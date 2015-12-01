@@ -1,0 +1,2 @@
+# MGL
+Simple graphics library

@@ -41,13 +41,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>..\..\EXTERNALS\GLEW\lib\$(Configuration);..\..\EXTERNALS\SOIL\$(Configuration);$(LibraryPath)</LibraryPath>
-    <IncludePath>..\..\EXTERNALS\GLEW\include\GL;..\MGL;..\..\EXTERNALS\SOIL;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\EXTERNALS\GLEW\lib\$(Configuration);..\..\EXTERNALS\SOIL\$(Configuration);..\..\EXTERNALS\GLFW\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\EXTERNALS\GLEW\include\GL;..\MGL;..\..\EXTERNALS\SOIL;..\..\EXTERNALS\GLM;..\..\EXTERNALS\GLFW;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>..\..\EXTERNALS\GLEW\lib\$(Configuration);..\..\EXTERNALS\SOIL\$(Configuration);$(LibraryPath)</LibraryPath>
-    <IncludePath>..\..\EXTERNALS\GLEW\include\GL;..\MGL;..\..\EXTERNALS\SOIL;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\EXTERNALS\GLEW\lib\$(Configuration);..\..\EXTERNALS\SOIL\$(Configuration);..\..\EXTERNALS\GLFW\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\EXTERNALS\GLEW\include\GL;..\MGL;..\..\EXTERNALS\SOIL;..\..\EXTERNALS\GLM;..\..\EXTERNALS\GLFW;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -87,11 +87,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MGL\MGL.vcxproj">
       <Project>{c77d58b9-5b68-49d9-b188-d3df011f21f8}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Scene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

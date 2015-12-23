@@ -1,8 +1,14 @@
-#include "Test.h"
-#include <iostream>
+#include "Scene.h"
 
 int main() {
-	std::cout << "adding: " << Test::add(2, 3) << std::endl;
-	system("pause");
+
+	// Create new MGLRenderer
+	Scene* scene = new Scene();
+	
+	while (!scene->ShouldClose()) {
+		scene->RenderScene();
+	}
+
+	delete scene;
 	return 0;
 }

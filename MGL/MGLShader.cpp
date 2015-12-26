@@ -7,19 +7,18 @@
 MGLShader::MGLShader() {
 	m_program = glCreateProgram();
 
-	for (int i = 0; i < SHADER_MAX; ++i) {
+	for (GLuint i = 0; i < MGL_SHADER_MAX; ++i) {
 		m_shaders[i] = 0;
 	}
 }
 
 MGLShader::~MGLShader() {
-	for (int i = 0; i < SHADER_MAX; ++i) {
+	for (GLuint i = 0; i < MGL_SHADER_MAX; ++i) {
 		if (m_shaders[i]) {
 			glDetachShader(m_program, m_shaders[i]);
 			glDeleteShader(m_shaders[i]);
 		}
 	}
-
 	glDeleteProgram(m_program);
 }
 
@@ -53,11 +52,11 @@ void MGLShader::LoadShader(std::string fileName, GLenum type) {
 	// Assign compiled shader
 	switch (type) {
 	case GL_VERTEX_SHADER:
-		m_shaders[SHADER_VERTEX] = Compile(into.c_str(), type); break;
+		m_shaders[MGL_SHADER_VERTEX] = Compile(into.c_str(), type); break;
 	case GL_FRAGMENT_SHADER:
-		m_shaders[SHADER_FRAGMENT] = Compile(into.c_str(), type); break;
+		m_shaders[MGL_SHADER_FRAGMENT] = Compile(into.c_str(), type); break;
 	case GL_GEOMETRY_SHADER:
-		m_shaders[SHADER_GEOMETRY] = Compile(into.c_str(), type); break;
+		m_shaders[MGL_SHADER_GEOMETRY] = Compile(into.c_str(), type); break;
 	default: std::cout << " - FAIL: TYPE ERROR" << std::endl; return;
 	}
 
@@ -91,14 +90,14 @@ GLuint MGLShader::Compile(const char* data, GLenum type) {
 }
 
 void MGLShader::SetDefaultAttributes() {
-	glBindAttribLocation(m_program, BUFFER_VERTEX, "position");
-	glBindAttribLocation(m_program, BUFFER_COLOUR, "colour");
-	glBindAttribLocation(m_program, BUFFER_TEXTURE, "texcoord");
+	glBindAttribLocation(m_program, MGL_BUFFER_VERTEX, "position");
+	glBindAttribLocation(m_program, MGL_BUFFER_COLOUR, "colour");
+	glBindAttribLocation(m_program, MGL_BUFFER_TEXTURE, "texCoord");
 }
 
 void MGLShader::Link() {
 	try {
-		for (int i = 0; i < SHADER_MAX; ++i) {
+		for (GLuint i = 0; i < MGL_SHADER_MAX; ++i) {
 			if (m_shaders[i]) {
 				glAttachShader(m_program, m_shaders[i]);
 			}

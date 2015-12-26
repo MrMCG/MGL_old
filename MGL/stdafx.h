@@ -5,6 +5,8 @@
 #include "glew.h"
 #include "glfw3.h"
 #include "glm.hpp"
+#include "gtc/matrix_transform.hpp"
+#include "gtc/type_ptr.hpp"
 #include "SOIL.h"
 
 // MGL
@@ -12,5 +14,6 @@
 #include "MGLExceptions.h"
 #include "MGLMesh.h"
 #include "MGLShader.h"
+#include "MGLCamera.h"
 
 // STL

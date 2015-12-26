@@ -13,6 +13,9 @@ public:
 
 	// Uses shaders program
 	void Use() const { glUseProgram(m_program); }
+	// Get program
+	GLuint Program() const { return m_program; }
+	
 
 protected:
 	// Returns 0 if error, otherwise returns shader
@@ -21,5 +24,5 @@ protected:
 	virtual void SetDefaultAttributes();
 
 	GLuint m_program;
-	GLuint m_shaders[SHADER_MAX];
+	GLuint m_shaders[MGL_SHADER_MAX];
 };

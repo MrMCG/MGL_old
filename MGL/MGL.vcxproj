@@ -85,6 +85,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="MGLCamera.h" />
     <ClInclude Include="MGLExceptions.h" />
     <ClInclude Include="MGLMesh.h" />
     <ClInclude Include="MGLShader.h" />
@@ -93,6 +94,7 @@
     <ClInclude Include="MGL.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="MGLCamera.cpp" />
     <ClCompile Include="MGLMesh.cpp" />
     <ClCompile Include="MGLShader.cpp" />
     <ClCompile Include="stdafx.cpp">

@@ -18,6 +18,7 @@ public:
 };
 
 /******	Common exceptions ******/
+
 class MGLException_FileNotFound : public MGLException {
 public:
 	MGLException_FileNotFound(std::string file)
@@ -35,6 +36,7 @@ public:
 };
 
 /******	Init exceptions ******/
+
 class MGLException_Init_GLFW : public MGLException {
 public:
 	MGLException_Init_GLFW()
@@ -72,6 +74,7 @@ public:
 };
 
 /****** Shader exceptions ******/
+
 class MGLException_Shader_LINK : public MGLException {
 public:
 	MGLException_Shader_LINK()
@@ -104,4 +107,25 @@ public:
 	}
 };
 
+/******	Image exceptions ******/
+
+class MGLException_SOIL : public MGLException {
+public:
+	MGLException_SOIL(std::string fN, std::string SLR)
+		: MGLException("SOIL : "+fN+" "+SLR) {}
+
+	virtual const char* what() const throw() {
+		return MGLException::what();
+	}
+
+	static void IsSuccessful(const int& success, const std::string fileName) {
+		if (success == 0) {
+			throw MGLException_SOIL(fileName, SOIL_last_result());
+		}
+	}
+
+
+private:
+	std::string str;
+};
 

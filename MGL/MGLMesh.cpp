@@ -6,7 +6,7 @@
 /*******************************/
 MGLMesh::MGLMesh() {
 
-	for (int i = 0; i < BUFFER_MAX; ++i) {
+	for (int i = 0; i < MGL_BUFFER_MAX; ++i) {
 		m_VBO[i] = 0;
 	}
 
@@ -27,7 +27,7 @@ MGLMesh::MGLMesh() {
 
 MGLMesh::~MGLMesh() {
 	glDeleteVertexArrays(1, &m_VAO);
-	glDeleteBuffers(BUFFER_MAX, m_VBO);
+	glDeleteBuffers(MGL_BUFFER_MAX, m_VBO);
 
 	if (m_vertices)
 		delete m_vertices;
@@ -54,38 +54,48 @@ void MGLMesh::BufferData() {
 	glBindVertexArray(m_VAO);
 
 	//Buffer vertex data
-	glGenBuffers(1, &m_VBO[BUFFER_VERTEX]);
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBO[BUFFER_VERTEX]);
+	glGenBuffers(1, &m_VBO[MGL_BUFFER_VERTEX]);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO[MGL_BUFFER_VERTEX]);
 	glBufferData(GL_ARRAY_BUFFER, m_numVertices*sizeof(glm::vec3), m_vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(BUFFER_VERTEX, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(BUFFER_VERTEX);
+	glVertexAttribPointer(MGL_BUFFER_VERTEX, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(MGL_BUFFER_VERTEX);
 
 	//buffer colour data
 	if (m_colours)	{
-		glGenBuffers(1, &m_VBO[BUFFER_COLOUR]);
-		glBindBuffer(GL_ARRAY_BUFFER, m_VBO[BUFFER_COLOUR]);
+		glGenBuffers(1, &m_VBO[MGL_BUFFER_COLOUR]);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO[MGL_BUFFER_COLOUR]);
 		glBufferData(GL_ARRAY_BUFFER, m_numVertices*sizeof(glm::vec4), m_colours, GL_STATIC_DRAW);
-		glVertexAttribPointer(BUFFER_COLOUR, 4, GL_FLOAT, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(BUFFER_COLOUR);
+		glVertexAttribPointer(MGL_BUFFER_COLOUR, 4, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(MGL_BUFFER_COLOUR);
 	}
 
 	//Buffer texture data
 	if (m_texCoords) {
-		glGenBuffers(1, &m_VBO[BUFFER_TEXTURE]);
-		glBindBuffer(GL_ARRAY_BUFFER, m_VBO[BUFFER_TEXTURE]);
+		glGenBuffers(1, &m_VBO[MGL_BUFFER_TEXTURE]);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO[MGL_BUFFER_TEXTURE]);
 		glBufferData(GL_ARRAY_BUFFER, m_numVertices*sizeof(glm::vec2), m_texCoords, GL_STATIC_DRAW);
-		glVertexAttribPointer(BUFFER_TEXTURE, 2, GL_FLOAT, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(BUFFER_TEXTURE);
+		glVertexAttribPointer(MGL_BUFFER_TEXTURE, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(MGL_BUFFER_TEXTURE);
 	}
 
 	//Buffer indicies data
 	if (m_indices) {
-		glGenBuffers(1, &m_VBO[BUFFER_INDICES]);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_VBO[BUFFER_INDICES]);
+		glGenBuffers(1, &m_VBO[MGL_BUFFER_INDICES]);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_VBO[MGL_BUFFER_INDICES]);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_numIndices*sizeof(GLuint), m_indices, GL_STATIC_DRAW);
 	}
 
 	glBindVertexArray(0);
+}
+
+void MGLMesh::SetColours(glm::vec4 colour) {
+	for (GLuint i = 0; i < m_numVertices; ++i) {
+		m_colours[i] = colour;
+	}
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO[MGL_BUFFER_COLOUR]);
+	glBufferData(GL_ARRAY_BUFFER, m_numVertices*sizeof(glm::vec4), m_colours, GL_STATIC_DRAW);
+	glVertexAttribPointer(MGL_BUFFER_COLOUR, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(MGL_BUFFER_COLOUR);
 }
 
 void MGLMesh::GenerateTriangle() {
@@ -146,12 +156,22 @@ void MGLMesh::GenerateQuad()	{
 /*********** MGLMeshTextured ***********/
 /***************************************/
 MGLMeshTextured::MGLMeshTextured() : MGLMesh() {
-	tex = 0;
+	m_tex = 0;
+	m_bump = 0;
+	m_OnDrawCallBack = [](){};
 }
 
 void MGLMeshTextured::Draw() {
-	if (tex) {
-		// enable tex
+	if (m_tex) {
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, m_tex);
 	}
+
+	if (m_bump) {
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, m_bump);
+	}
+	this->m_OnDrawCallBack();
 	MGLMesh::Draw();
+	glBindTexture(GL_TEXTURE_2D, 0);
 }

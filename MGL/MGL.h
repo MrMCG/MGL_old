@@ -6,13 +6,15 @@
 #pragma comment(lib, "glfw3.lib")
 #pragma comment(lib, "SOIL.lib")
 
-enum class WINDOWTYPE {FULLSCREEN, WINDOWED, FULLSCREEN_WINDOWED};
+
+// images: http://opengameart.org/content/50-free-textures-4-normalmaps
+// http://bgfons.com/upload/stars_texture2944.jpg
 
 class MGLContext {
 public:
 	// Defaults: MGL(3,3,true)
 	MGLContext();
-	MGLContext(int major, int minor, bool resizable = true);
+	MGLContext(GLuint major, GLuint minor, GLboolean resizable = true);
 	virtual ~MGLContext();
 
 	// Render loop
@@ -21,34 +23,48 @@ public:
 	// Init openGL options (use AFTER window is linked)
 	virtual void InitGL();
 	// Create a new window for use 
-	virtual void CreateNewWindow(int width, int height, std::string title, WINDOWTYPE type);
+	virtual void CreateNewWindow(GLuint width, GLuint height, std::string title, MGLenum windowType, GLFWmonitor* monito = nullptr);
 	// Should the window close
-	virtual int ShouldClose() { return glfwWindowShouldClose(m_window); }
+	virtual GLint ShouldClose() { return glfwWindowShouldClose(m_window); }
+	// Set callback on window resize (if m_resizable=true and window!=NULL)
+	void SetResizeCallback(GLFWwindowsizefun func);
 
 	/* Setters */
+
 	void SetWindow(GLFWwindow* win);
 	
 	/* Getters */
-	GLFWwindow* GetWindow() const { return m_window; }
+
+	GLFWwindow* Window() const { return m_window; }
 
 protected:
 	/****** Methods ******/
+
 	// Polls events
 	inline virtual void PollEvents() { glfwPollEvents(); }
 	// Swaps screen buffers
 	inline virtual void SwapBuffers() { glfwSwapBuffers(m_window); }
 
 	/****** Data ******/
+
 	GLFWwindow* m_window;
-	int m_windowWidth;
-	int m_windowHeight;
+	GLboolean m_resizable;
 }; 
 
 class MGLRenderer : public MGLContext {
 public:
 	MGLRenderer() :MGLContext(){};
-	~MGLRenderer(){};
+	~MGLRenderer();
 
 	virtual void RenderScene() = 0;
 	virtual void InitGL() override;
+	static void ResizeCallBack(GLFWwindow* window, GLuint width, GLuint height);
+
+protected:
+
+	glm::mat4 m_projMatrix;
+	glm::mat4 m_viewMatrix;
+	glm::mat4 m_modelMatrix;
+
+	MGLCamera* m_camera;
 };

@@ -6,7 +6,7 @@
 /***************************/
 
 MGLContext::MGLContext() : MGLContext(3, 3, true) {}
-MGLContext::MGLContext(int major, int minor, bool resizable) {
+MGLContext::MGLContext(GLuint major, GLuint minor, GLboolean resizable) {
 	try {
 		MGLException_Init_GLFW::IsSuccessful(glfwInit());
 	}
@@ -19,6 +19,8 @@ MGLContext::MGLContext(int major, int minor, bool resizable) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minor);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, resizable);
+
+	m_resizable = GL_TRUE;
 
 	// init pointers
 	m_window = nullptr;
@@ -55,19 +57,33 @@ void MGLContext::SetWindow(GLFWwindow* win) {
 	glfwMakeContextCurrent(m_window);
 }
 
-void MGLContext::CreateNewWindow(int width, int height, std::string title, WINDOWTYPE type) {
+void MGLContext::SetResizeCallback(GLFWwindowsizefun func) {
+	if (!m_resizable || !m_window)
+		return;
+
+	glfwSetWindowSizeCallback(m_window, func);
+}
+
+void MGLContext::CreateNewWindow(GLuint width, GLuint height, std::string title, MGLenum windowType, GLFWmonitor* monitor) {
 	if (m_window)
 		glfwDestroyWindow(m_window);
 
+	GLFWmonitor* mon = glfwGetPrimaryMonitor();
+	if (monitor)
+		mon = monitor;
+
 	try {
-		switch (type) {
-		case WINDOWTYPE::FULLSCREEN:
-			m_window = glfwCreateWindow(width, height, title.c_str(), glfwGetPrimaryMonitor(), nullptr);
+		switch (windowType) {
+		case MGL_WINDOWTYPE_FULLSCREEN:
+			m_window = glfwCreateWindow(width, height, title.c_str(), mon, nullptr);
 			break;
-		case WINDOWTYPE::WINDOWED:
+		case MGL_WINDOWTYPE_WINDOWED:
 			m_window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 			break;
-		case WINDOWTYPE::FULLSCREEN_WINDOWED: {
+		case MGL_WINDOWTYPE_FULLWINDOWED: {
+				if (width != 0 && height != 0)
+					break;
+
 				const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
 				glfwWindowHint(GLFW_RED_BITS, mode->redBits);
@@ -75,26 +91,23 @@ void MGLContext::CreateNewWindow(int width, int height, std::string title, WINDO
 				glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 				glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-				m_window = glfwCreateWindow(mode->width, mode->height, title.c_str(), glfwGetPrimaryMonitor(), nullptr);
+				if (width == 0 && height == 0)
+					m_window = glfwCreateWindow(mode->width, mode->height, title.c_str(), mon, nullptr);
 			}
 			break;
 		default:
-			m_window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 			break;
 		}
 
-		MGLException_Init_WINDOW::IsSuccessful(
-			m_window);
+		MGLException_Init_WINDOW::IsSuccessful(m_window);
 	}
 	catch (const MGLException& e) {
 		std::cerr << e.what() << std::endl;
-		return;
+		std::cerr << " !! Creating Default Window !! " << std::endl;
+		m_window = glfwCreateWindow(800, 600, "MGL: Default Window", nullptr, nullptr);
 	}
 
 	glfwMakeContextCurrent(m_window);
-
-	m_windowWidth = width;
-	m_windowHeight = height;
 
 	std::cout << "WINDOW INIT: SUCCESS" << std::endl;
 }
@@ -102,13 +115,33 @@ void MGLContext::CreateNewWindow(int width, int height, std::string title, WINDO
 /***********************************/
 /*********** MGLRenderer ***********/
 /***********************************/
+
 void MGLRenderer::InitGL() {
 	MGLContext::InitGL();
 	glfwWindowHint(GL_SAMPLES, 2);
 
-	glViewport(0, 0, m_windowWidth, m_windowHeight);
+	glViewport(0, 0,
+		MGL::GetWindowInfo(m_window, MGL_WINDOWINFO_WIDTH),
+		MGL::GetWindowInfo(m_window, MGL_WINDOWINFO_HEIGHT)
+		);
+
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glEnable(GL_MULTISAMPLE);
 	//glEnable(GL_DEPTH_TEST);
 	//glEnable(GL_CULL_FACE);
+
+	m_camera = nullptr;
+
+	SetResizeCallback((GLFWwindowsizefun)this->ResizeCallBack);
+}
+
+void MGLRenderer::ResizeCallBack(GLFWwindow* window, GLuint width, GLuint height) {
+	glViewport(0, 0,
+		MGL::GetWindowInfo(window, MGL_WINDOWINFO_WIDTH),
+		MGL::GetWindowInfo(window, MGL_WINDOWINFO_HEIGHT)
+		);
+}
+
+MGLRenderer::~MGLRenderer() {
+	delete m_camera;
 }

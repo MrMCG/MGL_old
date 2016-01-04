@@ -15,5 +15,6 @@
 #include "MGLMesh.h"
 #include "MGLShader.h"
 #include "MGLCamera.h"
+#include "MGLInput.h"
 
 // STL

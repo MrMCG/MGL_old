@@ -51,7 +51,6 @@
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>
@@ -66,7 +65,6 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -87,6 +85,7 @@
   <ItemGroup>
     <ClInclude Include="MGLCamera.h" />
     <ClInclude Include="MGLExceptions.h" />
+    <ClInclude Include="MGLInput.h" />
     <ClInclude Include="MGLMesh.h" />
     <ClInclude Include="MGLShader.h" />
     <ClInclude Include="MGLUtil.h" />
@@ -95,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MGLCamera.cpp" />
+    <ClCompile Include="MGLInput.cpp" />
     <ClCompile Include="MGLMesh.cpp" />
     <ClCompile Include="MGLShader.cpp" />
     <ClCompile Include="stdafx.cpp">

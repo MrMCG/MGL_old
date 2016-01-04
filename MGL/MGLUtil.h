@@ -19,7 +19,7 @@
 #define MGL_BUFFER_INDICES 3
 #define MGL_BUFFER_MAX 4
 
-// MGL
+// MGLenums
 
 #define MGL_NULL 0
 
@@ -32,10 +32,23 @@
 #define MGL_WINDOWINFO_XPOS 3
 #define MGL_WINDOWINFO_YPOS 4
 #define MGL_WINDOWINFO_ATTRIBUTE 5
+#define MGL_WINDOWINFO_M_XPOS 6
+#define MGL_WINDOWINFO_M_YPOS 7
+
+#define MGL_CAMERA_FORWARD 0
+#define MGL_CAMERA_BACKWARD 1
+#define MGL_CAMERA_LEFT 2
+#define MGL_CAMERA_RIGHT 3
+#define MGL_CAMERA_UP 4
+#define MGL_CAMERA_DOWN 5
+#define MGL_CAMERA_PITCH 6
+#define MGL_CAMERA_YAW 7
+#define MGL_CAMERA_ZOOM 8
 
 /****** Typedefs ******/
 
 typedef GLuint MGLenum;
+typedef void (*MGLFunction)(void*);
 
 /****** Utilities ******/
 
@@ -96,8 +109,33 @@ namespace MGL {
 		case MGL_WINDOWINFO_ATTRIBUTE:
 			wanted = glfwGetWindowAttrib(window, attribute);
 			break;
+		case MGL_WINDOWINFO_M_XPOS: {
+				GLdouble want, unwd;
+				glfwGetCursorPos(window, &want, &unwd);
+				wanted = (GLint)want;
+			}
+			break;
+		case MGL_WINDOWINFO_M_YPOS: {
+				GLdouble want, unwd;
+				glfwGetCursorPos(window, &unwd, &want);
+				wanted = (GLint)want;
+			}
+			break;
 		}
 		return wanted;
+	}
+
+	static void PrintMat4(const glm::mat4& matrix) {
+		double val[16] = { 0.0 };
+
+		const float *pSource = (const float*)glm::value_ptr(matrix);
+		for (int i = 0; i < 16; ++i)
+			val[i] = pSource[i];
+
+		std::cout << val[0] << "\t" << val[1] << "\t" << val[2] << "\t" << val[3] << std::endl;
+		std::cout << val[4] << "\t" << val[5] << "\t" << val[6] << "\t" << val[7] << std::endl;
+		std::cout << val[8] << "\t" << val[9] << "\t" << val[10] << "\t" << val[11] << std::endl;
+		std::cout << val[12] << "\t" << val[13] << "\t" << val[14] << "\t" << val[15] << std::endl;
 	}
 
 	/****** Useful data ******/

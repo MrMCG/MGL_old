@@ -11,7 +11,9 @@ public:
 	GLfloat GetDeltaTime() const { return deltaTime; }
 
 private:
-	MGLMeshTextured* triangle;
+	void Init();
+
+	MGLMesh* triangle;
 	MGLShader* shader;
 	GLfloat lastFrame;
 	GLfloat deltaTime;
@@ -25,5 +27,9 @@ void Key_UP_Func(void* data);
 void Key_DOWN_Func(void* data);
 void Key_MOUSE_Func(void* data);
 void Key_SCROLL_Func(void* data);
+void Key_1_Func(void* data);
+void Key_2_Func(void* data);
+
+
 
 

@@ -20,6 +20,8 @@ MGLContext::MGLContext(GLuint major, GLuint minor, GLboolean resizable) {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, resizable);
 
+	m_inFocus = GL_TRUE;
+
 	m_resizable = GL_TRUE;
 
 	// init pointers
@@ -200,6 +202,20 @@ void MGLContext::HandleMouseFocus(GLboolean focused) {
 /*********** MGLRenderer ***********/
 /***********************************/
 
+MGLRenderer::MGLRenderer() : MGLContext() {
+	m_camera = nullptr;
+	m_keyboad = new MGLKeyboard();
+	m_mouse = new MGLMouse();
+}
+
+MGLRenderer::~MGLRenderer() {
+	delete m_camera;
+	delete m_keyboad;
+	delete m_mouse;
+	MGLCommonMeshes::Release();
+	MGLTexture::Release();
+}
+
 void MGLRenderer::InitGL() {
 	MGLContext::InitGL();
 	glfwWindowHint(GL_SAMPLES, 2);
@@ -209,11 +225,10 @@ void MGLRenderer::InitGL() {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 
-	m_camera = nullptr;
-	m_keyboad = new MGLKeyboard();
-	m_mouse = new MGLMouse();
+	MGLTexture::Init();
+	MGLCommonMeshes::Init();
 }
 
 void MGLRenderer::PollEvents() {
@@ -248,6 +263,7 @@ void MGLRenderer::HandleMouseButton(GLuint button, GLuint action, GLuint mods) {
 
 void MGLRenderer::HandleMouseFocus(GLboolean focused) {
 	MGLContext::HandleMouseFocus(focused);
+	m_inFocus = focused;
 	if (focused)
 		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	else
@@ -256,11 +272,6 @@ void MGLRenderer::HandleMouseFocus(GLboolean focused) {
 
 void MGLRenderer::HandleMouseScroll(GLdouble xOffset, GLdouble yOffset) {
 	MGLContext::HandleMouseScroll(xOffset, yOffset);
-	m_mouse->UpdateScroll(xOffset, yOffset);
+	m_mouse->UpdateScroll((GLfloat)xOffset, (GLfloat)yOffset);
 }
 
-MGLRenderer::~MGLRenderer() {
-	delete m_camera;
-	delete m_keyboad;
-	delete m_mouse;
-}

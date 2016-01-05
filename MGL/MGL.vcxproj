@@ -88,6 +88,7 @@
     <ClInclude Include="MGLInput.h" />
     <ClInclude Include="MGLMesh.h" />
     <ClInclude Include="MGLShader.h" />
+    <ClInclude Include="MGLTexture.h" />
     <ClInclude Include="MGLUtil.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MGL.h" />
@@ -97,6 +98,8 @@
     <ClCompile Include="MGLInput.cpp" />
     <ClCompile Include="MGLMesh.cpp" />
     <ClCompile Include="MGLShader.cpp" />
+    <ClCompile Include="MGLTexture.cpp" />
+    <ClCompile Include="MGLUtil.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

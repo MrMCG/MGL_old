@@ -1,9 +1,10 @@
+#pragma once
 #include <iostream>
 #include <exception>
 #include <sstream>
 #include <stdexcept>
 #include <string>
-#pragma once
+
 
 // MGLException_EXCEPTYPE
 

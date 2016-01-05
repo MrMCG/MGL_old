@@ -1,10 +1,16 @@
-#include "stdafx.h"
 #pragma once
+#include "stdafx.h"
 
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glew32s.lib")
 #pragma comment(lib, "glfw3.lib")
 #pragma comment(lib, "SOIL.lib")
+
+#include "MGLMesh.h"
+#include "MGLShader.h"
+#include "MGLCamera.h"
+#include "MGLInput.h"
+#include "MGLTexture.h"
 
 // images: http://opengameart.org/content/50-free-textures-4-normalmaps
 // http://bgfons.com/upload/stars_texture2944.jpg
@@ -75,11 +81,12 @@ protected:
 	GLboolean m_resizable;
 	GLuint m_width;
 	GLuint m_height;
+	GLboolean m_inFocus;
 }; 
 
 class MGLRenderer : public MGLContext {
 public:
-	MGLRenderer() :MGLContext(){};
+	MGLRenderer();
 	virtual ~MGLRenderer();
 
 	virtual void InitGL() override;

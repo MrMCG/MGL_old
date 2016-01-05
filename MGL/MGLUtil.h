@@ -1,6 +1,8 @@
 #pragma once
+#include "stdafx.h"
+
+#include <mutex>
 #include <iostream>
-#include "MGLExceptions.h"
 
 /****** Defines ******/
 
@@ -18,6 +20,11 @@
 #define MGL_BUFFER_TEXTURE 2
 #define MGL_BUFFER_INDICES 3
 #define MGL_BUFFER_MAX 4
+
+#define MGL_MESH_QUAD 1
+#define MGL_MESH_TRIANGLE 2
+#define MGL_MESH_CUBE 3
+#define MGL_MESH_SPHERE 4
 
 // MGLenums
 
@@ -45,6 +52,17 @@
 #define MGL_CAMERA_YAW 7
 #define MGL_CAMERA_ZOOM 8
 
+// MGLTexture
+
+#define MGL_TEXTURE_DIFFUSE 1
+#define MGL_TEXTURE_SPECULAR 2
+
+/****** Other ******/
+
+#define MGL_DEFAULT_TEXTURE1 "stars.jpg"
+#define MGL_DEFAULT_CUBE "cube.obj"
+#define MGL_DEFAULT_SPHERE "sphere.obj"
+
 /****** Typedefs ******/
 
 typedef GLuint MGLenum;
@@ -56,87 +74,21 @@ typedef void (*MGLFunction)(void*);
 // ENSURE MGL INIT WAS SUCCESSFUL!
 namespace MGL {
 	// Enabled wireframe
-	static void EnableWireframe() { glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); }
+	inline void EnableWireframe() { glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); glDisable(GL_CULL_FACE); }
 	// Disables wireframe
-	static void DisableWireframe() { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
+	inline void DisableWireframe() { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); glEnable(GL_CULL_FACE); }
 
 	// Set basic texture params
 	// repeat: true = repeat, false = clamp to edge
 	// linear: true = min linear mipmap / max linear, false = nearest             
-	static void SetTextureParameters(GLuint texture, bool repeat, bool linear) {
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, linear ? GL_LINEAR_MIPMAP_LINEAR : GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, linear ? GL_LINEAR : GL_NEAREST);
-		glBindTexture(GL_TEXTURE_2D, 0);	
-	}
+	void SetTextureParameters(GLuint texture, GLboolean repeat, GLboolean linear);
 
 	// Loads a texture and generates mipmaps
-	static GLuint LoadTextureFromFile(std::string fileName) {
-		GLuint image = 0;
-		try {
-			image = SOIL_load_OGL_texture(fileName.c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
-			MGLException_SOIL::IsSuccessful(image, fileName);
-		}
-		catch (MGLException& e) {
-			std::cerr << e.what() << std::endl;
-			return 0;
-		}
-		return image;
-	}
+	GLuint LoadTextureFromFile(std::string fileName, GLboolean flipY = GL_TRUE);
 
-	static int GetWindowInfo(GLFWwindow* window, MGLenum info, GLint attribute = 0) {
-		if (!window)
-			return 0;
-
-		GLint wanted = 0;
-		GLint unw = 0;
-
-		switch (info) {
-		case MGL_WINDOWINFO_WIDTH:
-			glfwGetWindowSize(window, &wanted, &unw);
-			break;
-		case MGL_WINDOWINFO_HEIGHT:
-			glfwGetWindowSize(window, &unw, &wanted);
-			break;
-		case MGL_WINDOWINFO_XPOS:
-			glfwGetWindowPos(window, &wanted, &unw);
-			break;
-		case MGL_WINDOWINFO_YPOS:
-			glfwGetWindowPos(window, &unw, &wanted);
-			break;
-		case MGL_WINDOWINFO_ATTRIBUTE:
-			wanted = glfwGetWindowAttrib(window, attribute);
-			break;
-		case MGL_WINDOWINFO_M_XPOS: {
-				GLdouble want, unwd;
-				glfwGetCursorPos(window, &want, &unwd);
-				wanted = (GLint)want;
-			}
-			break;
-		case MGL_WINDOWINFO_M_YPOS: {
-				GLdouble want, unwd;
-				glfwGetCursorPos(window, &unwd, &want);
-				wanted = (GLint)want;
-			}
-			break;
-		}
-		return wanted;
-	}
-
-	static void PrintMat4(const glm::mat4& matrix) {
-		double val[16] = { 0.0 };
-
-		const float *pSource = (const float*)glm::value_ptr(matrix);
-		for (int i = 0; i < 16; ++i)
-			val[i] = pSource[i];
-
-		std::cout << val[0] << "\t" << val[1] << "\t" << val[2] << "\t" << val[3] << std::endl;
-		std::cout << val[4] << "\t" << val[5] << "\t" << val[6] << "\t" << val[7] << std::endl;
-		std::cout << val[8] << "\t" << val[9] << "\t" << val[10] << "\t" << val[11] << std::endl;
-		std::cout << val[12] << "\t" << val[13] << "\t" << val[14] << "\t" << val[15] << std::endl;
-	}
+	int GetWindowInfo(GLFWwindow* window, MGLenum info, GLint attribute = 0);
+		
+	void PrintMat4(const glm::mat4& matrix);
 
 	/****** Useful data ******/
 
@@ -145,3 +97,43 @@ namespace MGL {
 	const static glm::vec4 RED = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 	const static glm::vec4 GREEN = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 }
+
+template<class T>
+class MGLSingleton {
+public:
+	static inline T* Instance() { return m_instance; }
+	static void Init() {
+		if (!m_instance) {
+			std::lock_guard<std::mutex> lock(m_init);
+			if (!m_instance) {
+				m_instance = new T();
+			}
+		}
+	};
+	static void Release() {
+		if (m_instance) {
+			std::lock_guard<std::mutex> lock(m_init);
+			if (m_instance) {
+				delete m_instance;
+				m_instance = nullptr;
+			}
+		}
+	};
+protected:
+	MGLSingleton(){}
+	~MGLSingleton(){}
+
+private:
+	/* Prevent copy */
+
+	MGLSingleton(MGLSingleton const&){}
+	MGLSingleton& operator=(MGLSingleton const&){}
+
+	/* Keep instance pointer for refrence */
+
+	static std::mutex m_init;
+	static T* m_instance;
+};
+
+template <class T> std::mutex MGLSingleton<T>::m_init;
+template <class T> T* MGLSingleton<T>::m_instance = nullptr;

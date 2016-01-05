@@ -5,24 +5,19 @@ Scene::Scene() : MGLRenderer() {
 	CreateNewWindow(800, 600, "MGL Example Window!", MGL_WINDOWTYPE_WINDOWED);
 	InitGL();
 
-	triangle = new MGLMeshTextured();
-	triangle->GenerateTriangle();
+	triangle = MGLMesh::LoadOBJ("garden.obj");
 
 	shader = new MGLShader();
 	shader->LoadShader("vert.glsl", GL_VERTEX_SHADER);
 	shader->LoadShader("frag.glsl", GL_FRAGMENT_SHADER);
 	shader->Link();
 	shader->Use();
-	//MGL::EnableWireframe();
 
-	GLuint texture = MGL::LoadTextureFromFile("bricks.jpg");
-	MGL::SetTextureParameters(texture, true, true);
+	MGLTexHandle->LoadTexture("bricks.jpg", "bricks", true, true);
 
-	GLuint bump = MGL::LoadTextureFromFile("stars.jpg");
-	MGL::SetTextureParameters(bump, true, true);
+	triangle->AddTexture(MGLTexHandle->GetTexture("bricks"));
+	triangle->AddTexture(MGLTexHandle->GetTexture("DEFAULT"));
 
-	triangle->SetTexture(texture);
-	triangle->SetBump(bump);
 	triangle->SetUniforms([&]() {
 		glUniform1i(glGetUniformLocation(shader->Program(), "tex"), 0);
 		glUniform1i(glGetUniformLocation(shader->Program(), "bump"), 1);
@@ -31,6 +26,13 @@ Scene::Scene() : MGLRenderer() {
 	m_camera = new MGLCamera();
 	m_modelMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f,0.0f,0.0f));
 
+	lastFrame = (GLfloat)glfwGetTime();
+	deltaTime = 0.0f;
+
+	Init();
+}
+
+void Scene::Init() {
 	m_keyboad->AddKeyFunction(GLFW_KEY_W, GLFW_REPEAT, GLFW_PRESS, Key_W_Func);
 	m_keyboad->AddKeyFunction(GLFW_KEY_A, GLFW_REPEAT, GLFW_PRESS, Key_A_Func);
 	m_keyboad->AddKeyFunction(GLFW_KEY_S, GLFW_REPEAT, GLFW_PRESS, Key_S_Func);
@@ -38,14 +40,14 @@ Scene::Scene() : MGLRenderer() {
 	m_keyboad->AddKeyFunction(GLFW_KEY_UP, GLFW_REPEAT, GLFW_PRESS, Key_UP_Func);
 	m_keyboad->AddKeyFunction(GLFW_KEY_DOWN, GLFW_REPEAT, GLFW_PRESS, Key_DOWN_Func);
 
+	m_keyboad->AddKeyFunction(GLFW_KEY_1, GLFW_PRESS, Key_1_Func);
+	m_keyboad->AddKeyFunction(GLFW_KEY_2, GLFW_PRESS, Key_2_Func);
+
 	m_mouse->AddKeyFunction(GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE, Key_MOUSE_Func);
 	m_mouse->AddScrollFunction(Key_SCROLL_Func);
 
 	m_keyboad->SetDataPointer(this);
 	m_mouse->SetDataPointer(this);
-
-	lastFrame = (GLfloat)glfwGetTime();
-	deltaTime = 0.0f;
 }
 
 void Scene::RenderScene() {
@@ -109,4 +111,12 @@ void Key_SCROLL_Func(void* data) {
 	Scene* game = static_cast<Scene*>(data);
 	game->GetCamera()->MoveCamera(MGL_CAMERA_ZOOM, game->GetMouse()->GetScrollY() * 0.1f);
 	game->GetMouse()->SetScrollUpdated(GL_FALSE);
+}
+
+void Key_1_Func(void* data) {
+	MGL::EnableWireframe();
+}
+
+void Key_2_Func(void* data) {
+	MGL::DisableWireframe();
 }

@@ -1,11 +1,14 @@
-#include "stdafx.h"
 #pragma once
+#include "stdafx.h"
+
+#include "MGLTexture.h"
 
 #include <functional>
+#include <vector>
 
 class MGLMesh {
 public:
-	MGLMesh();
+	MGLMesh(MGLenum mgl_mesh_type = 0);
 	virtual ~MGLMesh();
 
 	// Draws the mesh
@@ -15,12 +18,33 @@ public:
 	void GenerateTriangle();
 	// Generates a quad mesh using indices (triangle strip)
 	void GenerateQuad();
+
 	// Sets m_vertices amount of colours to specified colour
-	void SetColours(glm::vec4 colour);
+	void SetColours(glm::vec4 colour, GLboolean buffer = GL_TRUE);
+
+	// Set texture
+	inline void AddTexture(GLuint tex) { m_textures->push_back(tex); }
+	// Set Bump
+	void RemoveTexture(GLuint tex);
+
+	/* Currently only uses vertices/texCoord/normals */
+	static MGLMesh* LoadOBJ(std::string fileName);
+
+	// Get texture
+	inline GLuint GetTexture(GLuint index) const { return m_textures->at(index); }
+
+	// User defined unfiforms will be set before drawing
+	inline void SetUniforms(std::function<void(void)> onDrawCallBack) { m_OnDrawCallBack = onDrawCallBack; }
 
 protected:
 	// Loads VBO data into memory
-	void BufferData();
+	virtual void BufferAllData(GLboolean genBuffers = GL_TRUE);
+
+	virtual void BufferVerticesData(GLboolean genBuffers);
+	virtual void BufferNormalsData(GLboolean genBuffers){}
+	virtual void BufferTexCoordData(GLboolean genBuffers);
+	virtual void BufferColourData(GLboolean genBuffers);
+	virtual void BufferIndicesData(GLboolean genBuffers);
 
 	GLuint m_VAO;
 	GLuint m_VBO[MGL_BUFFER_MAX];
@@ -29,40 +53,30 @@ protected:
 	GLuint m_numIndices;
 	GLuint m_numVertices;
 
-	GLuint* m_indices;
+	std::vector<glm::vec3>* m_vertices;
+	std::vector<glm::vec3>* m_normals;
+	std::vector<glm::vec2>* m_texCoords;
+	std::vector<glm::vec4>* m_colours;
 
-	glm::vec3* m_vertices;
-	glm::vec4* m_colours;
-	glm::vec2* m_texCoords;
-	glm::vec3* m_normals;
-	glm::vec3* m_tangents;
-
-};
-
-class MGLMeshTextured : public MGLMesh {
-public:
-	MGLMeshTextured();
-	virtual ~MGLMeshTextured(){};
-
-	// Draws the mesh
-	virtual void Draw();
-
-	// Set texture
-	void SetTexture(GLuint tex) { m_tex = tex; }
-	// Set Bump
-	void SetBump(GLuint tex) { m_bump = tex; }
-
-	// Get texture
-	GLuint GetTexture() const { return m_tex; }
-	// Get bu,p
-	GLuint GetBump() const { return m_bump; }
-
-	// User defined unfiforms will be set before drawing
-	void SetUniforms(std::function<void(void)> onDrawCallBack) { m_OnDrawCallBack = onDrawCallBack; }
-
-protected:
-	GLuint m_tex;
-	GLuint m_bump;
+	std::vector<GLuint>* m_textures;
+	std::vector<GLuint>* m_indices;
 
 	std::function<void(void)> m_OnDrawCallBack;
+};
+
+class MGLCommonMeshes {
+public:
+	static MGLMesh* Quad() { return m_quad; }
+	static MGLMesh* Triangle() { return m_triangle; }
+	static MGLMesh* Cube() { return m_cube; }
+	static MGLMesh* Sphere() { return m_sphere; }
+
+	static void Init();
+	static void Release();
+
+protected:
+	static MGLMesh* m_quad;
+	static MGLMesh* m_triangle;
+	static MGLMesh* m_cube;
+	static MGLMesh* m_sphere;
 };

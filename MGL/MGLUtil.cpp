@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "MGLUtil.h"
 
+#include <fstream>
+#include <vector>
+#include <algorithm>
+
 void MGL::SetTextureParameters(GLuint texture, GLboolean repeat, GLboolean linear) {
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
@@ -11,18 +15,51 @@ void MGL::SetTextureParameters(GLuint texture, GLboolean repeat, GLboolean linea
 }
 
 GLuint MGL::LoadTextureFromFile(std::string fileName, GLboolean flipY) {
+	/*
 	GLuint image = 0;
 	try {
 		image = SOIL_load_OGL_texture(fileName.c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 
 			flipY ? SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y : SOIL_FLAG_MIPMAPS);
-		MGLException_SOIL::IsSuccessful(image, fileName);
+		MGLException_STB::IsSuccessful(image, fileName);
 	}
 	catch (MGLException& e) {
 		std::cerr << e.what() << std::endl;
 		return 0;
 	}
-	return image;
+	*/
+	
+	GLuint tex = 0;
+
+	try {
+		GLint w, h, c;
+
+		if (flipY)
+			stbi_set_flip_vertically_on_load(GL_TRUE);
+		else 
+			stbi_set_flip_vertically_on_load(GL_FALSE);
+
+		GLubyte* image = stbi_load(fileName.c_str(), &w, &h, &c, STBI_rgb);
+		if (!image)
+			throw new MGLException("image load error");
+
+
+		glGenTextures(1, &tex);
+		glBindTexture(GL_TEXTURE_2D, tex);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		stbi_image_free(image);
+		MGLException_STB::IsSuccessful(tex, fileName);
+	}
+	catch (MGLException& e) {
+		std::cerr << e.what() << std::endl;
+		return 0;
+	}
+	
+	return tex;
 }
+
 
 int MGL::GetWindowInfo(GLFWwindow* window, MGLenum info, GLint attribute) {
 	if (!window)
@@ -75,4 +112,3 @@ void MGL::PrintMat4(const glm::mat4& matrix) {
 	std::cout << val[8] << "\t" << val[9] << "\t" << val[10] << "\t" << val[11] << std::endl;
 	std::cout << val[12] << "\t" << val[13] << "\t" << val[14] << "\t" << val[15] << std::endl;
 }
-

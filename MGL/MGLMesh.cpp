@@ -2,6 +2,7 @@
 #include "MGLMesh.h"
 
 #include <fstream>
+#include <algorithm>
 
 /*******************************/
 /*********** MGLMesh ***********/
@@ -23,7 +24,7 @@ MGLMesh::MGLMesh(MGLenum mgl_mesh_type) {
 	m_texCoords = nullptr;
 	m_colours = nullptr;
 
-	m_textures = new std::vector < GLuint > ;
+	m_textures = new MGLvecu;
 	m_indices = nullptr;
 
 	m_OnDrawCallBack = [](){};
@@ -32,8 +33,9 @@ MGLMesh::MGLMesh(MGLenum mgl_mesh_type) {
 	case 0: break;
 	case MGL_MESH_QUAD: GenerateQuad(); break;
 	case MGL_MESH_TRIANGLE: GenerateTriangle(); break;
-	case MGL_MESH_CUBE: LoadOBJ(MGL_DEFAULT_CUBE); break;
-	case MGL_MESH_SPHERE: LoadOBJ(MGL_DEFAULT_SPHERE); break;
+	case MGL_MESH_CUBE: MGLFileHandle->LoadMGL(MGL_DEFAULT_CUBE); break;
+	case MGL_MESH_SPHERE: MGLFileHandle->LoadMGL(MGL_DEFAULT_SPHERE); break;
+	case MGL_MESH_CONE: MGLFileHandle->LoadMGL(MGL_DEFAULT_CONE); break;
 	default: break;
 	}
 }
@@ -151,7 +153,7 @@ void MGLMesh::BufferColourData(GLboolean genBuffers) {
 	glBindVertexArray(0);
 }
 
-void MGLMesh::SetColours(glm::vec4 colour, GLboolean buffer) {
+void MGLMesh::SetNewColours(glm::vec4 colour, GLboolean buffer) {
 	for (GLuint i = 0; i < m_numVertices; ++i) {
 		m_colours->at(i) = colour;
 	}
@@ -173,9 +175,9 @@ void MGLMesh::GenerateTriangle() {
 	m_vertices->push_back(glm::vec3(-1.0f, -1.0f, 0.0f));
 	m_vertices->push_back(glm::vec3(1.0f, -1.0f, 0.0f));
 
-	m_texCoords->push_back(glm::vec2(0.5f, 0.0f));
-	m_texCoords->push_back(glm::vec2(0.0f, 1.0f));
-	m_texCoords->push_back(glm::vec2(1.0f, 1.0f));
+	m_texCoords->push_back(glm::vec2(0.5f, 1.0f));
+	m_texCoords->push_back(glm::vec2(0.0f, 0.0f));
+	m_texCoords->push_back(glm::vec2(1.0f, 0.0f));
 
 	m_colours->push_back(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 	m_colours->push_back(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
@@ -187,114 +189,29 @@ void MGLMesh::GenerateTriangle() {
 void MGLMesh::GenerateQuad()	{
 	m_numVertices = 4;
 	m_numIndices = 6;
-	m_type = GL_TRIANGLE_STRIP;
 
 	m_vertices = new std::vector<glm::vec3>[m_numVertices];
 	m_colours = new std::vector<glm::vec4>[m_numVertices];
 	m_texCoords = new std::vector<glm::vec2>[m_numVertices];
 
+	m_vertices->push_back(glm::vec3(-1.0f, -1.0f, 0.0f));
+	m_vertices->push_back(glm::vec3(-1.0f, 1.0f, 0.0f));
 	m_vertices->push_back(glm::vec3(1.0f, 1.0f, 0.0f));
 	m_vertices->push_back(glm::vec3(1.0f, -1.0f, 0.0f));
-	m_vertices->push_back(glm::vec3(-1.0f, 1.0f, 0.0f));
-	m_vertices->push_back(glm::vec3(-1.0f, -1.0f, 0.0f));
 
+	m_texCoords->push_back(glm::vec2(0.0f, 0.0f));
+	m_texCoords->push_back(glm::vec2(0.0f, 1.0f));
 	m_texCoords->push_back(glm::vec2(1.0f, 1.0f));
 	m_texCoords->push_back(glm::vec2(1.0f, 0.0f));
-	m_texCoords->push_back(glm::vec2(0.0f, 1.0f));
-	m_texCoords->push_back(glm::vec2(0.0f, 0.0f));
 
 	m_colours->push_back(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 	m_colours->push_back(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 	m_colours->push_back(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 	m_colours->push_back(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
-	m_indices = new std::vector < GLuint >{ 0, 1, 2, 1, 2, 3 };
+	m_indices = new std::vector < GLuint > { 2, 1, 3, 1, 0, 3 };
 
 	BufferAllData();
-}
-
-MGLMesh* MGLMesh::LoadOBJ(std::string fileName) {
-
-
-	std::ifstream file(fileName);
-
-	std::vector<glm::vec2> inputTexCoords;
-	std::vector<glm::vec3> inputVertices;
-	std::vector<glm::vec3> inputNormals;
-	
-	std::vector<GLuint> vertexIndices;
-	std::vector<GLuint> texIndices;
-	std::vector<GLuint> normIndices;
-
-	while (!file.eof()) {
-		std::string token;
-		file >> token;
-
-		if (token == "v") {
-			glm::vec3 vec;
-			file >> vec.x; file >> vec.y; file >> vec.z;
-			inputVertices.push_back(vec);
-		}
-		else if (token == "vn") {
-			glm::vec3 vec;
-			file >> vec.x; file >> vec.y; file >> vec.z;
-			inputNormals.push_back(vec);
-		}
-		else if (token == "vt") {
-			glm::vec2 vec;
-			file >> vec.x; file >> vec.y;
-			inputTexCoords.push_back(vec);
-		}
-		else if (token == "f") {
-			std::string line;
-			std::getline(file, line);
-
-			for (GLuint i = 0; i < line.length(); ++i) {
-				if (line[i] == '/')
-					line[i] = ' ';
-			}
-
-			GLuint index = 0;
-			GLuint data = 0;
-
-			std::stringstream stream(line);
-			while (stream >> data) {
-				switch (index) {
-				case 0: vertexIndices.push_back(data); break;
-				case 1: texIndices.push_back(data); break;
-				case 2: normIndices.push_back(data); break;
-				}
-
-				index++;
-				index %= 3;
-			}
-
-		}
-		
-
-	}
-
-	MGLMesh* mesh = new MGLMesh();
-
-	mesh->m_numVertices = vertexIndices.size();
-	mesh->m_vertices = new std::vector<glm::vec3>[mesh->m_numVertices];
-	for (GLuint ind : vertexIndices) {
-		mesh->m_vertices->push_back(inputVertices[ind-1]);
-	}
-
-	mesh->m_texCoords = new std::vector<glm::vec2>[mesh->m_numVertices];
-	for (GLuint ind : texIndices) {
-		mesh->m_texCoords->push_back(inputTexCoords[ind-1]);
-	}
-
-	mesh->m_colours = new std::vector<glm::vec4>[mesh->m_numVertices];
-	for (GLuint i = 0; i < mesh->m_numVertices; ++i) {
-		mesh->m_colours->push_back(MGL::WHITE);
-	}
-
-	mesh->BufferAllData();
-
-	return mesh;
 }
 
 /***************************************/
@@ -305,6 +222,7 @@ MGLMesh* MGLCommonMeshes::m_cube = nullptr;
 MGLMesh* MGLCommonMeshes::m_quad = nullptr;
 MGLMesh* MGLCommonMeshes::m_triangle = nullptr;
 MGLMesh* MGLCommonMeshes::m_sphere = nullptr;
+MGLMesh* MGLCommonMeshes::m_cone = nullptr;
 
 void MGLCommonMeshes::Init() {
 	if (!m_quad) {
@@ -312,13 +230,15 @@ void MGLCommonMeshes::Init() {
 
 		m_quad = new MGLMesh(MGL_MESH_QUAD);
 		m_triangle = new MGLMesh(MGL_MESH_TRIANGLE);
-		m_cube = MGLMesh::LoadOBJ(MGL_DEFAULT_CUBE);
-		m_sphere = MGLMesh::LoadOBJ(MGL_DEFAULT_SPHERE);
+		m_cube = MGLFileHandle->LoadMGL(MGL_DEFAULT_CUBE);
+		m_sphere = MGLFileHandle->LoadMGL(MGL_DEFAULT_SPHERE);
+		m_cone = MGLFileHandle->LoadMGL(MGL_DEFAULT_CONE);
 
 		m_quad->AddTexture(m_defaultTex);
 		m_cube->AddTexture(m_defaultTex);
 		m_triangle->AddTexture(m_defaultTex);
 		m_sphere->AddTexture(m_defaultTex);
+		m_cone->AddTexture(m_defaultTex);
 	}
 }
 
@@ -328,5 +248,6 @@ void MGLCommonMeshes::Release() {
 		delete m_cube;
 		delete m_triangle;
 		delete m_sphere;
+		delete m_cone;
 	}
 }

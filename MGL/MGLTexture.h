@@ -23,9 +23,9 @@ protected:
 	MGLTexture();
 	~MGLTexture();
 
-	std::vector<GLuint>* m_textures;
-	std::vector<std::string>* m_names;
-	std::vector<MGLenum>* m_types;
+	MGLvecu* m_textures;
+	MGLvecs* m_names;
+	MGLvecm* m_types;
 };
 
 #define MGLTexHandle MGLTexture::Instance()

@@ -21,6 +21,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -40,21 +41,29 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\..\EXTERNALS\GLEW\include\GL;..\..\EXTERNALS\SOIL;..\..\EXTERNALS\GLM;..\..\EXTERNALS\GLFW;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\EXTERNALS\GLEW\lib\$(Configuration);..\..\EXTERNALS\SOIL\$(Configuration);..\..\EXTERNALS\GLFW\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\EXTERNALS\GLEW\include\GL;..\..\EXTERNALS\STB;..\..\EXTERNALS\GLM;..\..\EXTERNALS\GLFW;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\EXTERNALS\GLEW\lib\$(Configuration);..\..\EXTERNALS\GLFW\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>..\..\EXTERNALS\GLEW\include\GL;..\..\EXTERNALS\SOIL;..\..\EXTERNALS\GLM;..\..\EXTERNALS\GLFW;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\EXTERNALS\GLEW\lib\$(Configuration);..\..\EXTERNALS\SOIL\$(Configuration);..\..\EXTERNALS\GLFW\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\EXTERNALS\GLEW\include\GL;..\..\EXTERNALS\STB;..\..\EXTERNALS\GLM;..\..\EXTERNALS\GLFW;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\EXTERNALS\GLEW\lib\$(Configuration);..\..\EXTERNALS\GLFW\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MGLDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>
+      </FunctionLevelLinking>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -67,7 +76,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
@@ -85,6 +94,7 @@
   <ItemGroup>
     <ClInclude Include="MGLCamera.h" />
     <ClInclude Include="MGLExceptions.h" />
+    <ClInclude Include="MGLFile.h" />
     <ClInclude Include="MGLInput.h" />
     <ClInclude Include="MGLMesh.h" />
     <ClInclude Include="MGLShader.h" />
@@ -95,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MGLCamera.cpp" />
+    <ClCompile Include="MGLFile.cpp" />
     <ClCompile Include="MGLInput.cpp" />
     <ClCompile Include="MGLMesh.cpp" />
     <ClCompile Include="MGLShader.cpp" />

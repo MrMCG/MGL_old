@@ -41,13 +41,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>..\..\EXTERNALS\GLEW\lib\$(Configuration);..\..\EXTERNALS\SOIL\$(Configuration);..\..\EXTERNALS\GLFW\$(Configuration);$(LibraryPath)</LibraryPath>
-    <IncludePath>..\..\EXTERNALS\GLEW\include\GL;..\MGL;..\..\EXTERNALS\SOIL;..\..\EXTERNALS\GLM;..\..\EXTERNALS\GLFW;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\EXTERNALS\GLEW\include\GL;..\MGL;..\..\EXTERNALS\STB;..\..\EXTERNALS\GLM;..\..\EXTERNALS\GLFW;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\EXTERNALS\GLEW\lib\$(Configuration);..\..\EXTERNALS\GLFW\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>..\..\EXTERNALS\GLEW\lib\$(Configuration);..\..\EXTERNALS\SOIL\$(Configuration);..\..\EXTERNALS\GLFW\$(Configuration);$(LibraryPath)</LibraryPath>
-    <IncludePath>..\..\EXTERNALS\GLEW\include\GL;..\MGL;..\..\EXTERNALS\SOIL;..\..\EXTERNALS\GLM;..\..\EXTERNALS\GLFW;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\EXTERNALS\GLEW\include\GL;..\MGL;..\..\EXTERNALS\STB;..\..\EXTERNALS\GLM;..\..\EXTERNALS\GLFW;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\EXTERNALS\GLEW\lib\$(Configuration);..\..\EXTERNALS\GLFW\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -55,10 +55,16 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MGLDEBUG;WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>
+      </FunctionLevelLinking>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

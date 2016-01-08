@@ -3,6 +3,10 @@
 
 #include <mutex>
 #include <iostream>
+#include <vector>
+
+
+
 
 /****** Defines ******/
 
@@ -25,6 +29,7 @@
 #define MGL_MESH_TRIANGLE 2
 #define MGL_MESH_CUBE 3
 #define MGL_MESH_SPHERE 4
+#define MGL_MESH_CONE 5
 
 // MGLenums
 
@@ -60,13 +65,58 @@
 /****** Other ******/
 
 #define MGL_DEFAULT_TEXTURE1 "stars.jpg"
-#define MGL_DEFAULT_CUBE "cube.obj"
-#define MGL_DEFAULT_SPHERE "sphere.obj"
+#define MGL_DEFAULT_CUBE "cube.mgl"
+#define MGL_DEFAULT_SPHERE "sphere.mgl"
+#define MGL_DEFAULT_CONE "cone.mgl"
 
 /****** Typedefs ******/
 
 typedef GLuint MGLenum;
 typedef void (*MGLFunction)(void*);
+
+typedef std::vector<glm::vec2> MGLvecv2;
+typedef std::vector<glm::vec3> MGLvecv3;
+typedef std::vector<glm::vec4> MGLvecv4;
+typedef std::vector<GLuint> MGLvecu;
+
+typedef std::vector<std::string> MGLvecs;
+typedef std::vector<MGLenum> MGLvecm;
+
+
+struct MGLObjVertData {
+	GLuint vertex = 0;
+	GLuint texture = 0;
+	GLuint normals = 0;
+	GLuint id = 0;
+
+	GLboolean Compare(const MGLObjVertData& o2) {
+		if (this->vertex == o2.vertex &&
+			this->texture == o2.texture &&
+			this->normals == o2.normals)
+			return GL_TRUE;
+
+		return GL_FALSE;
+	}
+
+	GLboolean operator<(const MGLObjVertData& o) const {
+		return this->id < o.id ? GL_TRUE : GL_FALSE;
+	}
+};
+
+struct MGLObjFileData {
+	MGLvecv2 inputTexCoords;
+	MGLvecv3 inputVertices;
+	MGLvecv3 inputNormals;
+
+	MGLvecu vertexIndices;
+	MGLvecu texIndices;
+	MGLvecu normalIndices;
+
+	std::vector<MGLObjVertData> objVertexList;
+	MGLvecu finalIndices;
+
+	GLuint idCounter = 0;
+};
 
 /****** Utilities ******/
 

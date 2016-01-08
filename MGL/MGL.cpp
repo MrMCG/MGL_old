@@ -18,7 +18,12 @@ MGLContext::MGLContext(GLuint major, GLuint minor, GLboolean resizable) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minor);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_RESIZABLE, resizable);
+
+#ifdef _DEBUG
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+#endif
 
 	m_inFocus = GL_TRUE;
 
@@ -162,38 +167,38 @@ void MGLContext::MouseFocusCallBack(GLFWwindow* window, GLboolean focused) {
 }
 
 void MGLContext::HandleResize(GLuint width, GLuint height) {
-#ifdef _DEBUG
+#ifdef MGLDEBUG
 	std::cout << "HANDLERESIZE: " << width << " " << height << std::endl;
 #endif
 }
 
 void MGLContext::HandleKeyInput(GLuint key, GLuint scancode, GLuint action, GLuint mods) {
-#ifdef _DEBUG
+#ifdef MGLDEBUG
 	std::cout << "HANDLEKEYBOARD: " << key << " ";
 	std::cout << scancode << " " << action << " " << mods << std::endl;
 #endif
 }
 
 void MGLContext::HandleMouseButton(GLuint button, GLuint action, GLuint mods) {
-#ifdef _DEBUG
+#ifdef MGLDEBUG
 	std::cout << "HANDLEMOUSEBUTTON: " << button << " " << action << " " << mods << std::endl;
 #endif
 }
 
 void MGLContext::HandleMousePosition(GLdouble xPos, GLdouble yPos) {
-#ifdef _DEBUG
+#ifdef MGLDEBUG
 	std::cout << "HANDLEMOUSEPOS: " << xPos << " " << yPos << std::endl;
 #endif
 }
 
 void MGLContext::HandleMouseScroll(GLdouble xOffset, GLdouble yOffset) {
-#ifdef _DEBUG
+#ifdef MGLDEBUG
 	std::cout << "HANDLEMOUSESCROLL: " << xOffset << " " << yOffset << std::endl;
 #endif
 }
 
 void MGLContext::HandleMouseFocus(GLboolean focused) {
-#ifdef _DEBUG
+#ifdef MGLDEBUG
 	std::cout << "HANDLEMOUSFOCUS: " << (focused ? "true" : "false") << std::endl;
 #endif
 }
@@ -214,6 +219,7 @@ MGLRenderer::~MGLRenderer() {
 	delete m_mouse;
 	MGLCommonMeshes::Release();
 	MGLTexture::Release();
+	MGLFile::Release();
 }
 
 void MGLRenderer::InitGL() {
@@ -225,10 +231,11 @@ void MGLRenderer::InitGL() {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 
 	MGLTexture::Init();
 	MGLCommonMeshes::Init();
+	MGLFile::Init();
 }
 
 void MGLRenderer::PollEvents() {

@@ -2,15 +2,19 @@
 #include "stdafx.h"
 
 #pragma comment(lib, "opengl32.lib")
+#ifdef MGLDEBUG
+#pragma comment(lib, "glew32sd.lib")
+#else
 #pragma comment(lib, "glew32s.lib")
+#endif
 #pragma comment(lib, "glfw3.lib")
-#pragma comment(lib, "SOIL.lib")
 
 #include "MGLMesh.h"
 #include "MGLShader.h"
 #include "MGLCamera.h"
 #include "MGLInput.h"
 #include "MGLTexture.h"
+#include "MGLFile.h"
 
 // images: http://opengameart.org/content/50-free-textures-4-normalmaps
 // http://bgfons.com/upload/stars_texture2944.jpg
@@ -33,6 +37,8 @@ public:
 	virtual GLint ShouldClose() { return glfwWindowShouldClose(m_window); }
 	// Set callback on window resize (if m_resizable=true and window!=NULL)
 	void SetResizeCallback(GLFWwindowsizefun func);
+
+	
 
 	/* Setters */
 

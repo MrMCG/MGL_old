@@ -1,6 +1,8 @@
 #pragma once
 #include "MGL.h"
 
+
+
 class Scene : public MGLRenderer {
 public:
 	Scene();
@@ -9,11 +11,12 @@ public:
 	void RenderScene() override;
 
 	GLfloat GetDeltaTime() const { return deltaTime; }
+	void load();
 
 private:
 	void Init();
 
-	MGLMesh* triangle;
+	MGLMesh* object;
 	MGLShader* shader;
 	GLfloat lastFrame;
 	GLfloat deltaTime;

@@ -110,10 +110,10 @@ public:
 
 /******	Image exceptions ******/
 
-class MGLException_SOIL : public MGLException {
+class MGLException_STB : public MGLException {
 public:
-	MGLException_SOIL(std::string fN, std::string SLR)
-		: MGLException("SOIL : "+fN+" "+SLR) {}
+	MGLException_STB(std::string fN)
+		: MGLException("STB : ERROR OPENING FILE - "+fN) {}
 
 	virtual const char* what() const throw() {
 		return MGLException::what();
@@ -121,7 +121,7 @@ public:
 
 	static void IsSuccessful(const int& success, const std::string fileName) {
 		if (success == 0) {
-			throw MGLException_SOIL(fileName, SOIL_last_result());
+			throw MGLException_STB(fileName);
 		}
 	}
 

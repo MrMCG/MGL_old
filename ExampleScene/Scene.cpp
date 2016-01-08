@@ -1,11 +1,9 @@
 #include "Scene.h"
-#include <direct.h>
+//#include <direct.h>
 
 Scene::Scene() : MGLRenderer() {
 	CreateNewWindow(800, 600, "MGL Example Window!", MGL_WINDOWTYPE_WINDOWED);
 	InitGL();
-
-	triangle = MGLMesh::LoadOBJ("garden.obj");
 
 	shader = new MGLShader();
 	shader->LoadShader("vert.glsl", GL_VERTEX_SHADER);
@@ -13,23 +11,30 @@ Scene::Scene() : MGLRenderer() {
 	shader->Link();
 	shader->Use();
 
-	MGLTexHandle->LoadTexture("bricks.jpg", "bricks", true, true);
+	//MGLFileHandle->ConvertOBJToMGL("victory-destroyer.obj");
 
-	triangle->AddTexture(MGLTexHandle->GetTexture("bricks"));
-	triangle->AddTexture(MGLTexHandle->GetTexture("DEFAULT"));
-
-	triangle->SetUniforms([&]() {
-		glUniform1i(glGetUniformLocation(shader->Program(), "tex"), 0);
-		glUniform1i(glGetUniformLocation(shader->Program(), "bump"), 1);
-	});
+	MGLTexHandle->LoadTexture("raptor.jpg", "bricks", true, true);
 
 	m_camera = new MGLCamera();
+	//m_camera->SetMoveSpeed(100.0f);
 	m_modelMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f,0.0f,0.0f));
 
 	lastFrame = (GLfloat)glfwGetTime();
 	deltaTime = 0.0f;
 
+	load();
 	Init();
+}
+
+void Scene::load() {
+	object = MGLFileHandle->LoadMGL("raptor.mgl");
+	object->AddTexture(MGLTexHandle->GetTexture("bricks"));
+	object->AddTexture(MGLTexHandle->GetTexture("DEFAULT"));
+
+	object->SetUniforms([&]() {
+		glUniform1i(glGetUniformLocation(shader->Program(), "tex"), 0);
+		glUniform1i(glGetUniformLocation(shader->Program(), "bump"), 1);
+	});
 }
 
 void Scene::Init() {
@@ -63,7 +68,7 @@ void Scene::RenderScene() {
 	glUniformMatrix4fv(glGetUniformLocation(shader->Program(), "modelMatrix"), 1, false, glm::value_ptr(m_modelMatrix));
 	glUniformMatrix4fv(glGetUniformLocation(shader->Program(), "viewMatrix"), 1, false, glm::value_ptr(m_viewMatrix));
 	glUniformMatrix4fv(glGetUniformLocation(shader->Program(), "projMatrix"), 1, false, glm::value_ptr(m_projMatrix));
-	triangle->Draw();
+	object->Draw();
 
 	SwapBuffers();
 }

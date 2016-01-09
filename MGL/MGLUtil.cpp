@@ -15,19 +15,6 @@ void MGL::SetTextureParameters(GLuint texture, GLboolean repeat, GLboolean linea
 }
 
 GLuint MGL::LoadTextureFromFile(std::string fileName, GLboolean flipY) {
-	/*
-	GLuint image = 0;
-	try {
-		image = SOIL_load_OGL_texture(fileName.c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 
-			flipY ? SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y : SOIL_FLAG_MIPMAPS);
-		MGLException_STB::IsSuccessful(image, fileName);
-	}
-	catch (MGLException& e) {
-		std::cerr << e.what() << std::endl;
-		return 0;
-	}
-	*/
-	
 	GLuint tex = 0;
 
 	try {

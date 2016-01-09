@@ -57,6 +57,11 @@
 #define MGL_CAMERA_YAW 7
 #define MGL_CAMERA_ZOOM 8
 
+// MGLFile
+
+#define MGLFileHandle MGLFile::Instance()
+#define MGL_FILE_MINSIZE 32
+
 // MGLTexture
 
 #define MGL_TEXTURE_DIFFUSE 1

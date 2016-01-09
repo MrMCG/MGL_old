@@ -6,7 +6,7 @@
 class Scene : public MGLRenderer {
 public:
 	Scene();
-	~Scene(){};
+	~Scene();
 
 	void RenderScene() override;
 

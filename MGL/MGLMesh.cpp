@@ -45,14 +45,13 @@ MGLMesh::~MGLMesh() {
 	glDeleteBuffers(MGL_BUFFER_MAX, m_VBO);
 
 	if (m_vertices) 
-		delete[] m_vertices;
+		delete m_vertices;
 	if (m_normals)
-		delete[] m_normals;
+		delete m_normals;
 	if (m_texCoords)
-		delete[] m_texCoords;
+		delete m_texCoords;
 	if (m_colours)
-		delete[] m_colours;
-
+		delete m_colours;
 	if (m_textures)
 		delete m_textures;
 	if (m_indices)
@@ -167,9 +166,9 @@ void MGLMesh::RemoveTexture(GLuint tex) {}
 void MGLMesh::GenerateTriangle() {
 	m_numVertices = 3;
 
-	m_vertices = new std::vector<glm::vec3>[m_numVertices];
-	m_colours = new std::vector<glm::vec4>[m_numVertices];
-	m_texCoords = new std::vector<glm::vec2>[m_numVertices];
+	m_vertices = new std::vector<glm::vec3>(m_numVertices);
+	m_colours = new std::vector<glm::vec4>(m_numVertices);
+	m_texCoords = new std::vector<glm::vec2>(m_numVertices);
 
 	m_vertices->push_back(glm::vec3(0.0f, 1.0f, 0.0f));
 	m_vertices->push_back(glm::vec3(-1.0f, -1.0f, 0.0f));
@@ -190,9 +189,9 @@ void MGLMesh::GenerateQuad()	{
 	m_numVertices = 4;
 	m_numIndices = 6;
 
-	m_vertices = new std::vector<glm::vec3>[m_numVertices];
-	m_colours = new std::vector<glm::vec4>[m_numVertices];
-	m_texCoords = new std::vector<glm::vec2>[m_numVertices];
+	m_vertices = new std::vector<glm::vec3>(m_numVertices);
+	m_colours = new std::vector<glm::vec4>(m_numVertices);
+	m_texCoords = new std::vector<glm::vec2>(m_numVertices);
 
 	m_vertices->push_back(glm::vec3(-1.0f, -1.0f, 0.0f));
 	m_vertices->push_back(glm::vec3(-1.0f, 1.0f, 0.0f));

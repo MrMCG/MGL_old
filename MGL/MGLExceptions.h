@@ -1,10 +1,4 @@
 #pragma once
-#include <iostream>
-#include <exception>
-#include <sstream>
-#include <stdexcept>
-#include <string>
-
 
 // MGLException_EXCEPTYPE
 
@@ -29,9 +23,41 @@ public:
 		return MGLException::what();
 	}
 
-	static void IsSuccessful(const int& success, std::string file) {
+	static void IsSuccessful(const GLint& success, std::string file) {
 		if (success != 1) {
 			throw MGLException_FileNotFound(file);
+		}
+	}
+};
+
+class MGLException_SizeTooSmall: public MGLException {
+public:
+	MGLException_SizeTooSmall(std::string file)
+		: MGLException("FILE TOO SMALL : " + file) {}
+
+	virtual const char* what() const throw() {
+		return MGLException::what();
+	}
+
+	static void IsSuccessful(const GLuint& size, GLuint minSize, std::string file) {
+		if (size < minSize) {
+			throw MGLException_SizeTooSmall(file);
+		}
+	}
+};
+
+class MGLException_NullError : public MGLException {
+public:
+	MGLException_NullError()
+		: MGLException("ITEM NULL") {}
+
+	virtual const char* what() const throw() {
+		return MGLException::what();
+	}
+
+	static void IsSuccessful(const void* success) {
+		if (success == nullptr) {
+			throw MGLException_NullError();
 		}
 	}
 };
@@ -43,7 +69,7 @@ public:
 	MGLException_Init_GLFW()
 		: MGLException("INIT : GLFW"){}
 
-	static void IsSuccessful(const int& success) {
+	static void IsSuccessful(const GLint& success) {
 		if (success != GL_TRUE) {
 			throw MGLException_Init_GLFW();
 		}
@@ -67,14 +93,14 @@ public:
 	MGLException_Init_GLEW()
 		: MGLException("INIT : GLEW"){}
 
-	static void IsSuccessful(const int& success) {
+	static void IsSuccessful(const GLint& success) {
 		if (success != GLEW_OK) {
 			throw MGLException_Init_GLEW();
 		}
 	}
 };
 
-/****** Shader exceptions ******/
+/****** MGLShader exceptions ******/
 
 class MGLException_Shader_LINK : public MGLException {
 public:
@@ -119,14 +145,38 @@ public:
 		return MGLException::what();
 	}
 
-	static void IsSuccessful(const int& success, const std::string fileName) {
+	static void IsSuccessful(const GLint& success, const std::string fileName) {
 		if (success == 0) {
 			throw MGLException_STB(fileName);
 		}
 	}
-
-
-private:
-	std::string str;
 };
 
+/******	MGLFile exceptions ******/
+
+class MGLException_File_LoadOBJ : public MGLException {
+public:
+	MGLException_File_LoadOBJ()
+		: MGLException("MGLFILE : LoadOBJ") {}
+
+	virtual const char* what() const throw() {
+		return MGLException::what();
+	}
+};
+
+class MGLException_File_FileType : public MGLException {
+public:
+	MGLException_File_FileType(const std::string& fileName, const std::string& fileType)
+		: MGLException("MGLFILE : EXPECTING TYPE "+fileType+" GIVEN "+fileName) {}
+
+	virtual const char* what() const throw() {
+		return MGLException::what();
+	}
+
+	static void IsSuccessful(const std::string& fileName, const std::string& fileType) {
+		std::string ext = fileName.substr(fileName.length() - fileType.length(), fileName.length());
+		if (ext != fileType) {
+			throw MGLException_File_FileType(fileName, fileType);
+		}
+	}
+};

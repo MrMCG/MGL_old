@@ -17,6 +17,12 @@
 
 #include "MGLUtil.h"
 #include "MGLExceptions.h"
+
+#include <memory>
+
+using std::unique_ptr;
+using std::shared_ptr;
+
 /*
 #include "MGLMesh.h"
 #include "MGLShader.h"

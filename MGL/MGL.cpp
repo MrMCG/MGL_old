@@ -91,40 +91,41 @@ void MGLContext::CreateNewWindow(GLuint width, GLuint height, std::string title,
 
 	GLFWwindow* window = nullptr;
 
-	try {
-		switch (windowType) {
-		case MGL_WINDOWTYPE_FULLSCREEN:
-			window = glfwCreateWindow(width, height, title.c_str(), mon, nullptr);
-			break;
-		case MGL_WINDOWTYPE_WINDOWED:
-			window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
-			break;
-		case MGL_WINDOWTYPE_FULLWINDOWED: {
-				if (width != 0 && height != 0)
-					break;
+	
+	switch (windowType) {
+	case MGL_WINDOWTYPE_FULLSCREEN:
+		window = glfwCreateWindow(width, height, title.c_str(), mon, nullptr);
+		break;
+	case MGL_WINDOWTYPE_WINDOWED:
+		window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+		break;
+	case MGL_WINDOWTYPE_FULLWINDOWED: {
+			if (width != 0 && height != 0)
+				break;
 
-				const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+			const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-				glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-				glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-				glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-				glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+			glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+			glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+			glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+			glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-				if (width == 0 && height == 0) {
-					window = glfwCreateWindow(mode->width, mode->height, title.c_str(), mon, nullptr);
-					m_width = mode->width;
-					m_height = mode->height;
-				}
+			if (width == 0 && height == 0) {
+				window = glfwCreateWindow(mode->width, mode->height, title.c_str(), mon, nullptr);
+				m_width = mode->width;
+				m_height = mode->height;
 			}
-			break;
-		default:
-			break;
 		}
+		break;
+	default:
+		break;
+	}
 
-		MGLException_Init_WINDOW::IsSuccessful(window);
+	try {
+		MGLException_Null::IsSuccessful(window);
 	}
 	catch (const MGLException& e) {
-		std::cerr << e.what() << std::endl;
+		std::cerr << e.what() << " MGLContext::CreateNewWindow" << std::endl;
 		std::cerr << " !! Creating Default Window !! " << std::endl;
 		window = glfwCreateWindow(800, 600, "MGL: Default Window", nullptr, nullptr);
 		m_width = 800;
@@ -217,9 +218,11 @@ MGLRenderer::~MGLRenderer() {
 	delete m_camera;
 	delete m_keyboad;
 	delete m_mouse;
-	MGLCommonMeshes::Release();
+
 	MGLTexture::Release();
 	MGLFile::Release();
+	MGLCommonMeshes::Release();
+	MGLLog::Release();
 }
 
 void MGLRenderer::InitGL() {
@@ -231,11 +234,21 @@ void MGLRenderer::InitGL() {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 
+	InitInstances();
+
+#ifdef MGLDEBUG
+	MGL_TESTS_::MGL_TEST_ALL();
+#endif MGLDEBUG
+}
+
+void MGLRenderer::InitInstances() {
+	// ORDER IS IMPORTANT
 	MGLTexture::Init();
-	MGLCommonMeshes::Init();
 	MGLFile::Init();
+	MGLCommonMeshes::Init();
+	MGLLog::Init();
 }
 
 void MGLRenderer::PollEvents() {

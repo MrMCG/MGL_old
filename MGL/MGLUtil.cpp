@@ -5,7 +5,17 @@
 #include <vector>
 #include <algorithm>
 
-void MGL::SetTextureParameters(GLuint texture, GLboolean repeat, GLboolean linear) {
+void MGL::EnableWireframe() {
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glDisable(GL_CULL_FACE);
+}
+
+void MGL::DisableWireframe() {
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glEnable(GL_CULL_FACE);
+}
+
+void MGL::SetTextureParameters(const GLuint texture, const GLboolean repeat, const GLboolean linear) {
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
@@ -14,21 +24,17 @@ void MGL::SetTextureParameters(GLuint texture, GLboolean repeat, GLboolean linea
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-GLuint MGL::LoadTextureFromFile(std::string fileName, GLboolean flipY) {
+GLuint MGL::LoadTextureFromFile(const std::string& fileName, const GLboolean flipY) {
 	GLuint tex = 0;
 
 	try {
 		GLint w, h, c;
 
-		if (flipY)
-			stbi_set_flip_vertically_on_load(GL_TRUE);
-		else 
-			stbi_set_flip_vertically_on_load(GL_FALSE);
+		stbi_set_flip_vertically_on_load(flipY);
 
 		GLubyte* image = stbi_load(fileName.c_str(), &w, &h, &c, STBI_rgb);
-		if (!image)
-			throw new MGLException("image load error");
 
+		MGLException_Null::IsSuccessful(image);
 
 		glGenTextures(1, &tex);
 		glBindTexture(GL_TEXTURE_2D, tex);
@@ -37,10 +43,10 @@ GLuint MGL::LoadTextureFromFile(std::string fileName, GLboolean flipY) {
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		stbi_image_free(image);
-		MGLException_STB::IsSuccessful(tex, fileName);
+		MGLException_IsZero::IsSuccessful(tex);
 	}
 	catch (MGLException& e) {
-		std::cerr << e.what() << std::endl;
+		std::cerr << e.what() << "LoadTextureFromFile " << fileName.c_str() << std::endl;
 		return 0;
 	}
 	

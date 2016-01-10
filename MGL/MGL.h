@@ -2,11 +2,14 @@
 #include "stdafx.h"
 
 #pragma comment(lib, "opengl32.lib")
+
 #ifdef MGLDEBUG
 #pragma comment(lib, "glew32sd.lib")
+#include "MGLDebug.h"
 #else
 #pragma comment(lib, "glew32s.lib")
 #endif
+
 #pragma comment(lib, "glfw3.lib")
 
 #include "MGLMesh.h"
@@ -15,6 +18,7 @@
 #include "MGLInput.h"
 #include "MGLTexture.h"
 #include "MGLFile.h"
+#include "MGLDebug.h"
 
 // images: http://opengameart.org/content/50-free-textures-4-normalmaps
 // http://bgfons.com/upload/stars_texture2944.jpg
@@ -37,8 +41,6 @@ public:
 	virtual GLint ShouldClose() { return glfwWindowShouldClose(m_window); }
 	// Set callback on window resize (if m_resizable=true and window!=NULL)
 	void SetResizeCallback(GLFWwindowsizefun func);
-
-	
 
 	/* Setters */
 
@@ -105,7 +107,8 @@ public:
 	glm::mat4 m_modelMatrix;
 
 protected:
-	inline virtual void PollEvents();
+	virtual void PollEvents();
+	virtual void InitInstances();
 
 	virtual void HandleResize(GLuint width, GLuint height) override;
 	virtual void HandleKeyInput(GLuint key, GLuint scancode, GLuint action, GLuint mods) override;
@@ -118,3 +121,37 @@ protected:
 	MGLKeyboard* m_keyboad;
 	MGLMouse* m_mouse;
 };
+
+// Test cases for debugging
+#ifdef MGLDEBUG
+namespace MGL_TESTS_ {
+	// Test all funcitons and clean (delete) created files
+	void MGL_TEST_ALL(const GLboolean cleanFiles = GL_TRUE);
+	// Deletes files created by test cases
+	void MGL_TEST_FileCleanup();
+
+	GLuint MGL_TEST_MGLFILE();
+	GLuint MGL_TEST_MGLFILE_COTM(); // ConvertOBJToMGL
+	GLuint MGL_TEST_MGLFILE_LO(); // LadOBJ
+	GLuint MGL_TEST_MGLFILE_LM(); // LadMGL
+	GLuint MGL_TEST_MGLFILE_SMTM(); // SaveMeshToMGL
+
+	GLuint MGL_TEST_MGLLOG();
+	GLuint MGL_TEST_MGLLOG_WTF(); // WriteToFile
+	GLuint MGL_TEST_MGLLOG_AL(); // AddLog
+
+	const MGLvecs createdTestFiles = { // KEEP SIZE EVEN!
+		MGL_TESTS_DIRECTORY"MGLFILE_LO_1", // 0
+		".mgl",
+		MGL_TESTS_DIRECTORY"MGLFILE_LO_2", // 2
+		".mgl",
+		MGL_TESTS_DIRECTORY"MGLFILE_SMTM_1", // 4
+		".mgl",
+		MGL_TESTS_DIRECTORY"MGLFILE_SMTM_2", // 6
+		".mgl",
+	};
+
+	const enum Counters{total, MGLFile, MGLLog, max};
+	const enum FuncMax{MGLFileMax = 30, MGLLogMax = 7};
+}
+#endif

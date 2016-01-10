@@ -28,4 +28,3 @@ protected:
 	MGLvecm* m_types;
 };
 
-#define MGLTexHandle MGLTexture::Instance()

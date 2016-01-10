@@ -25,8 +25,6 @@ public:
 
 	// Set texture
 	inline void AddTexture(GLuint tex) { m_textures->push_back(tex); }
-	// Set Bump
-	void RemoveTexture(GLuint tex);
 
 	// Get texture
 	inline GLuint GetTexture(GLuint index) const { return m_textures->at(index); }
@@ -34,8 +32,8 @@ public:
 	// User defined unfiforms will be set before drawing
 	inline void SetUniforms(std::function<void(void)> onDrawCallBack) { m_OnDrawCallBack = onDrawCallBack; }
 
-	MGLvecv2* GetTexCoords() const { return m_texCoords; }
 	MGLvecv3* GetVertices() const { return m_vertices; }
+	MGLvecv2* GetTexCoords() const { return m_texCoords; }
 	MGLvecv3* GetNormals() const { return m_normals; }
 	MGLvecv4* GetColours() const { return m_colours; }
 
@@ -55,13 +53,15 @@ public:
 	void SetType(GLenum type) { m_type = type; }
 
 	// Loads VBO data into memory
-	virtual void BufferAllData(GLboolean genBuffers = GL_TRUE);
+	virtual void BufferAllData(GLboolean genBuffers = GL_TRUE, const GLenum usage = GL_STATIC_DRAW);
 
-	virtual void BufferVerticesData(GLboolean genBuffers);
-	virtual void BufferNormalsData(GLboolean genBuffers){}
-	virtual void BufferTexCoordData(GLboolean genBuffers);
-	virtual void BufferColourData(GLboolean genBuffers);
-	virtual void BufferIndicesData(GLboolean genBuffers);
+	virtual void BufferVerticesData(GLboolean genBuffers, const GLenum usage);
+	virtual void BufferNormalsData(GLboolean genBuffers, const GLenum usage);
+	virtual void BufferTexCoordData(GLboolean genBuffers, const GLenum usage);
+	virtual void BufferColourData(GLboolean genBuffers, const GLenum usage);
+	virtual void BufferIndicesData(GLboolean genBuffers, const GLenum usage);
+
+	void GenerateNormals(){}; // TODO
 
 protected:
 	GLuint m_VAO;
@@ -82,21 +82,23 @@ protected:
 	std::function<void(void)> m_OnDrawCallBack;
 };
 
-class MGLCommonMeshes {
+class MGLCommonMeshes : public MGLSingleton<MGLCommonMeshes> {
+	friend class MGLSingleton < MGLCommonMeshes > ;
 public:
-	static MGLMesh* Quad() { return m_quad; }
-	static MGLMesh* Triangle() { return m_triangle; }
-	static MGLMesh* Cube() { return m_cube; }
-	static MGLMesh* Sphere() { return m_sphere; }
-	static MGLMesh* Cone() { return m_cone; }
-
-	static void Init();
-	static void Release();
+	MGLMesh* Quad() { return m_quad; }
+	MGLMesh* Triangle() { return m_triangle; }
+	MGLMesh* Cube() { return m_cube; }
+	MGLMesh* Sphere() { return m_sphere; }
+	MGLMesh* Cone() { return m_cone; }
 
 protected:
-	static MGLMesh* m_quad;
-	static MGLMesh* m_triangle;
-	static MGLMesh* m_cube;
-	static MGLMesh* m_sphere;
-	static MGLMesh* m_cone;
+	MGLCommonMeshes();
+	~MGLCommonMeshes();
+
+	MGLMesh* m_quad;
+	MGLMesh* m_triangle;
+	MGLMesh* m_cube;
+	MGLMesh* m_sphere;
+	MGLMesh* m_cone;
 };
+

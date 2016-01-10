@@ -6,7 +6,7 @@ MGLTexture::MGLTexture() {
 	m_names = new std::vector<std::string>;
 	m_types = new std::vector<MGLenum>;
 
-	LoadTexture(MGL_DEFAULT_TEXTURE1, "DEFAULT", MGL_TEXTURE_DIFFUSE);
+	LoadTexture(MGL_DEFAULT_TEXTURE, "DEFAULT", MGL_TEXTURE_DIFFUSE);
 }
 
 MGLTexture::~MGLTexture() {

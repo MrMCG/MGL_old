@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MGLCamera.h" />
+    <ClInclude Include="MGLDebug.h" />
     <ClInclude Include="MGLExceptions.h" />
     <ClInclude Include="MGLFile.h" />
     <ClInclude Include="MGLInput.h" />
@@ -105,6 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MGLCamera.cpp" />
+    <ClCompile Include="MGLDebug.cpp" />
     <ClCompile Include="MGLFile.cpp" />
     <ClCompile Include="MGLInput.cpp" />
     <ClCompile Include="MGLMesh.cpp" />
@@ -116,6 +118,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="MGL.cpp" />
+    <ClCompile Include="Tests.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

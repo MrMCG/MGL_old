@@ -34,10 +34,10 @@ void MGLShader::LoadShader(std::string fileName, GLenum type) {
 
 		file.open(fileName.c_str());
 		try {
-			MGLException_FileNotFound::IsSuccessful(file.is_open(), fileName);
+			MGLException_FileError::IsSuccessful(file.is_open(), fileName);
 		}
 		catch (MGLException& e) {
-			std::cerr << std::endl << e.what() << std::endl;
+			std::cerr << e.what() << std::endl;
 			return;
 		}
 
@@ -76,7 +76,7 @@ GLuint MGLShader::Compile(const char* data, GLenum type) {
 		MGLException_Shader_COMPILE::IsSuccessful(status);
 	}
 	catch (MGLException& e) {
-		std::cerr << std::endl << e.what() << std::endl;
+		std::cerr << e.what() << std::endl;
 
 		char error[512];
 		glGetInfoLogARB(shader, sizeof(error), NULL, error);
@@ -91,8 +91,9 @@ GLuint MGLShader::Compile(const char* data, GLenum type) {
 
 void MGLShader::SetDefaultAttributes() {
 	glBindAttribLocation(m_program, MGL_BUFFER_VERTEX, "position");
-	glBindAttribLocation(m_program, MGL_BUFFER_COLOUR, "colour");
-	glBindAttribLocation(m_program, MGL_BUFFER_TEXTURE, "texCoord");
+	glBindAttribLocation(m_program, MGL_BUFFER_TEXTURES, "texCoord");
+	glBindAttribLocation(m_program, MGL_BUFFER_NORMALS, "normals");
+	glBindAttribLocation(m_program, MGL_BUFFER_COLOURS, "colour");
 }
 
 void MGLShader::Link() {

@@ -5,9 +5,6 @@
 #include <iostream>
 #include <vector>
 
-
-
-
 /****** Defines ******/
 
 // MGLShader
@@ -20,16 +17,14 @@
 // MGLMesh
 
 #define MGL_BUFFER_VERTEX 0
-#define MGL_BUFFER_COLOUR 1
-#define MGL_BUFFER_TEXTURE 2
-#define MGL_BUFFER_INDICES 3
-#define MGL_BUFFER_MAX 4
+#define MGL_BUFFER_TEXTURES 1
+#define MGL_BUFFER_NORMALS 2
+#define MGL_BUFFER_COLOURS 3
+#define MGL_BUFFER_INDICES 4
+#define MGL_BUFFER_MAX 5
 
 #define MGL_MESH_QUAD 1
 #define MGL_MESH_TRIANGLE 2
-#define MGL_MESH_CUBE 3
-#define MGL_MESH_SPHERE 4
-#define MGL_MESH_CONE 5
 
 // MGLenums
 
@@ -59,20 +54,39 @@
 
 // MGLFile
 
-#define MGLFileHandle MGLFile::Instance()
 #define MGL_FILE_MINSIZE 32
+#define MGL_FILE_CURRENTVERSION 1.0f
 
 // MGLTexture
 
 #define MGL_TEXTURE_DIFFUSE 1
 #define MGL_TEXTURE_SPECULAR 2
 
+// MGLLog
+
+#define MGL_LOG_MAXLINESIZE 1024
+#define MGL_LOG_MAIN "mgl_main_log.txt"
+#define MGL_LOG_ERROR "mgl_error_log.txt"
+
+// Instance handlers
+
+#define MGLFileHandle MGLFile::Instance()
+#define MGLComMeshHandle MGLCommonMeshes::Instance()
+#define MGLTexHandle MGLTexture::Instance()
+#define MGLLodHandle MGLLog::Instance()
+
+// MGLLog
+
 /****** Other ******/
 
-#define MGL_DEFAULT_TEXTURE1 "stars.jpg"
-#define MGL_DEFAULT_CUBE "cube.mgl"
-#define MGL_DEFAULT_SPHERE "sphere.mgl"
-#define MGL_DEFAULT_CONE "cone.mgl"
+#define MGL_DEFAULT_DIRECTORY "DEFAULTS/"
+#define MGL_TESTS_DIRECTORY "TESTS/"
+
+#define MGL_DEFAULT_TEXTURE MGL_DEFAULT_DIRECTORY"stars.jpg"
+
+#define MGL_DEFAULT_CUBE MGL_DEFAULT_DIRECTORY"cube.mgl"
+#define MGL_DEFAULT_SPHERE MGL_DEFAULT_DIRECTORY"sphere.mgl"
+#define MGL_DEFAULT_CONE MGL_DEFAULT_DIRECTORY"cone.mgl"
 
 /****** Typedefs ******/
 
@@ -82,7 +96,9 @@ typedef void (*MGLFunction)(void*);
 typedef std::vector<glm::vec2> MGLvecv2;
 typedef std::vector<glm::vec3> MGLvecv3;
 typedef std::vector<glm::vec4> MGLvecv4;
+
 typedef std::vector<GLuint> MGLvecu;
+typedef std::vector<GLfloat> MGLvecf;
 
 typedef std::vector<std::string> MGLvecs;
 typedef std::vector<MGLenum> MGLvecm;
@@ -125,32 +141,30 @@ struct MGLObjFileData {
 
 /****** Utilities ******/
 
-// Simple static functions that change state
-// ENSURE MGL INIT WAS SUCCESSFUL!
+// Simple utility functions
+// ENSURE MGL INIT (GLFW + GLEW) WAS SUCCESSFUL!
 namespace MGL {
 	// Enabled wireframe
-	inline void EnableWireframe() { glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); glDisable(GL_CULL_FACE); }
+	void EnableWireframe();
 	// Disables wireframe
-	inline void DisableWireframe() { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); glEnable(GL_CULL_FACE); }
+	void DisableWireframe();
 
-	// Set basic texture params
-	// repeat: true = repeat, false = clamp to edge
-	// linear: true = min linear mipmap / max linear, false = nearest             
-	void SetTextureParameters(GLuint texture, GLboolean repeat, GLboolean linear);
+	// Set basic texture params      
+	void SetTextureParameters(const GLuint texture, const GLboolean repeat, const GLboolean linear);
 
 	// Loads a texture and generates mipmaps
-	GLuint LoadTextureFromFile(std::string fileName, GLboolean flipY = GL_TRUE);
+	GLuint LoadTextureFromFile(const std::string& fileName, const GLboolean flipY = GL_TRUE);
 
-	int GetWindowInfo(GLFWwindow* window, MGLenum info, GLint attribute = 0);
+	int GetWindowInfo(GLFWwindow* window, const MGLenum info, const GLint attribute = 0);
 		
 	void PrintMat4(const glm::mat4& matrix);
 
 	/****** Useful data ******/
 
-	const static glm::vec4 WHITE = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	const static glm::vec4 BLUE = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
-	const static glm::vec4 RED = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-	const static glm::vec4 GREEN = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+	const glm::vec4 WHITE = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	const glm::vec4 BLUE = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+	const glm::vec4 RED = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+	const glm::vec4 GREEN = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 }
 
 template<class T>

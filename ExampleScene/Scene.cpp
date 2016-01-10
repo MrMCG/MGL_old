@@ -5,10 +5,12 @@ Scene::Scene() : MGLRenderer() {
 	CreateNewWindow(800, 600, "MGL Example Window!", MGL_WINDOWTYPE_WINDOWED);
 	InitGL();
 
-	object = MGLFileHandle->LoadMGL("tits");
-	MGLFileHandle->ConvertOBJToMGL("h", GL_FALSE);
-	object = MGLFileHandle->LoadOBJ("cube.mgl");
+	//MGLFileHandle->ConvertOBJToMGL("obj/cube.obj", GL_FALSE);
 
+	object = MGLFileHandle->LoadOBJ("obj/cube.obj");
+
+	//object = new MGLMesh(MGL_MESH_QUAD);
+	 
 	shader = new MGLShader();
 	shader->LoadShader("vert.glsl", GL_VERTEX_SHADER);
 	shader->LoadShader("frag.glsl", GL_FRAGMENT_SHADER);
@@ -20,7 +22,7 @@ Scene::Scene() : MGLRenderer() {
 	MGLTexHandle->LoadTexture("raptor.jpg", "bricks", true, true);
 
 	m_camera = new MGLCamera();
-	m_camera->SetMoveSpeed(100.0f);
+	//m_camera->SetMoveSpeed(100.0f);
 	m_modelMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, 0.0f, -5.0f));
 	//m_modelMatrix = glm::translate(glm::mat4(), glm::vec3(-1700.0f, 275.0f, -1700.0f));
 	//m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(0.3f,0.5f,0.3f));

@@ -11,7 +11,7 @@ MGLTexture::MGLTexture() {
 
 MGLTexture::~MGLTexture() {
 	for (GLuint tex : *m_textures) {
-		glDeleteTextures(1, &tex);
+		glDeleteTextures(1, &tex); // delete all textures
 	}
 	delete m_textures;
 
@@ -23,7 +23,7 @@ MGLTexture::~MGLTexture() {
 }
 
 void MGLTexture::AddTexture(GLuint tex, std::string name, MGLenum type) {
-	if (FindTexture(tex))
+	if (FindTexture(tex)) // texture already exists
 		return;
 
 	m_textures->push_back(tex);
@@ -32,10 +32,10 @@ void MGLTexture::AddTexture(GLuint tex, std::string name, MGLenum type) {
 
 void MGLTexture::LoadTexture(std::string fileName, std::string name, 
 		MGLenum type, GLboolean repeat, GLboolean linear) {
-	GLuint tex = MGL::LoadTextureFromFile(fileName);
-	MGL::SetTextureParameters(tex, repeat, linear);
+	GLuint tex = MGL::LoadTextureFromFile(fileName); // load tex
+	MGL::SetTextureParameters(tex, repeat, linear); // apply attributes
 
-	AddTexture(tex, name, type);
+	AddTexture(tex, name, type); // add
 }
 
 GLuint MGLTexture::GetTexture(std::string name, GLboolean returnIndex) {
@@ -48,7 +48,8 @@ GLuint MGLTexture::GetTexture(std::string name, GLboolean returnIndex) {
 		}
 	}
 
-	return 0;
+	// returns default tex if no tex is found
+	return m_textures->at(0); 
 }
 
 GLuint MGLTexture::GetTextureType(std::string name) {

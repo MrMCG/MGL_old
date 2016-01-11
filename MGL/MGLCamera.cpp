@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "MGLCamera.h"
 
+/*********************************/
+/*********** MGLCamera ***********/
+/*********************************/
+
 MGLCamera::MGLCamera() {
 	m_pitch = 0.0f;
 	m_yaw = -90.0f;
@@ -17,6 +21,7 @@ MGLCamera::MGLCamera() {
 
 	m_zoom = 45.0f;
 
+	// map movement directions to function
 	m_movementMap.insert(std::make_pair(MGL_CAMERA_FORWARD, &MGLCamera::MoveForward));
 	m_movementMap.insert(std::make_pair(MGL_CAMERA_BACKWARD, &MGLCamera::MoveBackward));
 	m_movementMap.insert(std::make_pair(MGL_CAMERA_LEFT, &MGLCamera::MoveLeft));
@@ -42,13 +47,15 @@ void MGLCamera::UpdateCameraVectors() {
 	front.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
 	m_front = glm::normalize(front);
 
-	m_right = glm::normalize(glm::cross(m_front, m_worldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+	m_right = glm::normalize(glm::cross(m_front, m_worldUp));
 	m_up = glm::normalize(glm::cross(m_right, m_front));
 }
 
 void MGLCamera::MoveCamera(MGLenum direction, GLfloat dt) {
 	(this->*m_movementMap[direction])(dt);
 }
+
+/***** MGLCamera directions *****/
 
 void MGLCamera::MoveForward(GLfloat dt) {
 	GLfloat vel = m_moveSpeed * dt;

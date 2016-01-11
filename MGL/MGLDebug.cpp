@@ -3,65 +3,59 @@
 
 #include <ctime>
 
+/******************************/
+/*********** MGLLog ***********/
+/******************************/
+
 MGLLog::MGLLog() {
 	m_mainLog = new MGLvecs();
 	m_errorLog = new MGLvecs();
 }
 
 MGLLog::~MGLLog() {
-	WriteToFile(GL_FALSE);
 	delete m_mainLog;
 	delete m_errorLog;
 }
 
-void MGLLog::WriteToFile(const GLboolean mainLog, const GLboolean truncate, const GLboolean flushBuffer) {
-	std::string fileName = "";
+void MGLLog::WriteToFile(const std::string fileName, const GLboolean mainLog, const GLboolean truncate) {
+	std::ofstream out(fileName, truncate ? std::ios::out | std::ios::trunc : std::ios::out | std::ios::app);
 
-	if (mainLog)
-		fileName = MGL_LOG_MAIN;
-	else
-		fileName = MGL_LOG_ERROR;
-	
-	std::ofstream out;
-
+	// did it open successfully
 	try {
-		out.open(fileName, truncate ? std::ios::out | std::ios::trunc : std::ios::out | std::ios::app);
 		MGLException_FileError::IsSuccessful(out.is_open(), fileName);
-
 	}
 	catch (MGLException& e) {
 		std::cerr << e.what() << "MGLLOG WRTIE ERROR" << std::endl;
 		return;
 	}
 
+	// write intro string
 	std::string intro = "----- New MGLLog -----\n";
-
 	out.write((char *)&intro[0], intro.size());
 
+	// write each log line
 	for (const std::string& str : mainLog ? *m_mainLog : *m_errorLog) {
 		out.write((char *)&str[0], str.size());
-		out.write("\n", 2);
+		out.write("\n", 1);
 	}
 
 	out.close();
-
-	if (flushBuffer && mainLog)
-		Flush();
-	else if (flushBuffer)
-		Flush(GL_FALSE);
-		
 }
 
 void MGLLog::AddLog(const GLboolean mainLog, const GLboolean timeStamp, const std::string line, ...) {
+	// get arguments
 	va_list args;
 	va_start(args, line);
 
+	// create char buffer based on inputs
 	GLchar buffer[MGL_LOG_MAXLINESIZE];
 	GLint needed = vsnprintf_s(buffer, MGL_LOG_MAXLINESIZE-1, _TRUNCATE, line.c_str(), args);
 	va_end(args);
 
+	// determine buffer length and possibly truncate size
 	GLint length = (needed < 0) ? MGL_LOG_MAXLINESIZE : needed;
 
+	// create timestamp
 	std::string text = "";
 	if (timeStamp) {
 		std::time_t t = std::time(nullptr);
@@ -77,6 +71,7 @@ void MGLLog::AddLog(const GLboolean mainLog, const GLboolean timeStamp, const st
 
 	text += std::string(buffer, (size_t)length);
 
+	// write to particular log
 	if (mainLog)
 		m_mainLog->push_back(text);
 	else

@@ -23,7 +23,7 @@ MGLShader::~MGLShader() {
 }
 
 void MGLShader::LoadShader(std::string fileName, GLenum type) {
-	std::cout << "Compiling Shader : " << fileName;
+	std::string message = "Compiling Shader : "+fileName;
 
 	std::string into;
 
@@ -33,11 +33,14 @@ void MGLShader::LoadShader(std::string fileName, GLenum type) {
 		std::string temp;
 
 		file.open(fileName.c_str());
+
 		try {
 			MGLException_FileError::IsSuccessful(file.is_open(), fileName);
 		}
 		catch (MGLException& e) {
-			std::cerr << e.what() << std::endl;
+			//std::cerr << e.what() << std::endl;
+			MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+
 			return;
 		}
 
@@ -57,30 +60,35 @@ void MGLShader::LoadShader(std::string fileName, GLenum type) {
 		m_shaders[MGL_SHADER_FRAGMENT] = Compile(into.c_str(), type); break;
 	case GL_GEOMETRY_SHADER:
 		m_shaders[MGL_SHADER_GEOMETRY] = Compile(into.c_str(), type); break;
-	default: std::cout << " - FAIL: TYPE ERROR" << std::endl; return;
+	default: message += " - FAIL: TYPE ERROR"; return;
 	}
 
-	std::cout << " - SUCCESS" << std::endl;
+	message += " - SUCCESS";
+	MGLLodHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, message.c_str());
+
 }
 
 GLuint MGLShader::Compile(const char* data, GLenum type) {
 	// Generate and compile loaded shader
 	GLuint shader = glCreateShader(type);
 
-	try {
-		glShaderSource(shader, 1, &data, NULL);
-		glCompileShader(shader);
+	glShaderSource(shader, 1, &data, NULL);
+	glCompileShader(shader);
 
-		GLint status;
-		glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+	GLint status;
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+
+	try {
 		MGLException_Shader_COMPILE::IsSuccessful(status);
 	}
 	catch (MGLException& e) {
-		std::cerr << e.what() << std::endl;
+		//std::cerr << e.what() << std::endl;
+		MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
 
-		char error[512];
+		GLchar error[512];
 		glGetInfoLogARB(shader, sizeof(error), NULL, error);
-		std::cerr << error << std::endl;
+		//std::cerr << error << std::endl;
+		MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, error);
 
 		glDeleteShader(shader);
 		return 0;
@@ -118,9 +126,13 @@ void MGLShader::Link() {
 		SetDefaultAttributes();
 	}
 	catch (MGLException& e) {
-		std::cerr << e.what() << std::endl;
-		char log[512];
+		//std::cerr << e.what() << std::endl;
+		MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+
+		GLchar log[512];
 		glGetProgramInfoLog(m_program, sizeof(log), NULL, log);
-		std::cout << log << std::endl;
+		MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, log);
+
+		//std::cout << log << std::endl;
 	}
 }

@@ -14,23 +14,18 @@ public:
 
 	// Draws the mesh
 	virtual void Draw();
-
 	// Generates a triangle mesh
 	void GenerateTriangle();
 	// Generates a quad mesh using indices (triangle strip)
 	void GenerateQuad();
-
 	// Sets m_vertices amount of colours to specified colour
 	void SetNewColours(glm::vec4 colour, GLboolean buffer = GL_TRUE);
-
 	// Set texture
 	inline void AddTexture(GLuint tex) { m_textures->push_back(tex); }
-
 	// Get texture
-	inline GLuint GetTexture(GLuint index) const { return m_textures->at(index); }
-
+	GLuint GetTexture(GLuint index) const { return m_textures->at(index); }
 	// User defined unfiforms will be set before drawing
-	inline void SetUniforms(std::function<void(void)> onDrawCallBack) { m_OnDrawCallBack = onDrawCallBack; }
+	void SetUniforms(std::function<void(void)> onDrawCallBack) { m_OnDrawCallBack = onDrawCallBack; }
 
 	MGLvecv3* GetVertices() const { return m_vertices; }
 	MGLvecv2* GetTexCoords() const { return m_texCoords; }
@@ -64,6 +59,9 @@ public:
 	void GenerateNormals(){}; // TODO
 
 protected:
+
+	/****** Data ******/
+
 	GLuint m_VAO;
 	GLuint m_VBO[MGL_BUFFER_MAX];
 
@@ -85,15 +83,23 @@ protected:
 class MGLCommonMeshes : public MGLSingleton<MGLCommonMeshes> {
 	friend class MGLSingleton < MGLCommonMeshes > ;
 public:
+
+	// Returns a shared quad (DONT DELETE)
 	MGLMesh* Quad() { return m_quad; }
+	// Returns a shared triangle (DONT DELETE)
 	MGLMesh* Triangle() { return m_triangle; }
+	// Returns a shared cube (DONT DELETE)
 	MGLMesh* Cube() { return m_cube; }
+	// Returns a shared sphere (DONT DELETE)
 	MGLMesh* Sphere() { return m_sphere; }
+	// Returns a shared cone (DONT DELETE)
 	MGLMesh* Cone() { return m_cone; }
 
 protected:
 	MGLCommonMeshes();
 	~MGLCommonMeshes();
+
+	/****** Data ******/
 
 	MGLMesh* m_quad;
 	MGLMesh* m_triangle;

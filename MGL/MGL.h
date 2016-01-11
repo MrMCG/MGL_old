@@ -5,7 +5,6 @@
 
 #ifdef MGLDEBUG
 #pragma comment(lib, "glew32sd.lib")
-#include "MGLDebug.h"
 #else
 #pragma comment(lib, "glew32s.lib")
 #endif
@@ -27,12 +26,11 @@ class MGLContext {
 public:
 	// Defaults: MGL(3,3,true)
 	MGLContext();
-	MGLContext(GLuint major, GLuint minor, GLboolean resizable = true);
+	MGLContext(GLuint major, GLuint minor, GLboolean resizable = GL_TRUE);
 	virtual ~MGLContext();
 
 	// Render loop
 	virtual void RenderScene() = 0;
-	
 	// Init openGL options (use AFTER window is linked)
 	virtual void InitGL();
 	// Create a new window for use 
@@ -42,27 +40,17 @@ public:
 	// Set callback on window resize (if m_resizable=true and window!=NULL)
 	void SetResizeCallback(GLFWwindowsizefun func);
 
-	/* Setters */
-
 	void SetWindow(GLFWwindow* win);
-	
-	/* Getters */
-
 	GLFWwindow* GetWindow() const { return m_window; }
 
-	
 protected:
+
 	/****** Methods ******/
 
 	// Polls events
 	inline virtual void PollEvents() { glfwPollEvents(); }
 	// Swaps screen buffers
 	inline virtual void SwapBuffers() { glfwSwapBuffers(m_window); }
-
-	inline MGLContext* CastWindowToMGLContext(GLFWwindow* window) { 
-		return static_cast<MGLContext*>(glfwGetWindowUserPointer(window));
-	}
-
 	// Handle keyboard input
 	virtual void HandleKeyInput(GLuint key, GLuint scancode, GLuint action, GLuint mods);
 	// Handle mouse button input
@@ -97,18 +85,28 @@ public:
 	MGLRenderer();
 	virtual ~MGLRenderer();
 
+	// Init openGL options (use AFTER window is linked)
 	virtual void InitGL() override;
 
 	MGLCamera* GetCamera() { return m_camera; }
 	MGLMouse* GetMouse() { return m_mouse; }
 
+	/****** TEMP ******/
 	glm::mat4 m_projMatrix;
 	glm::mat4 m_viewMatrix;
 	glm::mat4 m_modelMatrix;
+	/****** TEMP ******/
 
 protected:
+
+	/****** Methods ******/
+
+	// Polls events (including user mouse and keyboard)
 	virtual void PollEvents();
+	// Init singleton instances
 	virtual void InitInstances();
+
+	// Handlers for window 
 
 	virtual void HandleResize(GLuint width, GLuint height) override;
 	virtual void HandleKeyInput(GLuint key, GLuint scancode, GLuint action, GLuint mods) override;
@@ -117,41 +115,10 @@ protected:
 	virtual void HandleMouseFocus(GLboolean focused) override;
 	virtual void HandleMouseScroll(GLdouble xOffset, GLdouble yOffset);
 
+	/****** Data ******/
+
 	MGLCamera* m_camera;
 	MGLKeyboard* m_keyboad;
 	MGLMouse* m_mouse;
 };
 
-// Test cases for debugging
-#ifdef MGLDEBUG
-namespace MGL_TESTS_ {
-	// Test all funcitons and clean (delete) created files
-	void MGL_TEST_ALL(const GLboolean cleanFiles = GL_TRUE);
-	// Deletes files created by test cases
-	void MGL_TEST_FileCleanup();
-
-	GLuint MGL_TEST_MGLFILE();
-	GLuint MGL_TEST_MGLFILE_COTM(); // ConvertOBJToMGL
-	GLuint MGL_TEST_MGLFILE_LO(); // LadOBJ
-	GLuint MGL_TEST_MGLFILE_LM(); // LadMGL
-	GLuint MGL_TEST_MGLFILE_SMTM(); // SaveMeshToMGL
-
-	GLuint MGL_TEST_MGLLOG();
-	GLuint MGL_TEST_MGLLOG_WTF(); // WriteToFile
-	GLuint MGL_TEST_MGLLOG_AL(); // AddLog
-
-	const MGLvecs createdTestFiles = { // KEEP SIZE EVEN!
-		MGL_TESTS_DIRECTORY"MGLFILE_LO_1", // 0
-		".mgl",
-		MGL_TESTS_DIRECTORY"MGLFILE_LO_2", // 2
-		".mgl",
-		MGL_TESTS_DIRECTORY"MGLFILE_SMTM_1", // 4
-		".mgl",
-		MGL_TESTS_DIRECTORY"MGLFILE_SMTM_2", // 6
-		".mgl",
-	};
-
-	const enum Counters{total, MGLFile, MGLLog, max};
-	const enum FuncMax{MGLFileMax = 30, MGLLogMax = 7};
-}
-#endif

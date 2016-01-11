@@ -62,11 +62,17 @@
 #define MGL_TEXTURE_DIFFUSE 1
 #define MGL_TEXTURE_SPECULAR 2
 
+// MGLInput
+
+#define MGL_INPUT_SCROLLACTION 5
+
 // MGLLog
 
-#define MGL_LOG_MAXLINESIZE 1024
-#define MGL_LOG_MAIN "mgl_main_log.txt"
-#define MGL_LOG_ERROR "mgl_error_log.txt"
+#define MGL_LOG_MAXLINESIZE 512
+#define MGL_LOG_FILENAME_MAIN "mgl_main_log.txt"
+#define MGL_LOG_FILENAME_ERROR "mgl_error_log.txt"
+#define MGL_LOG_MAIN GL_TRUE
+#define MGL_LOG_ERROR GL_FALSE
 
 // Instance handlers
 
@@ -91,7 +97,8 @@
 /****** Typedefs ******/
 
 typedef GLuint MGLenum;
-typedef void (*MGLFunction)(void*);
+typedef void(*MGLFunction1)(void*);
+typedef void(*MGLFunction2)(void*, void*);
 
 typedef std::vector<glm::vec2> MGLvecv2;
 typedef std::vector<glm::vec3> MGLvecv3;

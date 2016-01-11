@@ -8,7 +8,7 @@ class MGLFile : public MGLSingleton<MGLFile> {
 public:
 	// Converts .obj to .mgl (better storage for MGLMesh) 
 	// ISSUE WITH 4 VERTEX FACE! need to implement GL_TRIANGLE_FAN
-	void ConvertOBJToMGL(const std::string& fileName, const std::string& title, const GLboolean saveColours);
+	void ConvertOBJToMGL(const std::string fileName, const std::string title, const GLboolean saveColours);
 	// Loads in a .obj file and returns a resultant MGLMesh 
 	// (WORKS BEST WITH FACES WITH 3 VERTICES!)
 	MGLMesh* LoadOBJ(std::string fileName, GLboolean bufferData = GL_TRUE);
@@ -21,12 +21,14 @@ protected:
 	MGLFile(){}
 	~MGLFile(){}
 	
+	/****** Methods ******/
+
 	// Gets a stringstream of a full file
 	std::stringstream* LoadFileToSS(std::string fileName);
 	// Created a MGLmesh based on info from .obj file
 	MGLMesh* CreateMesh(MGLObjFileData* obj);
-	// Handles indices loading of a .obj face
-	void HandleOBJFace(std::string line, MGLObjFileData* obj);
+	// Handles indices loading of a .obj face, returns success
+	GLboolean HandleOBJFace(std::string line, MGLObjFileData* obj);
 	// Correctly adds vertex data to list
 	GLuint AddOBJVertToList(MGLObjFileData* obj, MGLObjVertData& vert);
 	// Determines neccessary file size from inputs

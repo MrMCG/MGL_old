@@ -7,6 +7,7 @@
 /*******************************/
 /*********** MGLMesh ***********/
 /*******************************/
+
 MGLMesh::MGLMesh(MGLenum mgl_mesh_type) {
 
 	for (int i = 0; i < MGL_BUFFER_MAX; ++i) {

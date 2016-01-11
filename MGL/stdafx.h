@@ -6,6 +6,7 @@
 #define GLEW_STATIC
 
 // Third Party
+
 #include "glew.h"
 #include "glfw3.h"
 #include "glm.hpp"
@@ -17,18 +18,5 @@
 
 #include "MGLUtil.h"
 #include "MGLExceptions.h"
+#include "MGLDebug.h"
 
-#include <memory>
-
-using std::unique_ptr;
-using std::shared_ptr;
-
-/*
-#include "MGLMesh.h"
-#include "MGLShader.h"
-#include "MGLCamera.h"
-#include "MGLInput.h"
-#include "MGLTexture.h"
-*/
-
-// STL

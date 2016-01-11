@@ -10,6 +10,7 @@ public:
 
 	typedef void(MGLCamera::*MGLFloatFunction)(GLfloat);
 
+	// Created a view matrix based on camera
 	glm::mat4 BuildViewMatrix();
 
 	void SetYaw(GLfloat yaw) { m_yaw = yaw; }
@@ -34,9 +35,27 @@ public:
 	glm::vec3 GetPosition() const { return m_position; }
 	glm::vec3 GetWorldUp() const { return m_worldUp; }
 
+	// Move camera an amount based on update time
 	void MoveCamera(MGLenum direction, GLfloat dt);
 
 protected:
+
+	/****** Methods ******/
+
+	void UpdateCameraVectors();
+
+	void MoveForward(GLfloat dt);
+	void MoveBackward(GLfloat dt);
+	void MoveLeft(GLfloat dt);
+	void MoveRight(GLfloat dt);
+	void MoveUp(GLfloat dt);
+	void MoveDown(GLfloat dt);
+	void MovePitch(GLfloat offset);
+	void MoveYaw(GLfloat offset);
+	void Zoom(GLfloat amount);
+
+	/****** Data ******/
+
 	GLfloat m_pitch;
 	GLfloat m_yaw;
 
@@ -53,16 +72,4 @@ protected:
 	glm::vec3 m_front;
 
 	std::unordered_map<MGLenum, MGLFloatFunction> m_movementMap;
-
-	void UpdateCameraVectors();
-
-	void MoveForward(GLfloat dt);
-	void MoveBackward(GLfloat dt);
-	void MoveLeft(GLfloat dt);
-	void MoveRight(GLfloat dt);
-	void MoveUp(GLfloat dt);
-	void MoveDown(GLfloat dt);
-	void MovePitch(GLfloat offset);
-	void MoveYaw(GLfloat offset);
-	void Zoom(GLfloat amount);
 };

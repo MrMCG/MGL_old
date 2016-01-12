@@ -9,7 +9,7 @@ MGLContext::MGLContext() : MGLContext(3, 3, true) {}
 MGLContext::MGLContext(GLuint major, GLuint minor, GLboolean resizable) {
 	MGLLog::Init();
 	try {
-		MGLException_Init_GLFW::IsSuccessful(glfwInit());
+		MGLException_Init_GLFW::Test(glfwInit());
 	}
 	catch (const MGLException& e) {
 		//std::cerr << e.what() << std::endl;
@@ -19,8 +19,8 @@ MGLContext::MGLContext(GLuint major, GLuint minor, GLboolean resizable) {
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minor);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // remove depreciated OGL code
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // remove depreciated code
 	glfwWindowHint(GLFW_RESIZABLE, resizable);
 
 #ifdef MGLDEBUG
@@ -48,7 +48,7 @@ MGLContext::~MGLContext() {
 void MGLContext::InitGL() {
 	try {
 		glewExperimental = GL_TRUE;
-		MGLException_Init_GLEW::IsSuccessful(glewInit());
+		MGLException_Init_GLEW::Test(glewInit());
 	}
 	catch (const MGLException& e) {
 		//std::cerr << e.what() << std::endl;
@@ -58,7 +58,7 @@ void MGLContext::InitGL() {
 	}
 
 	//std::cout << "GLEW INIT: SUCCESS" << std::endl;
-	MGLLodHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "GLFW INIT: SUCCESS");
+	MGLLodHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "GLEW INIT: SUCCESS");
 
 }
 
@@ -128,7 +128,7 @@ void MGLContext::CreateNewWindow(GLuint width, GLuint height, std::string title,
 	}
 
 	try {
-		MGLException_Null::IsSuccessful(window);
+		MGLException_Null::Test(window);
 	}
 	catch (const MGLException& e) {
 		//std::cerr << e.what() << " MGLContext::CreateNewWindow" << std::endl;

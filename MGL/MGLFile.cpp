@@ -21,7 +21,7 @@ void MGLFile::ConvertOBJToMGL(const std::string fileName, const std::string titl
 
 	// make sure mesh is not a triangle (error mesh)
 	try {
-		MGLException_IsLessThan::IsSuccessful(mesh->GetNumVertices(), (GLuint)4);
+		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4);
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << ": OBJ LOADING ERROR FROM " << fileName << std::endl;
@@ -36,23 +36,19 @@ void MGLFile::ConvertOBJToMGL(const std::string fileName, const std::string titl
 
 MGLMesh* MGLFile::LoadMGL(std::string fileName, GLboolean bufferData) {
 	
-	ifstream file;
+	ifstream file(fileName, std::ios::in | std::ios::binary);
 
-	std::size_t size = 0;
+	file.seekg(0, std::ios_base::end);
+	std::size_t size = (std::size_t)file.tellg(); // get file size
+	file.seekg(0, std::ios_base::beg);
+
 	try {
-		// open file
-		file.open(fileName, std::ios::in | std::ios::binary);
-
 		// file is open and has correct extension
-		MGLException_FileError::IsSuccessful(file.is_open(), fileName);
-		MGLException_File_FileType::IsSuccessful(fileName, ".mgl");
-
-		file.seekg(0, std::ios_base::end);
-		size = (std::size_t)file.tellg(); // get file size
-		file.seekg(0, std::ios_base::beg);
+		MGLException_FileError::Test(file.is_open(), fileName);
+		MGLException_File_FileType::Test(fileName, ".mgl");
 
 		// file size is large enough
-		MGLException_FileSTooSmall::IsSuccessful(fileName, file, MGL_FILE_MINSIZE);
+		MGLException_FileSTooSmall::Test(fileName, file, MGL_FILE_MINSIZE);
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << std::endl;
@@ -68,7 +64,7 @@ MGLMesh* MGLFile::LoadMGL(std::string fileName, GLboolean bufferData) {
 
 	// file is equal to determined file size
 	try {
-		MGLException_IsNotEqual::IsSuccessful(DetermineFileSize(
+		MGLException_IsNotEqual::Test(DetermineFileSize(
 			(GLuint)buffer->at(2), (GLuint)buffer->at(3), (GLint)buffer->at(4)), size);
 	}
 	catch (MGLException& e) {
@@ -194,8 +190,8 @@ void MGLFile::SaveMeshToMGL(MGLMesh* mesh, std::string fileName, GLboolean saveC
 	std::ofstream out(fileName + ".mgl", std::ios::binary);
 
 	try {
-		MGLException_FileError::IsSuccessful(out.is_open(), fileName);
-		MGLException_Null::IsSuccessful(mesh);
+		MGLException_FileError::Test(out.is_open(), fileName);
+		MGLException_Null::Test(mesh);
 	}
 	catch (MGLException_FileError& e) {
 		//std::cerr << e.what() << std::endl;
@@ -281,8 +277,8 @@ MGLMesh* MGLFile::LoadOBJ(std::string fileName, GLboolean bufferData) {
 	stringstream* stream = LoadFileToSS(fileName);
 
 	try {
-		MGLException_Null::IsSuccessful(stream);
-		MGLException_File_FileType::IsSuccessful(fileName, ".obj");
+		MGLException_Null::Test(stream);
+		MGLException_File_FileType::Test(fileName, ".obj");
 	}
 	catch (MGLException_Null& e) {
 		//std::cerr << e.what() << ": STRINGSTREAM LoadOBJ " << std::endl;
@@ -344,7 +340,7 @@ MGLMesh* MGLFile::LoadOBJ(std::string fileName, GLboolean bufferData) {
 	delete obj;
 
 	try {
-		MGLException_Null::IsSuccessful(mesh);
+		MGLException_Null::Test(mesh);
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << " Error creating mesh" << std::endl;
@@ -364,7 +360,7 @@ std::stringstream* MGLFile::LoadFileToSS(std::string fileName) {
 	ifstream file(fileName);
 
 	try {
-		MGLException_FileError::IsSuccessful(file.is_open(), fileName);
+		MGLException_FileError::Test(file.is_open(), fileName);
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << std::endl;
@@ -432,7 +428,7 @@ GLboolean MGLFile::HandleOBJFace(std::string line, MGLObjFileData* obj) {
 		GLuint skip = (skipTex || skipNorm) ? 2 : 3;
 		GLuint shouldBe = verts * skip;
 
-		MGLException_IsNotEqual::IsSuccessful(numIndices, shouldBe);
+		MGLException_IsNotEqual::Test(numIndices, shouldBe);
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << std::endl;
@@ -550,9 +546,9 @@ MGLMesh* MGLFile::CreateMesh(MGLObjFileData* obj) {
 			maxNorm = (data.normals > maxNorm) ? data.normals : maxNorm;
 		}
 
-		MGLException_IsLessThan::IsSuccessful(++maxVert, obj->inputVertices.size());
-		MGLException_IsLessThan::IsSuccessful(++maxTex, obj->inputTexCoords.size());
-		MGLException_IsLessThan::IsSuccessful(++maxNorm, obj->inputNormals.size());
+		MGLException_IsLessThan::Test(++maxVert, obj->inputVertices.size());
+		MGLException_IsLessThan::Test(++maxTex, obj->inputTexCoords.size());
+		MGLException_IsLessThan::Test(++maxNorm, obj->inputNormals.size());
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << "Mesh size error" << std::endl;

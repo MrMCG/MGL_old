@@ -6,7 +6,7 @@
 // MGLException_EXCEPTYPE
 
 /*
-	*Most* MGLExceptions have a isSuccessful(PARAMS) function that with throw the error.
+	*Most* MGLExceptions have a Test(PARAMS) function that with throw the error.
 */
 
 // Standard exception
@@ -32,7 +32,7 @@ public:
 		return MGLException::what();
 	}
 
-	static void IsSuccessful(const GLint success, std::string file) {
+	static void Test(const GLint success, std::string file) {
 		if (success != 1) {
 			throw MGLException_FileError(file);
 		}
@@ -49,7 +49,7 @@ public:
 		return MGLException::what();
 	}
 
-	static void IsSuccessful(const std::string fileName, std::ifstream& file, const GLuint size) {
+	static void Test(const std::string fileName, std::ifstream& file, const GLuint size) {
 		std::ios_base::seekdir pos = (std::ios_base::seekdir)file.tellg();
 
 		file.seekg(0, std::ios_base::end);
@@ -72,7 +72,7 @@ public:
 		return MGLException::what();
 	}
 
-	static void IsSuccessful(const void* success) {
+	static void Test(const void* success) {
 		if (success == nullptr) {
 			throw MGLException_Null();
 		}
@@ -89,7 +89,7 @@ public:
 		return MGLException::what();
 	}
 
-	static void IsSuccessful(const void* query, const void* match, const GLboolean shouldMatch) {
+	static void Test(const void* query, const void* match, const GLboolean shouldMatch) {
 		GLboolean theyMatch = (query == match);
 		if ( (!theyMatch && shouldMatch) || (theyMatch && !shouldMatch) ) {
 			throw MGLException_Mismatch();
@@ -108,7 +108,7 @@ public:
 	}
 
 	template<typename T>
-	static void IsSuccessful(const T number) {
+	static void Test(const T number) {
 		if (number == 0) {
 			throw MGLException_IsZero();
 		}
@@ -126,7 +126,7 @@ public:
 	}
 
 	template<typename T>
-	static void IsSuccessful(const T number) {
+	static void Test(const T number) {
 		if (number != 0) {
 			throw MGLException_IsNotZero();
 		}
@@ -136,7 +136,7 @@ public:
 // Throws if number is less than size
 class MGLException_IsLessThan : public MGLException {
 public:
-	template<class T, class N>
+	template<typename T, typename N>
 	MGLException_IsLessThan(const T num, const N size)
 		: MGLException("LESS THAN : "+std::to_string(num)+" < "+std::to_string(size)) {}
 	
@@ -144,8 +144,8 @@ public:
 		return MGLException::what();
 	}
 
-	template<class T, class N>
-	static void IsSuccessful(const T num, const N size) {
+	template<typename T, typename N>
+	static void Test(const T num, const N size) {
 		if (num < size) {
 			throw MGLException_IsLessThan(num, size);
 		}
@@ -155,7 +155,7 @@ public:
 // Throws if num1 != num2
 class MGLException_IsNotEqual : public MGLException {
 public:
-	template<class T, class N>
+	template<typename T, typename N>
 	MGLException_IsNotEqual(const T num1, const N num2)
 		: MGLException("NOT EQUAL : " + std::to_string(num1) + " " + std::to_string(num2)) {}
 
@@ -163,8 +163,8 @@ public:
 		return MGLException::what();
 	}
 
-	template<class T, class N>
-	static void IsSuccessful(const T num1, const N num2) {
+	template<typename T, typename N>
+	static void Test(const T num1, const N num2) {
 		if (num1 != num2) {
 			throw MGLException_IsNotEqual(num1, num2);
 		}
@@ -174,7 +174,7 @@ public:
 // Throws if num1 == num2
 class MGLException_IsEqual : public MGLException {
 public:
-	template<class T, class N>
+	template<typename T, typename N>
 	MGLException_IsEqual(const T num1, const N num2)
 		: MGLException("EQUAL : " + std::to_string(num1) + " " + std::to_string(num2)) {}
 
@@ -182,8 +182,8 @@ public:
 		return MGLException::what();
 	}
 
-	template<class T, class N>
-	static void IsSuccessful(const T num1, const N num2) {
+	template<typename T, typename N>
+	static void Test(const T num1, const N num2) {
 		if (num1 == num2) {
 			throw MGLException_IsEqual(num1, num2);
 		}
@@ -200,7 +200,7 @@ public:
 		return MGLException::what();
 	}
 
-	static void IsSuccessful(const std::string fileName, const std::string fileType) {
+	static void Test(const std::string fileName, const std::string fileType) {
 		if (fileName.length() < fileType.length()) {
 			throw MGLException_File_FileType(fileName, fileType);
 		}
@@ -219,7 +219,7 @@ public:
 	MGLException_Init_GLFW()
 		: MGLException("INIT : GLFW : "){}
 
-	static void IsSuccessful(const GLint success) {
+	static void Test(const GLint success) {
 		if (success != GL_TRUE) {
 			throw MGLException_Init_GLFW();
 		}
@@ -232,7 +232,7 @@ public:
 	MGLException_Init_GLEW()
 		: MGLException("INIT : GLEW "){}
 
-	static void IsSuccessful(const GLint success) {
+	static void Test(const GLint success) {
 		if (success != GLEW_OK) {
 			throw MGLException_Init_GLEW();
 		}
@@ -251,7 +251,7 @@ public:
 		return MGLException::what();
 	}
 
-	static void IsSuccessful(const GLint success) {
+	static void Test(const GLint success) {
 		if (success != GL_TRUE) {
 			throw MGLException_Shader_LINK();
 		}
@@ -268,7 +268,7 @@ public:
 		return MGLException::what();
 	}
 
-	static void IsSuccessful(const GLint success) {
+	static void Test(const GLint success) {
 		if (success != GL_TRUE) {
 			throw MGLException_Shader_COMPILE();
 		}

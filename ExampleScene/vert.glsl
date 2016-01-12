@@ -10,9 +10,9 @@ uniform mat4 viewMatrix;
 uniform mat4 projMatrix;
 
 out Vertex {
-	vec4 colour;
 	vec2 texCoord;
 	vec3 normals;
+	vec4 colour;
 } OUT;
 
 

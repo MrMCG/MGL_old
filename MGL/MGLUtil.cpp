@@ -34,7 +34,7 @@ GLuint MGL::LoadTextureFromFile(const std::string& fileName, const GLboolean fli
 
 		GLubyte* image = stbi_load(fileName.c_str(), &w, &h, &c, STBI_rgb);
 
-		MGLException_Null::IsSuccessful(image);
+		MGLException_Null::Test(image);
 
 		glGenTextures(1, &tex);
 		glBindTexture(GL_TEXTURE_2D, tex);
@@ -43,7 +43,7 @@ GLuint MGL::LoadTextureFromFile(const std::string& fileName, const GLboolean fli
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		stbi_image_free(image);
-		MGLException_IsZero::IsSuccessful(tex);
+		MGLException_IsZero::Test(tex);
 	}
 	catch (MGLException& e) {
 		std::cerr << e.what() << "LoadTextureFromFile " << fileName.c_str() << std::endl;

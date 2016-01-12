@@ -122,3 +122,34 @@ protected:
 	MGLMouse* m_mouse;
 };
 
+// Test cases for debugging
+#ifdef MGLDEBUG
+namespace MGL_TESTS_ {
+	// Test all funcitons and clean (delete) created files
+	void MGL_TEST_ALL(const GLboolean cleanFiles = GL_TRUE);
+	// Deletes files created by test cases
+	void MGL_TEST_FileCleanup();
+
+	GLuint MGL_TEST_MGLFILE();
+	GLuint MGL_TEST_MGLFILE_COTM(); // ConvertOBJToMGL 6
+	GLuint MGL_TEST_MGLFILE_LO(); // LadOBJ 10
+	GLuint MGL_TEST_MGLFILE_LM(); // LadMGL 18
+	GLuint MGL_TEST_MGLFILE_SMTM(); // SaveMeshToMGL 6
+
+	const MGLvecs createdTestFiles = { // KEEP SIZE EVEN!
+		MGL_TESTS_DIRECTORY"MGLFILE_LO_1", // 0
+		".mgl",
+		MGL_TESTS_DIRECTORY"MGLFILE_LO_2", // 2
+		".mgl",
+		MGL_TESTS_DIRECTORY"MGLFILE_SMTM_1", // 4
+		".mgl",
+		MGL_TESTS_DIRECTORY"MGLFILE_SMTM_2", // 6
+		".mgl",
+	};
+
+	const enum Counters{ total, MGLFile, max };
+	const enum FuncMax{
+		MGLFileMax = 40
+	};
+}
+#endif

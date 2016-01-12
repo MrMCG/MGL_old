@@ -2,13 +2,13 @@
 #include "MGL.h"
 
 /*
-	Test cases for debugging MGL classes.
+	Test cases for debugging some MGL classes.
 	The main function of these is to run to completion
 	and not crash the program, showing that the errors
 	are caught and handled at runtime.
 
 	That said, there is no standard result from these functions
-	and they are used for debugging purposes
+	or what they test, they are used for debugging purposes
 */
 
 #ifdef MGLDEBUG
@@ -38,11 +38,11 @@ void MGL_TESTS_::MGL_TEST_ALL(const GLboolean cleanFiles) {
 	MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "*********** BUT DONT WORRY! ***********");
 	MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "***************************************");
 
-	counter[MGLFile] = MGL_TEST_MGLFILE();
+	counter[Counters::MGLFile] = MGL_TEST_MGLFILE();
 	
 	// ensure number of functions ran is correct
 	try {
-		MGLException_IsLessThan::IsSuccessful(counter[MGLFile], (GLuint)MGLFileMax);
+		MGLException_IsLessThan::Test(counter[Counters::MGLFile], (GLuint)FuncMax::MGLFileMax);
 	}
 	catch (MGLException& e) {
 		std::cerr << e.what() << std::endl;
@@ -63,7 +63,7 @@ void MGL_TESTS_::MGL_TEST_FileCleanup() {
 	for (GLuint i = 0; i < createdTestFiles.size(); i += 2) {
 		std::string file = createdTestFiles[i] + createdTestFiles[i + 1]; // file name + extension
 		try {
-			MGLException_IsNotZero::IsSuccessful(std::remove(file.c_str()));
+			MGLException_IsNotZero::Test(std::remove(file.c_str()));
 		}
 		catch (MGLException& e) {
 			//std::cerr << e.what() << std::endl;
@@ -142,19 +142,19 @@ GLuint MGL_TESTS_::MGL_TEST_MGLFILE_LO() {
 	mesh = MGLFileHandle->LoadOBJ(MGL_TESTS_DIRECTORY"cubeError.obj", GL_FALSE);
 	delete mesh;
 
-	functionCounter += 6;
+	functionCounter += 8;
 
 	// CORRECT
 	try {
 		mesh = MGLFileHandle->LoadOBJ(MGL_TESTS_DIRECTORY"cube.obj", GL_TRUE);
 		functionCounter++;
 		delete mesh;
-		MGLException_IsLessThan::IsSuccessful(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
+		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
 
 		mesh = MGLFileHandle->LoadOBJ(MGL_TESTS_DIRECTORY"cube.obj", GL_FALSE);
 		functionCounter++;
 		delete mesh;
-		MGLException_IsLessThan::IsSuccessful(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
+		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
 
 	}
 	catch (MGLException& e) {
@@ -209,42 +209,42 @@ GLuint MGL_TESTS_::MGL_TEST_MGLFILE_LM() {
 		mesh = MGLFileHandle->LoadMGL(createdTestFiles[0] + createdTestFiles[1], GL_TRUE);
 		functionCounter++;
 		delete mesh;
-		MGLException_IsLessThan::IsSuccessful(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
+		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
 
 		mesh = MGLFileHandle->LoadMGL(createdTestFiles[0] + createdTestFiles[1], GL_FALSE);
 		functionCounter++;
 		delete mesh;
-		MGLException_IsLessThan::IsSuccessful(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
+		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
 
 		mesh = MGLFileHandle->LoadMGL(createdTestFiles[2] + createdTestFiles[3], GL_TRUE);
 		functionCounter++;
 		delete mesh;
-		MGLException_IsLessThan::IsSuccessful(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
+		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
 
 		mesh = MGLFileHandle->LoadMGL(createdTestFiles[2] + createdTestFiles[3], GL_FALSE);
 		functionCounter++;
 		delete mesh;
-		MGLException_IsLessThan::IsSuccessful(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
+		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
 
 		mesh = MGLFileHandle->LoadMGL(createdTestFiles[4] + createdTestFiles[5], GL_TRUE);
 		functionCounter++;
 		delete mesh;
-		MGLException_IsLessThan::IsSuccessful(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
+		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
 
 		mesh = MGLFileHandle->LoadMGL(createdTestFiles[4] + createdTestFiles[5], GL_FALSE);
 		functionCounter++;
 		delete mesh;
-		MGLException_IsLessThan::IsSuccessful(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
+		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
 
 		mesh = MGLFileHandle->LoadMGL(createdTestFiles[6] + createdTestFiles[7], GL_TRUE);
 		functionCounter++;
 		delete mesh;
-		MGLException_IsLessThan::IsSuccessful(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
+		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
 
 		mesh = MGLFileHandle->LoadMGL(createdTestFiles[6] + createdTestFiles[7], GL_FALSE);
 		functionCounter++;
 		delete mesh;
-		MGLException_IsLessThan::IsSuccessful(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
+		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << ": MESH IS TRIANGLE" << std::endl;
@@ -279,5 +279,7 @@ GLuint MGL_TESTS_::MGL_TEST_MGLFILE_SMTM() {
 
 	return functionCounter;
 }
+
+
 
 #endif

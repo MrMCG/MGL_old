@@ -25,6 +25,29 @@ MGLShader::~MGLShader() {
 void MGLShader::LoadShader(std::string fileName, GLenum type) {
 	std::string message = "Compiling Shader : "+fileName;
 
+	GLuint shaderType = -1;
+
+	// Assign compiled shader
+	switch (type) {
+	case GL_VERTEX_SHADER:
+		shaderType = MGL_SHADER_VERTEX; break;
+	case GL_FRAGMENT_SHADER:
+		shaderType = MGL_SHADER_FRAGMENT; break;
+	case GL_GEOMETRY_SHADER:
+		shaderType = MGL_SHADER_GEOMETRY; break;
+	default: break;
+	}
+
+	try {
+		MGLException_IsLessThan::Test(shaderType, (GLuint)0);
+	}
+	catch (MGLException& e) {
+		//std::cerr << e.what() << std::endl;
+		MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), ": Shader Type Unknown");
+
+		return;
+	}
+
 	std::string into;
 
 	// Load shader from file
@@ -35,7 +58,7 @@ void MGLShader::LoadShader(std::string fileName, GLenum type) {
 		file.open(fileName.c_str());
 
 		try {
-			MGLException_FileError::IsSuccessful(file.is_open(), fileName);
+			MGLException_FileError::Test(file.is_open(), fileName);
 		}
 		catch (MGLException& e) {
 			//std::cerr << e.what() << std::endl;
@@ -52,20 +75,19 @@ void MGLShader::LoadShader(std::string fileName, GLenum type) {
 		file.close();
 	}
 
-	// Assign compiled shader
-	switch (type) {
-	case GL_VERTEX_SHADER:
-		m_shaders[MGL_SHADER_VERTEX] = Compile(into.c_str(), type); break;
-	case GL_FRAGMENT_SHADER:
-		m_shaders[MGL_SHADER_FRAGMENT] = Compile(into.c_str(), type); break;
-	case GL_GEOMETRY_SHADER:
-		m_shaders[MGL_SHADER_GEOMETRY] = Compile(into.c_str(), type); break;
-	default: message += " - FAIL: TYPE ERROR"; return;
+	m_shaders[shaderType] = Compile(into.c_str(), type);
+
+	try {
+		MGLException_IsZero::Test(m_shaders[shaderType]);
+		message += " - SUCCESS"; // runs is MGLException is not thrown
+	}
+	catch (MGLException& e) {
+		//std::cerr << e.what() << std::endl;
+		MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+		message += " - FAIL: TYPE ERROR";
 	}
 
-	message += " - SUCCESS";
 	MGLLodHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, message.c_str());
-
 }
 
 GLuint MGLShader::Compile(const char* data, GLenum type) {
@@ -79,7 +101,7 @@ GLuint MGLShader::Compile(const char* data, GLenum type) {
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
 
 	try {
-		MGLException_Shader_COMPILE::IsSuccessful(status);
+		MGLException_Shader_COMPILE::Test(status);
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << std::endl;
@@ -105,23 +127,24 @@ void MGLShader::SetDefaultAttributes() {
 }
 
 void MGLShader::Link() {
-	try {
-		for (GLuint i = 0; i < MGL_SHADER_MAX; ++i) {
-			if (m_shaders[i]) {
-				glAttachShader(m_program, m_shaders[i]);
-			}
-		}
 	
-		glLinkProgram(m_program);
+	for (GLuint i = 0; i < MGL_SHADER_MAX; ++i) {
+		if (m_shaders[i]) {
+			glAttachShader(m_program, m_shaders[i]);
+		}
+	}
 
+	glLinkProgram(m_program);
+
+	try {
 		GLint code = GL_FALSE;
 		glGetProgramiv(m_program, GL_LINK_STATUS, &code);
-		MGLException_Shader_LINK::IsSuccessful(code);
+		MGLException_Shader_LINK::Test(code);
 
 		code = GL_FALSE;
 		glValidateProgram(m_program);
 		glGetProgramiv(m_program, GL_VALIDATE_STATUS, &code);
-		MGLException_Shader_LINK::IsSuccessful(code);
+		MGLException_Shader_LINK::Test(code);
 
 		SetDefaultAttributes();
 	}

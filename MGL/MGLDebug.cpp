@@ -22,7 +22,7 @@ void MGLLog::WriteToFile(const std::string fileName, const GLboolean mainLog, co
 
 	// did it open successfully
 	try {
-		MGLException_FileError::IsSuccessful(out.is_open(), fileName);
+		MGLException_FileError::Test(out.is_open(), fileName);
 	}
 	catch (MGLException& e) {
 		std::cerr << e.what() << "MGLLOG WRTIE ERROR" << std::endl;

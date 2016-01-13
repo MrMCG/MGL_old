@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "MGLDebug.h"
 
-#include <ctime>
+#include "MGLExceptions.h"
 
 /******************************/
 /*********** MGLLog ***********/

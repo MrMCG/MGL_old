@@ -1,5 +1,9 @@
-#include "stdafx.h"
 #pragma once
+#include "stdafx.h"
+
+#include "MGLUtil.h"
+
+// TODO: Add a singleton shader handler to hold program refrences
 
 class MGLShader {
 public:

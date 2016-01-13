@@ -1,6 +1,8 @@
 #pragma once
 #include "stdafx.h"
 
+#include "MGLUtil.h"
+
 class MGLMesh;
 // Handles the loading of .obj and .mgl files
 class MGLFile : public MGLSingleton<MGLFile> {
@@ -32,7 +34,7 @@ protected:
 	// Correctly adds vertex data to list
 	GLuint AddOBJVertToList(MGLObjFileData* obj, MGLObjVertData& vert);
 	// Determines neccessary file size from inputs
-	GLuint DetermineFileSize(const GLuint numVertices, const GLuint numIndices, const GLint colourVal);
+	std::size_t DetermineFileSize(const GLuint numVertices, const GLuint numIndices, const GLint colourVal);
 	// Loads buffer data into a mesh
 	MGLMesh* LoadMesh(const MGLvecf* buffer, const GLboolean bufferData);
 };

@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 
-#include <vector>
+#include "MGLUtil.h"
 
 // TODO: make adding/loading textures handle 
 // loading existing textures safer

@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "MGLMesh.h"
 
-#include <fstream>
-#include <algorithm>
+#include "MGLTexture.h"
+#include "MGLFile.h"
 
 /*******************************/
 /*********** MGLMesh ***********/

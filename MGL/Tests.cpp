@@ -27,16 +27,16 @@ void MGL_TESTS_::MGL_TEST_ALL(const GLboolean cleanFiles) {
 
 	// write contents of current log to temp file
 	std::cout << "\n\tBEGIN - MGL_TEST_ALL" << std::endl;
-	std::cout << "Dumping current log to mgl_error_log_temp.txt" << std::endl;
-	MGLLodHandle->WriteToFile("mgl_error_log_temp.txt", GL_FALSE);
-	MGLLodHandle->Flush(MGL_LOG_ERROR);
+	std::cout << "Dumping current log to "MGL_LOG_DIRECTORY"mgl_error_log_temp.txt" << std::endl;
+	MGLLogHandle->WriteToFile("mgl_error_log_temp.txt", GL_FALSE);
+	MGLLogHandle->Flush(MGL_LOG_ERROR);
 	std::cout << "Running tests..." << std::endl;
 
-	MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n\tBEGIN - MGL_TEST_ALL");
-	MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n***************************************");
-	MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "***** EXPECT ERRORS BY THE TONNE! *****");
-	MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "*********** BUT DONT WORRY! ***********");
-	MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "***************************************");
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n\tBEGIN - MGL_TEST_ALL");
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n***************************************");
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "***** EXPECT ERRORS BY THE TONNE! *****");
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "*********** BUT DONT WORRY! ***********");
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "***************************************");
 
 	counter[Counters::MGLFile] = MGL_TEST_MGLFILE();
 	
@@ -52,9 +52,9 @@ void MGL_TESTS_::MGL_TEST_ALL(const GLboolean cleanFiles) {
 	if (cleanFiles) // delete created files
 		MGL_TEST_FileCleanup();
 
-	MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, message);
-	MGLLodHandle->WriteToFile("mgl_tests_all.txt", GL_FALSE, GL_TRUE);
-	MGLLodHandle->Flush(MGL_LOG_ERROR);
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, message);
+	MGLLogHandle->WriteToFile(MGL_LOG_DIRECTORY"mgl_tests_all.txt", GL_FALSE, GL_TRUE);
+	MGLLogHandle->Flush(MGL_LOG_ERROR);
 
 	std::cout << message << std::endl;
 }
@@ -69,13 +69,13 @@ void MGL_TESTS_::MGL_TEST_FileCleanup() {
 			//std::cerr << e.what() << std::endl;
 			//std::cerr << "Error deleting file " << file.c_str() << std::endl;
 
-			MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s%s", e.what(), "Error deleting file ", file.c_str());
+			MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s%s", e.what(), "Error deleting file ", file.c_str());
 		}
 	}
 }
 
 GLuint MGL_TESTS_::MGL_TEST_MGLFILE() {
-	MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n\tBEGIN - MGL_TEST_MGLFILE");
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n\tBEGIN - MGL_TEST_MGLFILE");
 
 	GLuint functionCounter = 0;
 
@@ -85,7 +85,7 @@ GLuint MGL_TESTS_::MGL_TEST_MGLFILE() {
 	functionCounter += MGL_TEST_MGLFILE_LO();
 	functionCounter += MGL_TEST_MGLFILE_LM();
 
-	MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n\tEND MGL_TEST_MGLFILE");
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n\tEND MGL_TEST_MGLFILE");
 
 	return functionCounter;
 }
@@ -93,7 +93,7 @@ GLuint MGL_TESTS_::MGL_TEST_MGLFILE() {
 GLuint MGL_TESTS_::MGL_TEST_MGLFILE_COTM() {
 	GLuint functionCounter = 0;
 
-	MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n - ConverOBJToMGL - ");
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n - ConverOBJToMGL - ");
 
 	// No file
 	MGLFileHandle->ConvertOBJToMGL(MGL_TESTS_DIRECTORY"wrongfile.obj", MGL_TESTS_DIRECTORY"TEST1", GL_FALSE);
@@ -114,7 +114,7 @@ GLuint MGL_TESTS_::MGL_TEST_MGLFILE_COTM() {
 GLuint MGL_TESTS_::MGL_TEST_MGLFILE_LO() {
 	GLuint functionCounter = 0;
 
-	MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n - LoadOBJ - ");
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n - LoadOBJ - ");
 
 	MGLMesh* mesh = nullptr;
 
@@ -148,18 +148,19 @@ GLuint MGL_TESTS_::MGL_TEST_MGLFILE_LO() {
 	try {
 		mesh = MGLFileHandle->LoadOBJ(MGL_TESTS_DIRECTORY"cube.obj", GL_TRUE);
 		functionCounter++;
-		delete mesh;
 		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
+		delete mesh;
 
 		mesh = MGLFileHandle->LoadOBJ(MGL_TESTS_DIRECTORY"cube.obj", GL_FALSE);
 		functionCounter++;
-		delete mesh;
 		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
+		delete mesh;
 
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << ": MESH IS TRIANGLE" << std::endl;
-		MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "%s%s", e.what(), ": MESH IS TRIANGLE");
+		delete mesh;
+		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "%s%s", e.what(), ": Mesh is triangle");
 	}
 
 	return functionCounter;
@@ -168,7 +169,7 @@ GLuint MGL_TESTS_::MGL_TEST_MGLFILE_LO() {
 GLuint MGL_TESTS_::MGL_TEST_MGLFILE_LM() {
 	GLuint functionCounter = 0;
 
-	MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n - LoadMGL - ");
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n - LoadMGL - ");
 
 	MGLMesh* mesh = nullptr;
 
@@ -208,47 +209,48 @@ GLuint MGL_TESTS_::MGL_TEST_MGLFILE_LM() {
 	try {
 		mesh = MGLFileHandle->LoadMGL(createdTestFiles[0] + createdTestFiles[1], GL_TRUE);
 		functionCounter++;
-		delete mesh;
 		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
+		delete mesh;
 
 		mesh = MGLFileHandle->LoadMGL(createdTestFiles[0] + createdTestFiles[1], GL_FALSE);
 		functionCounter++;
-		delete mesh;
 		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
+		delete mesh;
 
 		mesh = MGLFileHandle->LoadMGL(createdTestFiles[2] + createdTestFiles[3], GL_TRUE);
 		functionCounter++;
-		delete mesh;
 		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
+		delete mesh;
 
 		mesh = MGLFileHandle->LoadMGL(createdTestFiles[2] + createdTestFiles[3], GL_FALSE);
 		functionCounter++;
-		delete mesh;
 		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
+		delete mesh;
 
 		mesh = MGLFileHandle->LoadMGL(createdTestFiles[4] + createdTestFiles[5], GL_TRUE);
 		functionCounter++;
-		delete mesh;
 		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
+		delete mesh;
 
 		mesh = MGLFileHandle->LoadMGL(createdTestFiles[4] + createdTestFiles[5], GL_FALSE);
 		functionCounter++;
-		delete mesh;
 		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
+		delete mesh;
 
 		mesh = MGLFileHandle->LoadMGL(createdTestFiles[6] + createdTestFiles[7], GL_TRUE);
 		functionCounter++;
-		delete mesh;
 		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
+		delete mesh;
 
 		mesh = MGLFileHandle->LoadMGL(createdTestFiles[6] + createdTestFiles[7], GL_FALSE);
 		functionCounter++;
-		delete mesh;
 		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
+		delete mesh;
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << ": MESH IS TRIANGLE" << std::endl;
-		MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "%s%s", e.what(), ": MESH IS TRIANGLE");
+		delete mesh;
+		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "%s%s", e.what(), ": MESH IS TRIANGLE");
 	}
 
 	return functionCounter;
@@ -257,7 +259,7 @@ GLuint MGL_TESTS_::MGL_TEST_MGLFILE_LM() {
 GLuint MGL_TESTS_::MGL_TEST_MGLFILE_SMTM() {
 	GLuint functionCounter = 0;
 
-	MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n - SaveMeshToMGL - ");
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n - SaveMeshToMGL - ");
 
 	MGLMesh* mesh = nullptr;
 

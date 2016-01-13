@@ -1,6 +1,8 @@
 #pragma once
 #include "stdafx.h"
 
+#include "MGLUtil.h"
+
 class MGLLog : public MGLSingleton < MGLLog > {
 	friend class MGLSingleton < MGLLog > ;
 public:

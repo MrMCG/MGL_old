@@ -13,7 +13,7 @@ MGLContext::MGLContext(GLuint major, GLuint minor, GLboolean resizable) {
 	}
 	catch (const MGLException& e) {
 		//std::cerr << e.what() << std::endl;
-		MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
 		return;
 	}
 
@@ -34,7 +34,7 @@ MGLContext::MGLContext(GLuint major, GLuint minor, GLboolean resizable) {
 	m_window = nullptr;
 
 	//std::cout << "GLFW INIT: SUCCESS" << std::endl;
-	MGLLodHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "GLFW INIT: SUCCESS");
+	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "GLFW INIT: SUCCESS");
 
 }
 
@@ -52,13 +52,13 @@ void MGLContext::InitGL() {
 	}
 	catch (const MGLException& e) {
 		//std::cerr << e.what() << std::endl;
-		MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
 
 		return;
 	}
 
 	//std::cout << "GLEW INIT: SUCCESS" << std::endl;
-	MGLLodHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "GLEW INIT: SUCCESS");
+	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "GLEW INIT: SUCCESS");
 
 }
 
@@ -133,8 +133,8 @@ void MGLContext::CreateNewWindow(GLuint width, GLuint height, std::string title,
 	catch (const MGLException& e) {
 		//std::cerr << e.what() << " MGLContext::CreateNewWindow" << std::endl;
 		//std::cerr << " !! Creating Default Window !! " << std::endl;
-		MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), " MGLContext::CreateNewWindow");
-		MGLLodHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, " !! Creating Default Window !! ");
+		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), " MGLContext::CreateNewWindow");
+		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, " !! Creating Default Window !! ");
 
 		window = glfwCreateWindow(800, 600, "MGL: Default Window", nullptr, nullptr);
 		m_width = 800;
@@ -144,7 +144,7 @@ void MGLContext::CreateNewWindow(GLuint width, GLuint height, std::string title,
 	SetWindow(window);
 
 	//std::cout << "WINDOW INIT: SUCCESS" << std::endl;
-	MGLLodHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "WINDOW INIT: SUCCESS");
+	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "WINDOW INIT: SUCCESS");
 
 }
 
@@ -226,8 +226,8 @@ MGLRenderer::MGLRenderer() : MGLContext() {
 }
 
 MGLRenderer::~MGLRenderer() {
-	MGLLodHandle->WriteToFile(MGL_LOG_FILENAME_MAIN, GL_TRUE); // write main to file
-	MGLLodHandle->WriteToFile(MGL_LOG_FILENAME_ERROR, GL_FALSE); // write errors to file
+	MGLLogHandle->WriteToFile(MGL_LOG_FILENAME_MAIN, GL_TRUE); // write main to file
+	MGLLogHandle->WriteToFile(MGL_LOG_FILENAME_ERROR, GL_FALSE); // write errors to file
 
 	delete m_camera;
 	delete m_keyboad;

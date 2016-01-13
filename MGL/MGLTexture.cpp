@@ -28,6 +28,7 @@ void MGLTexture::AddTexture(GLuint tex, std::string name, MGLenum type) {
 
 	m_textures->push_back(tex);
 	m_names->push_back(name);
+	m_types->push_back(type);
 }
 
 void MGLTexture::LoadTexture(std::string fileName, std::string name, 
@@ -52,12 +53,12 @@ GLuint MGLTexture::GetTexture(std::string name, GLboolean returnIndex) {
 	return m_textures->at(0); 
 }
 
-GLuint MGLTexture::GetTextureType(std::string name) {
-	return m_textures->at(GetTexture(name, GL_TRUE));
-}
-
 GLuint MGLTexture::GetTexture(GLuint index) {
 	return m_textures->at(index);
+}
+
+GLuint MGLTexture::GetTextureType(std::string name) {
+	return m_textures->at(GetTexture(name, GL_TRUE));
 }
 
 GLuint MGLTexture::GetTextureType(GLuint index) {

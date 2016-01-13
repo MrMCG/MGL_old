@@ -1,11 +1,7 @@
 #pragma once
 #include "stdafx.h"
 
-#include "MGLTexture.h"
-#include "MGLFile.h"
-
-#include <functional>
-#include <vector>
+#include "MGLUtil.h"
 
 class MGLMesh {
 public:

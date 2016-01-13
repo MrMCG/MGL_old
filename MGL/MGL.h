@@ -11,6 +11,10 @@
 
 #pragma comment(lib, "glfw3.lib")
 
+#include "MGLUtil.h"
+#include "MGLExceptions.h"
+#include "MGLDebug.h"
+
 #include "MGLMesh.h"
 #include "MGLShader.h"
 #include "MGLCamera.h"

@@ -1,0 +1,24 @@
+----- New MGLLog -----
+[13-1-2016 1:17] GLFW INIT: SUCCESS
+[13-1-2016 1:17] WINDOW INIT: SUCCESS
+[13-1-2016 1:17] GLEW INIT: SUCCESS
+[13-1-2016 1:17] Compiling Shader : shaders/vert.glsl - SUCCESS
+[13-1-2016 1:17] Compiling Shader : shaders/frag.glsl - SUCCESS
+----- New MGLLog -----
+[13-1-2016 1:21] GLFW INIT: SUCCESS
+[13-1-2016 1:21] WINDOW INIT: SUCCESS
+[13-1-2016 1:21] GLEW INIT: SUCCESS
+[13-1-2016 1:21] Compiling Shader : shaders/vert.glsl - SUCCESS
+[13-1-2016 1:21] Compiling Shader : shaders/frag.glsl - SUCCESS
+----- New MGLLog -----
+[13-1-2016 2:38] GLFW INIT: SUCCESS
+[13-1-2016 2:38] WINDOW INIT: SUCCESS
+[13-1-2016 2:38] GLEW INIT: SUCCESS
+[13-1-2016 2:38] Compiling Shader : shaders/vert.glsl - SUCCESS
+[13-1-2016 2:38] Compiling Shader : shaders/frag.glsl - SUCCESS
+----- New MGLLog -----
+[13-1-2016 2:42] GLFW INIT: SUCCESS
+[13-1-2016 2:42] WINDOW INIT: SUCCESS
+[13-1-2016 2:42] GLEW INIT: SUCCESS
+[13-1-2016 2:42] Compiling Shader : shaders/vert.glsl - SUCCESS
+[13-1-2016 2:42] Compiling Shader : shaders/frag.glsl - SUCCESS

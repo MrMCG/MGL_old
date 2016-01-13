@@ -1,10 +1,6 @@
 #pragma once
 #include "stdafx.h"
 
-#include <mutex>
-#include <iostream>
-#include <vector>
-
 /****** Defines ******/
 
 // MGLShader
@@ -69,8 +65,9 @@
 // MGLLog
 
 #define MGL_LOG_MAXLINESIZE 512
-#define MGL_LOG_FILENAME_MAIN "mgl_main_log.txt"
-#define MGL_LOG_FILENAME_ERROR "mgl_error_log.txt"
+#define MGL_LOG_DIRECTORY "_LOGS/"
+#define MGL_LOG_FILENAME_MAIN MGL_LOG_DIRECTORY"mgl_main_log.txt"
+#define MGL_LOG_FILENAME_ERROR MGL_LOG_DIRECTORY"mgl_error_log.txt"
 #define MGL_LOG_MAIN GL_TRUE
 #define MGL_LOG_ERROR GL_FALSE
 
@@ -79,14 +76,14 @@
 #define MGLFileHandle MGLFile::Instance()
 #define MGLComMeshHandle MGLCommonMeshes::Instance()
 #define MGLTexHandle MGLTexture::Instance()
-#define MGLLodHandle MGLLog::Instance()
+#define MGLLogHandle MGLLog::Instance()
 
 // MGLLog
 
 /****** Other ******/
 
-#define MGL_DEFAULT_DIRECTORY "DEFAULTS/"
-#define MGL_TESTS_DIRECTORY "TESTS/"
+#define MGL_DEFAULT_DIRECTORY "_DEFAULTS/"
+#define MGL_TESTS_DIRECTORY MGL_DEFAULT_DIRECTORY"TESTS/"
 
 #define MGL_DEFAULT_TEXTURE MGL_DEFAULT_DIRECTORY"stars.jpg"
 

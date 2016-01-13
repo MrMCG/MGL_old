@@ -14,14 +14,14 @@ Scene::Scene() : MGLRenderer() {
 
 	// Create new shader program
 	shader = new MGLShader();
-	shader->LoadShader("vert.glsl", GL_VERTEX_SHADER);
-	shader->LoadShader("frag.glsl", GL_FRAGMENT_SHADER);
+	shader->LoadShader("shaders/vert.glsl", GL_VERTEX_SHADER);
+	shader->LoadShader("shaders/frag.glsl", GL_FRAGMENT_SHADER);
 	shader->Link();
 	shader->Use();
 
 	// Load new texture into handler
-	MGLTexHandle->LoadTexture("raptor.jpg", "raptor", true, true);
-	MGLTexHandle->LoadTexture("bricks.jpg", "bricks", true, true);
+	MGLTexHandle->LoadTexture("textures/raptor.jpg", "raptor", true, true);
+	MGLTexHandle->LoadTexture("textures/bricks.jpg", "bricks", true, true);
 
 	// Add a camera
 	m_camera = new MGLCamera();
@@ -46,7 +46,7 @@ Scene::~Scene() {
 
 void Scene::loadObjects() {
 	// Load raptor
-	dino = MGLFileHandle->LoadMGL("raptor.mgl");
+	dino = MGLFileHandle->LoadMGL("meshes/raptor.mgl");
 	dino->AddTexture(MGLTexHandle->GetTexture("raptor"));
 
 	dino->SetUniforms([&]() { // just as an example

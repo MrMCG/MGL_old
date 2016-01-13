@@ -1,9 +1,7 @@
 #include "stdafx.h"
 #include "MGLUtil.h"
 
-#include <fstream>
-#include <vector>
-#include <algorithm>
+#include "MGLExceptions.h"
 
 void MGL::EnableWireframe() {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

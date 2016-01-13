@@ -1,6 +1,12 @@
 // Pre-Compiled headers
 #pragma once
 
+/*
+	NOTE: MGLDEBUG is defined in VS properties for debug build
+
+	NOTE: GLFW is built using MSVC_RUNTIME_LIBRARY_DLL
+*/
+
 #define STB_IMAGE_STATIC
 #define STB_IMAGE_IMPLEMENTATION
 #define GLEW_STATIC
@@ -16,7 +22,16 @@
 
 // MGL
 
-#include "MGLUtil.h"
-#include "MGLExceptions.h"
-#include "MGLDebug.h"
+// STL
 
+#include <iostream>
+#include <unordered_map>
+#include <string>
+#include <vector>
+
+#include <fstream>
+
+#include <algorithm>
+#include <functional>
+#include <ctime>
+#include <mutex>

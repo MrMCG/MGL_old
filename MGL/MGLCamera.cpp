@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "MGLCamera.h"
 
+#include "MGLExceptions.h"
+
 /*********************************/
 /*********** MGLCamera ***********/
 /*********************************/

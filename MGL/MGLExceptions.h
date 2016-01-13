@@ -1,12 +1,19 @@
 #pragma once
+#include "stdafx.h"
 
-#include <fstream>
-#include <string>
+
 
 // MGLException_EXCEPTYPE
 
 /*
-	*Most* MGLExceptions have a Test(PARAMS) function that with throw the error.
+	*Most* MGLExceptions have a Test(PARAMS) function that
+	will throw the error if those params are true to the error name.
+
+	e.g.
+	MGLException_IsEqual::Test(1,0) // WONT throw
+	MGLException_IsEqual::Test(25,25) // throws
+	MGLException_IsZero::Test(12) // WONT throw
+	MGLException_IsZero::Test(0) // throws
 */
 
 // Standard exception

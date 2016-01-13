@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 
-#include <unordered_map>
+#include "MGLUtil.h"
 
 // Key function data
 struct MGLInputItem {
@@ -17,7 +17,7 @@ struct MGLInputItem {
 	GLuint m_mod;
 	GLboolean m_use = GL_FALSE;
 
-	void* m_functionData = nullptr;
+	void* m_functionData = nullptr; // secodary data for this key function
 };
 
 class MGLInput {
@@ -43,7 +43,7 @@ public:
 protected:
 	GLuint m_inputCounter;
 	GLuint m_currentMod;
-	void* m_dataPointer;
+	void* m_dataPointer; // primary data for all key functions
 
 	std::vector<MGLInputItem> m_inputList;
 	std::unordered_map<GLuint, MGLFunction2> m_inputMap;

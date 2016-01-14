@@ -7,23 +7,24 @@ class MGLLog : public MGLSingleton < MGLLog > {
 	friend class MGLSingleton < MGLLog > ;
 public:
 	// Write current log to .txt
-	void WriteToFile(const std::string fileName, GLboolean mainLog,
+	void WriteToFile(const std::string fileName, const GLuint log,
 		const GLboolean truncate = GL_FALSE);
 	// Add string to log file, follows same rules as printf
-	void AddLog(const GLboolean mainLog, const GLboolean timeStamp, const std::string line, ...);
+	void AddLog(const GLuint log, const GLboolean timeStamp, const std::string line, ...);
 	// Delete strings in current log (not the .txt file)
-	void Flush(const GLboolean mainLog = GL_TRUE);
+	void Flush(const GLuint log = 1);
 
-	MGLvecs* GetMainLog() const { return m_mainLog; }
-	MGLvecs* GetErrorLog() const { return m_errorLog; }
+	MGLvecs* GetLog(const GLuint index) const { return m_logs->at(index); }
 protected:
 	MGLLog();
 	~MGLLog();
 
 	/****** Data ******/
 
-	MGLvecs* m_mainLog;
-	MGLvecs* m_errorLog;
+	std::vector<MGLvecs*>* m_logs;
+
+	//MGLvecs* m_mainLog;
+	//MGLvecs* m_errorLog;
 
 	//MGLvecs* m_screenLog; TODO
 };

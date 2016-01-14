@@ -8,16 +8,23 @@
 /******************************/
 
 MGLLog::MGLLog() {
-	m_mainLog = new MGLvecs();
-	m_errorLog = new MGLvecs();
+	m_logs = new std::vector<MGLvecs*>(MGL_LOG_AMOUNT);
+
+	for (GLuint i = 0; i < MGL_LOG_AMOUNT; ++i) {
+		m_logs->at(i) = new MGLvecs;
+		m_logs->at(i)->reserve(MGL_LOG_MAXLOGSIZE);
+	}
 }
 
 MGLLog::~MGLLog() {
-	delete m_mainLog;
-	delete m_errorLog;
+	for (MGLvecs* vec : *m_logs) {
+		delete vec;
+	}
+
+	delete m_logs;
 }
 
-void MGLLog::WriteToFile(const std::string fileName, const GLboolean mainLog, const GLboolean truncate) {
+void MGLLog::WriteToFile(const std::string fileName, const GLuint log, const GLboolean truncate) {
 	std::ofstream out(fileName, truncate ? std::ios::out | std::ios::trunc : std::ios::out | std::ios::app);
 
 	// did it open successfully
@@ -30,18 +37,18 @@ void MGLLog::WriteToFile(const std::string fileName, const GLboolean mainLog, co
 	}
 
 	// write intro string
-	std::string intro = "----- New MGLLog -----\n";
+	std::string intro = "******************************************\n";
+	intro += "*************** New MGLLog ***************\n";
+	intro += "******************************************\n";
 	out.write((char *)&intro[0], intro.size());
 
-	// write each log line
-	for (const std::string& str : mainLog ? *m_mainLog : *m_errorLog) {
+	for (const std::string& str : *m_logs->at(log)) {
 		out.write((char *)&str[0], str.size());
 		out.write("\n", 1);
 	}
-
 }
 
-void MGLLog::AddLog(const GLboolean mainLog, const GLboolean timeStamp, const std::string line, ...) {
+void MGLLog::AddLog(const GLuint log, const GLboolean timeStamp, const std::string line, ...) {
 	// get arguments
 	va_list args;
 	va_start(args, line);
@@ -72,16 +79,9 @@ void MGLLog::AddLog(const GLboolean mainLog, const GLboolean timeStamp, const st
 
 	text += std::string(buffer, (size_t)length);
 
-	// write to particular log
-	if (mainLog)
-		m_mainLog->push_back(text);
-	else
-		m_errorLog->push_back(text);
+	m_logs->at(log)->push_back(text);
 }
 
-void MGLLog::Flush(const GLboolean mainLog) {
-	if (mainLog)
-		m_mainLog->clear();
-	else
-		m_errorLog->clear();
+void MGLLog::Flush(const GLuint log) {
+	m_logs->at(log)->clear();
 }

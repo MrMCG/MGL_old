@@ -3,6 +3,10 @@
 
 /****** Defines ******/
 
+/*
+	Comments indicate main location of define use
+*/
+
 // MGLShader
 
 #define MGL_SHADER_VERTEX 0
@@ -24,8 +28,6 @@
 
 // MGLenums
 
-#define MGL_NULL 0
-
 #define MGL_WINDOWTYPE_WINDOWED 1
 #define MGL_WINDOWTYPE_FULLSCREEN 2
 #define MGL_WINDOWTYPE_FULLWINDOWED 3
@@ -37,6 +39,8 @@
 #define MGL_WINDOWINFO_ATTRIBUTE 5
 #define MGL_WINDOWINFO_M_XPOS 6
 #define MGL_WINDOWINFO_M_YPOS 7
+
+// MGLCamera
 
 #define MGL_CAMERA_FORWARD 0
 #define MGL_CAMERA_BACKWARD 1
@@ -66,11 +70,15 @@
 // MGLLog
 
 #define MGL_LOG_MAXLINESIZE 512
+#define MGL_LOG_MAXLOGSIZE 512
+#define MGL_LOG_AMOUNT 2
+
 #define MGL_LOG_DIRECTORY "_LOGS/"
 #define MGL_LOG_FILENAME_MAIN MGL_LOG_DIRECTORY"mgl_main_log.txt"
 #define MGL_LOG_FILENAME_ERROR MGL_LOG_DIRECTORY"mgl_error_log.txt"
-#define MGL_LOG_MAIN GL_TRUE
-#define MGL_LOG_ERROR GL_FALSE
+
+#define MGL_LOG_ERROR 0
+#define MGL_LOG_MAIN 1
 
 // Instance handlers
 
@@ -79,12 +87,14 @@
 #define MGLTexHandle MGLTexture::Instance()
 #define MGLLogHandle MGLLog::Instance()
 
-// MGLLog
+// Use for multithreading
+
+#define MGL_THREADS_FILE 4
 
 /****** Other ******/
 
 #define MGL_DEFAULT_DIRECTORY "_DEFAULTS/"
-#define MGL_TESTS_DIRECTORY MGL_DEFAULT_DIRECTORY"TESTS/"
+#define MGL_DEFAULT_TESTS_DIRECTORY MGL_DEFAULT_DIRECTORY"TESTS/"
 
 #define MGL_DEFAULT_TEXTURE MGL_DEFAULT_DIRECTORY"mgl_default_tex.png"
 #define MGL_DEFAULT_FONT MGL_DEFAULT_DIRECTORY"mgl_default_font.png"
@@ -109,6 +119,7 @@ typedef std::vector<GLfloat> MGLvecf;
 typedef std::vector<std::string> MGLvecs;
 typedef std::vector<MGLenum> MGLvecm;
 
+/****** Structs ******/
 
 struct MGLObjVertData {
 	GLuint vertex = 0;
@@ -154,15 +165,13 @@ namespace MGL {
 	void EnableWireframe();
 	// Disables wireframe
 	void DisableWireframe();
-
 	// Set basic texture params      
 	void SetTextureParameters(const GLuint texture, const GLboolean repeat, const GLboolean linear);
-
 	// Loads a texture and generates mipmaps
 	GLuint LoadTextureFromFile(const std::string& fileName, const GLboolean flipY = GL_TRUE);
-
+	// Get window info or attributes
 	int GetWindowInfo(GLFWwindow* window, const MGLenum info, const GLint attribute = 0);
-		
+	// Print glm::mat4, uses std::cout
 	void PrintMat4(const glm::mat4& matrix);
 
 	/****** Useful data ******/
@@ -191,7 +200,7 @@ protected:
 	GLfloat end;
 };
 
-template<class T>
+template<typename T>
 class MGLSingleton {
 public:
 	static inline T* Instance() { return m_instance; }
@@ -219,8 +228,8 @@ protected:
 private:
 	/* Prevent copy */
 
-	MGLSingleton(MGLSingleton const&){}
-	MGLSingleton& operator=(MGLSingleton const&){}
+	MGLSingleton(MGLSingleton const&) = delete;
+	MGLSingleton& operator=(MGLSingleton const&) = delete;
 
 	/* Keep instance pointer for refrence */
 
@@ -228,5 +237,5 @@ private:
 	static T* m_instance;
 };
 
-template <class T> std::mutex MGLSingleton<T>::m_init;
-template <class T> T* MGLSingleton<T>::m_instance = nullptr;
+template <typename T> std::mutex MGLSingleton<T>::m_init;
+template <typename T> T* MGLSingleton<T>::m_instance = nullptr;

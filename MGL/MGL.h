@@ -37,6 +37,12 @@ public:
 	virtual void RenderScene() = 0;
 	// Init openGL options (use AFTER window is linked)
 	virtual void InitGL();
+	// Writes user optional / settings based defines to main log file
+	void WriteDefinesInfo();
+	// Writes some OpenGL info to main log - !!! uses OGL version > 3.0 !!!
+	void WriteOGLInfo();
+	// Writes window info to main log
+	void WriteWindowInfo();
 	// Create a new window for use 
 	virtual void CreateNewWindow(GLuint width, GLuint height, std::string title, MGLenum windowType, GLFWmonitor* monito = nullptr);
 	// Should the window close
@@ -81,6 +87,7 @@ protected:
 
 	GLFWwindow* m_window;
 	GLboolean m_resizable;
+	GLuint m_windowType;
 	GLuint m_width;
 	GLuint m_height;
 	GLboolean m_inFocus;
@@ -134,14 +141,17 @@ protected:
 // Test cases for debugging
 #ifdef MGLDEBUG
 namespace MGL_TESTS_ {
-	// Run all class funcitons and clean (delete) created files
-	void MGL_TEST_CLASSES(const GLboolean cleanFiles = GL_TRUE);
+	
+	/****** Utility functions *****/
+
 	// Deletes files created by test cases
-	void MGL_TEST_FileCleanup();
+	void MGL_FileCleanup();
+	// Writes current log to temp file
+	void MGL_WriteTempLog(const std::string fileName);
 
 	/****** Various Tests *****/
 
-	// Run all various tests
+	// Run ALL various tests
 	void MGL_TEST_VARIOUS();
 	// Tests load speed of meshes of .obj and .mgl type
 	// Also tests memory usage/leads of mesh generations
@@ -149,26 +159,25 @@ namespace MGL_TESTS_ {
 
 	/****** MGL Classes Test *****/
 
+	// Run ALL class funcitons and clean (delete) created files
+	void MGL_TEST_CLASSES(const GLboolean cleanFiles = GL_TRUE);
+
 	GLuint MGL_TEST_MGLFILE();
-	GLuint MGL_TEST_MGLFILE_COTM(); // ConvertOBJToMGL 6
-	GLuint MGL_TEST_MGLFILE_LO(); // LadOBJ 10
-	GLuint MGL_TEST_MGLFILE_LM(); // LadMGL 18
-	GLuint MGL_TEST_MGLFILE_SMTM(); // SaveMeshToMGL 6
+	GLuint MGL_TEST_MGLFILE_COTM(); // ConvertOBJToMGL
+	GLuint MGL_TEST_MGLFILE_LO(); // LadOBJ
+	GLuint MGL_TEST_MGLFILE_LM(); // LadMGL
+	GLuint MGL_TEST_MGLFILE_SMTM(); // SaveMeshToMGL
 
+	// List of files created by tests, to be destroyed by MGL_FileCleanup
 	const MGLvecs createdTestFiles = { // KEEP SIZE EVEN!
-		MGL_TESTS_DIRECTORY"MGLFILE_LO_1", // 0
+		MGL_DEFAULT_TESTS_DIRECTORY"MGLFILE_LO_1", // 0
 		".mgl",
-		MGL_TESTS_DIRECTORY"MGLFILE_LO_2", // 2
+		MGL_DEFAULT_TESTS_DIRECTORY"MGLFILE_LO_2", // 2
 		".mgl",
-		MGL_TESTS_DIRECTORY"MGLFILE_SMTM_1", // 4
+		MGL_DEFAULT_TESTS_DIRECTORY"MGLFILE_SMTM_1", // 4
 		".mgl",
-		MGL_TESTS_DIRECTORY"MGLFILE_SMTM_2", // 6
+		MGL_DEFAULT_TESTS_DIRECTORY"MGLFILE_SMTM_2", // 6
 		".mgl",
-	};
-
-	const enum Counters{ total, MGLFile, max };
-	const enum FuncMax{
-		MGLFileMax = 40
 	};
 }
 #endif

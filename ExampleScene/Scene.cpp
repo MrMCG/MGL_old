@@ -10,7 +10,7 @@ Scene::Scene() : MGLRenderer() {
 #ifdef MGLDEBUG
 	// For running test cases
 	MGL_TESTS_::MGL_TEST_CLASSES();
-	//MGL_TESTS_::MGL_TEST_VARIOUS();
+	MGL_TESTS_::MGL_TEST_VARIOUS();
 #endif MGLDEBUG
 
 	// Create new shader program

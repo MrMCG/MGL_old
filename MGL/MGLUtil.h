@@ -52,6 +52,7 @@
 
 #define MGL_FILE_MINSIZE 32
 #define MGL_FILE_CURRENTVERSION 1.0f
+#define MGL_FILE_FLOATSIZE 4
 
 // MGLTexture
 
@@ -85,7 +86,8 @@
 #define MGL_DEFAULT_DIRECTORY "_DEFAULTS/"
 #define MGL_TESTS_DIRECTORY MGL_DEFAULT_DIRECTORY"TESTS/"
 
-#define MGL_DEFAULT_TEXTURE MGL_DEFAULT_DIRECTORY"stars.jpg"
+#define MGL_DEFAULT_TEXTURE MGL_DEFAULT_DIRECTORY"mgl_default_tex.png"
+#define MGL_DEFAULT_FONT MGL_DEFAULT_DIRECTORY"mgl_default_font.png"
 
 #define MGL_DEFAULT_CUBE MGL_DEFAULT_DIRECTORY"cube.mgl"
 #define MGL_DEFAULT_SPHERE MGL_DEFAULT_DIRECTORY"sphere.mgl"
@@ -170,6 +172,24 @@ namespace MGL {
 	const glm::vec4 RED = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 	const glm::vec4 GREEN = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 }
+
+// Timer in milliseconds
+class MGLTimer {
+public:
+	MGLTimer();
+	~MGLTimer(){};
+
+	// Start the timer
+	void Start(); 
+	// End the timer
+	void End();
+	// Get the time since Start()   
+	GLfloat Time();
+
+protected:
+	GLfloat start;
+	GLfloat end;
+};
 
 template<class T>
 class MGLSingleton {

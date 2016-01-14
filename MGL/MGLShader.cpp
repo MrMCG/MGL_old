@@ -72,7 +72,6 @@ void MGLShader::LoadShader(std::string fileName, GLenum type) {
 			into += temp + "\n";
 		}
 
-		file.close();
 	}
 
 	m_shaders[shaderType] = Compile(into.c_str(), type);

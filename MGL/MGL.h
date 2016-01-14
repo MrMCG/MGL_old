@@ -41,6 +41,8 @@ public:
 	virtual void CreateNewWindow(GLuint width, GLuint height, std::string title, MGLenum windowType, GLFWmonitor* monito = nullptr);
 	// Should the window close
 	virtual GLint ShouldClose() { return glfwWindowShouldClose(m_window); }
+	// Close the window
+	virtual void CloseWindow() { glfwSetWindowShouldClose(m_window, GL_TRUE); }
 	// Set callback on window resize (if m_resizable=true and window!=NULL)
 	void SetResizeCallback(GLFWwindowsizefun func);
 
@@ -109,7 +111,10 @@ protected:
 	virtual void PollEvents();
 	// Init singleton instances
 	virtual void InitInstances();
-
+	// Creates and sets a view matrix based on the camera
+	virtual void CreateViewMatrix();
+	// Creates a projection matrix based on camera
+	virtual void CreateProjectionMatrix(const GLboolean orthographic = GL_FALSE);
 	// Handlers for window 
 
 	virtual void HandleResize(GLuint width, GLuint height) override;
@@ -129,10 +134,20 @@ protected:
 // Test cases for debugging
 #ifdef MGLDEBUG
 namespace MGL_TESTS_ {
-	// Test all funcitons and clean (delete) created files
-	void MGL_TEST_ALL(const GLboolean cleanFiles = GL_TRUE);
+	// Run all class funcitons and clean (delete) created files
+	void MGL_TEST_CLASSES(const GLboolean cleanFiles = GL_TRUE);
 	// Deletes files created by test cases
 	void MGL_TEST_FileCleanup();
+
+	/****** Various Tests *****/
+
+	// Run all various tests
+	void MGL_TEST_VARIOUS();
+	// Tests load speed of meshes of .obj and .mgl type
+	// Also tests memory usage/leads of mesh generations
+	void MGL_TEST_VARIOUS_FILESPEED();
+
+	/****** MGL Classes Test *****/
 
 	GLuint MGL_TEST_MGLFILE();
 	GLuint MGL_TEST_MGLFILE_COTM(); // ConvertOBJToMGL 6

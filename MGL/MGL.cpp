@@ -253,6 +253,16 @@ void MGLRenderer::InitGL() {
 	InitInstances();
 }
 
+void MGLRenderer::CreateProjectionMatrix(const GLboolean orthographic) {
+	m_projMatrix = orthographic ?
+		glm::ortho(-5.0f, 5.0f, -5.0f, 5.0f, 0.1f, 2000.0f) :
+		glm::perspective(m_camera->GetZoom(), ((GLfloat)m_width / (GLfloat)m_height), 0.1f, 2000.0f);	
+}
+
+void MGLRenderer::CreateViewMatrix() {
+	m_viewMatrix = m_camera->BuildViewMatrix();
+}
+
 void MGLRenderer::InitInstances() {
 	// ORDER IS IMPORTANT
 	MGLTexture::Init();

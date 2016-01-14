@@ -39,7 +39,6 @@ void MGLLog::WriteToFile(const std::string fileName, const GLboolean mainLog, co
 		out.write("\n", 1);
 	}
 
-	out.close();
 }
 
 void MGLLog::AddLog(const GLboolean mainLog, const GLboolean timeStamp, const std::string line, ...) {
@@ -57,6 +56,7 @@ void MGLLog::AddLog(const GLboolean mainLog, const GLboolean timeStamp, const st
 
 	// create timestamp
 	std::string text = "";
+	
 	if (timeStamp) {
 		std::time_t t = std::time(nullptr);
 		struct tm now;
@@ -66,8 +66,9 @@ void MGLLog::AddLog(const GLboolean mainLog, const GLboolean timeStamp, const st
 		text += "-" + std::to_string(now.tm_year + 1900);
 		text += " " + std::to_string(now.tm_hour);
 		text += ":" + std::to_string(now.tm_min);
+		text += ":" + std::to_string(now.tm_sec);
 		text += "] ";
-	}
+	}	
 
 	text += std::string(buffer, (size_t)length);
 

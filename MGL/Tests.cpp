@@ -11,12 +11,15 @@
 	or what they test, they are used for debugging purposes
 */
 
+
 #ifdef MGLDEBUG
 
-void MGL_TESTS_::MGL_TEST_ALL(const GLboolean cleanFiles) {
+#define FILESPEED_ITERATIONS 1000
+
+void MGL_TESTS_::MGL_TEST_CLASSES(const GLboolean cleanFiles) {
 	MGLLog::Init(); //just to be sure
 
-	std::string message = "\n\tEND - MGL_TEST_ALL - SUCCESS\n";
+	std::string message = "\n\tEND - MGL_TEST_CLASSES - SUCCESS\n";
 
 	// counter for the number of functions ran
 	GLuint counter[Counters::max];
@@ -26,13 +29,13 @@ void MGL_TESTS_::MGL_TEST_ALL(const GLboolean cleanFiles) {
 	}
 
 	// write contents of current log to temp file
-	std::cout << "\n\tBEGIN - MGL_TEST_ALL" << std::endl;
+	std::cout << "\n\tBEGIN - MGL_TEST_CLASSES\n" << std::endl;
 	std::cout << "Dumping current log to "MGL_LOG_DIRECTORY"mgl_error_log_temp.txt" << std::endl;
-	MGLLogHandle->WriteToFile("mgl_error_log_temp.txt", GL_FALSE);
+	MGLLogHandle->WriteToFile(MGL_LOG_DIRECTORY"mgl_error_log_temp.txt", GL_FALSE);
 	MGLLogHandle->Flush(MGL_LOG_ERROR);
 	std::cout << "Running tests..." << std::endl;
 
-	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n\tBEGIN - MGL_TEST_ALL");
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n\tBEGIN - MGL_TEST_CLASSES");
 	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n***************************************");
 	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "***** EXPECT ERRORS BY THE TONNE! *****");
 	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "*********** BUT DONT WORRY! ***********");
@@ -46,17 +49,17 @@ void MGL_TESTS_::MGL_TEST_ALL(const GLboolean cleanFiles) {
 	}
 	catch (MGLException& e) {
 		std::cerr << e.what() << std::endl;
-		message = "\tEND - MGL_TEST_ALL - FAILED\n";
+		message = "\tEND - MGL_TEST_CLASSES - FAILED\n";
 	}
 
 	if (cleanFiles) // delete created files
 		MGL_TEST_FileCleanup();
 
 	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, message);
-	MGLLogHandle->WriteToFile(MGL_LOG_DIRECTORY"mgl_tests_all.txt", GL_FALSE, GL_TRUE);
+	MGLLogHandle->WriteToFile(MGL_LOG_DIRECTORY"mgl_tests_all.txt", GL_FALSE, GL_FALSE);
 	MGLLogHandle->Flush(MGL_LOG_ERROR);
 
-	std::cout << message << std::endl;
+	std::cout << message;
 }
 
 void MGL_TESTS_::MGL_TEST_FileCleanup() {
@@ -72,6 +75,54 @@ void MGL_TESTS_::MGL_TEST_FileCleanup() {
 			MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s%s", e.what(), "Error deleting file ", file.c_str());
 		}
 	}
+}
+
+void MGL_TESTS_::MGL_TEST_VARIOUS() {
+	std::cout << "\n\tBEGIN - MGL_TEST_VARIOUS" << std::endl;
+	std::cout << "Dumping current log to "MGL_LOG_DIRECTORY"mgl_error_log_temp.txt" << std::endl;
+	MGLLogHandle->WriteToFile(MGL_LOG_DIRECTORY"mgl_error_log_temp.txt", GL_FALSE);
+	MGLLogHandle->Flush(MGL_LOG_ERROR);
+	std::cout << "Running tests..." << std::endl;
+
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n\tBEGIN - MGL_TEST_VARIOUS");
+
+	MGL_TEST_VARIOUS_FILESPEED();
+	
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n\tEND MGL_TEST_VARIOUS");
+
+	MGLLogHandle->WriteToFile(MGL_LOG_DIRECTORY"mgl_tests_all.txt", GL_FALSE, GL_FALSE);
+	MGLLogHandle->Flush(MGL_LOG_ERROR);
+
+	std::cout << "\n\tEND - MGL_TEST_VARIOUS" << std::endl;
+}
+
+void MGL_TESTS_::MGL_TEST_VARIOUS_FILESPEED() {
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n\tBEGIN - MGL_TEST_VARIOUS_FILESPEED\n");
+
+	MGLMesh* mesh = nullptr;
+	MGLTimer timer = MGLTimer();
+
+	timer.Start();
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%i%s", "BEGIN Load of ", FILESPEED_ITERATIONS, " cube.obj");
+	for (GLuint i = 0; i < FILESPEED_ITERATIONS; ++i) {
+		mesh = MGLFileHandle->LoadOBJ(MGL_TESTS_DIRECTORY"cube.obj");
+		
+		delete mesh;
+	}
+	timer.End();
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, "END Load - Time: %f", timer.Time());
+
+	timer.Start();
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%i%s", "BEGIN Load of ", FILESPEED_ITERATIONS, " cube.mgl");
+	for (GLuint i = 0; i < FILESPEED_ITERATIONS; ++i) {
+		mesh = MGLFileHandle->LoadMGL(MGL_TESTS_DIRECTORY"cube.mgl");
+
+		delete mesh;
+	}
+	timer.End();
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, "END Load - Time: %f", timer.Time());
+
+	MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n\tEND MGL_TEST_VARIOUS_FILESPEED");
 }
 
 GLuint MGL_TESTS_::MGL_TEST_MGLFILE() {

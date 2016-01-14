@@ -1,6 +1,8 @@
 #pragma once
 #include "MGL.h"
 
+#define testtest
+
 class Scene : public MGLRenderer {
 public:
 	Scene();
@@ -20,13 +22,16 @@ private:
 
 	MGLShader* shader;
 
-	GLfloat lastFrame;
+	MGLTimer gameTimer;
+
 	GLfloat deltaTime;
 };
 
 /****** Input functions ******/
+
 void Key_MOUSE_Func(Scene* inputData);
 void Key_SCROLL_Func(Scene* inputData);
+void key_ESC_Func(Scene* inputData);
 
 void Movement_Func(Scene* inputData, MGLenum* funcData);
 

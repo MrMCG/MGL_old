@@ -3,13 +3,16 @@
 
 /*
 	NOTE: MGLDEBUG is defined in VS properties for debug build
-
-	NOTE: GLFW is built using MSVC_RUNTIME_LIBRARY_DLL
 */
 
 #define STB_IMAGE_STATIC
 #define STB_IMAGE_IMPLEMENTATION
 #define GLEW_STATIC
+
+/****** FOR MEMORY DEBUGGING *****/
+//#define _CRTDBG_MAP_ALLOC
+//#include <stdlib.h>
+//#include <crtdbg.h>
 
 // Third Party
 

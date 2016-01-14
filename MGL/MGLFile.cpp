@@ -56,14 +56,13 @@ MGLMesh* MGLFile::LoadMGL(std::string fileName, GLboolean bufferData) {
 	catch (MGLException& e) {
 		//std::cerr << e.what() << std::endl;
 		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
-
+	
 		return new MGLMesh(MGL_MESH_TRIANGLE);
 	}
 
 	// read file buffer into vector
-	std::vector<GLfloat>* buffer = new std::vector<GLfloat>(size / sizeof(GLfloat));
+	std::vector<GLfloat>* buffer = new std::vector < GLfloat >((size / MGL_FILE_FLOATSIZE) + 1);
 	file.read((GLchar*)&buffer->at(0), size);
-	file.close();
 
 	// file is equal to determined file size
 	try {
@@ -73,7 +72,7 @@ MGLMesh* MGLFile::LoadMGL(std::string fileName, GLboolean bufferData) {
 	catch (MGLException& e) {
 		//std::cerr << e.what() << ": FILE SIZE ERROR " << fileName << std::endl;
 		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s%s", e.what(), ": FILE SIZE ERROR ", fileName.c_str());
-
+		delete buffer;
 		return new MGLMesh(MGL_MESH_TRIANGLE);
 	}
 
@@ -204,7 +203,7 @@ void MGLFile::SaveMeshToMGL(MGLMesh* mesh, std::string fileName, GLboolean saveC
 	}
 	catch (MGLException_Null& e) {
 		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), "SMTM Mesh");
-
+		
 		return;
 	}
 
@@ -272,7 +271,6 @@ void MGLFile::SaveMeshToMGL(MGLMesh* mesh, std::string fileName, GLboolean saveC
 		out.write((GLchar*)&val, sizeof(GLfloat));
 	}
 	
-	out.close();
 }
 
 MGLMesh* MGLFile::LoadOBJ(std::string fileName, GLboolean bufferData) {
@@ -292,7 +290,7 @@ MGLMesh* MGLFile::LoadOBJ(std::string fileName, GLboolean bufferData) {
 	catch (MGLException_File_FileType& e) {
 		//std::cerr << e.what() << std::endl;
 		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
-
+		delete stream;
 		return new MGLMesh(MGL_MESH_TRIANGLE);
 	}
 
@@ -341,6 +339,7 @@ MGLMesh* MGLFile::LoadOBJ(std::string fileName, GLboolean bufferData) {
 	}
 	MGLMesh* mesh = CreateMesh(obj);
 	delete obj;
+	delete stream;
 
 	try {
 		MGLException_Null::Test(mesh);
@@ -348,7 +347,7 @@ MGLMesh* MGLFile::LoadOBJ(std::string fileName, GLboolean bufferData) {
 	catch (MGLException& e) {
 		//std::cerr << e.what() << " Error creating mesh" << std::endl;
 		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), " Error creating mesh");
-
+		delete mesh;
 		return new MGLMesh(MGL_MESH_TRIANGLE);
 	}
 
@@ -368,13 +367,12 @@ std::stringstream* MGLFile::LoadFileToSS(std::string fileName) {
 	catch (MGLException& e) {
 		//std::cerr << e.what() << std::endl;
 		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
-
+	
 		return nullptr;
 	}
 
 	stringstream* stream = new stringstream{};
 	*stream << file.rdbuf();
-	file.close();
 
 	return stream;
 }

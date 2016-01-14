@@ -55,14 +55,12 @@ MGLMesh::~MGLMesh() {
 		delete m_colours;
 		glDeleteBuffers(1, &m_VBO[MGL_BUFFER_COLOURS]);
 	}
-	if (m_textures) {
-		delete m_textures;
-	}
 	if (m_indices) {
 		delete m_indices;
 		glDeleteBuffers(1, &m_VBO[MGL_BUFFER_INDICES]);
 	}
 
+	delete m_textures;
 	glDeleteVertexArrays(1, &m_VAO);
 }
 

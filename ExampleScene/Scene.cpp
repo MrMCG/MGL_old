@@ -9,7 +9,8 @@ Scene::Scene() : MGLRenderer() {
 
 #ifdef MGLDEBUG
 	// For running test cases
-	MGL_TESTS_::MGL_TEST_ALL();
+	MGL_TESTS_::MGL_TEST_CLASSES();
+	//MGL_TESTS_::MGL_TEST_VARIOUS();
 #endif MGLDEBUG
 
 	// Create new shader program
@@ -26,8 +27,10 @@ Scene::Scene() : MGLRenderer() {
 	// Add a camera
 	m_camera = new MGLCamera();
 
+	// Create new timer
+	gameTimer = MGLTimer();
+
 	// Init delta time variables
-	lastFrame = (GLfloat)glfwGetTime();
 	deltaTime = 0.0f;
 
 	// load objects
@@ -81,6 +84,7 @@ void Scene::InitInputFuncs() {
 
 	m_keyboad->AddKeyFunction(GLFW_KEY_1, GLFW_PRESS, (MGLFunction2)MGL::EnableWireframe, nullptr);
 	m_keyboad->AddKeyFunction(GLFW_KEY_2, GLFW_PRESS, (MGLFunction2)MGL::DisableWireframe, nullptr);
+	m_keyboad->AddKeyFunction(GLFW_KEY_ESCAPE, GLFW_PRESS, (MGLFunction2)key_ESC_Func, nullptr);
 
 	// Add mouse functions
 	m_mouse->AddKeyFunction(GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE, (MGLFunction2)Key_MOUSE_Func, nullptr);
@@ -92,10 +96,12 @@ void Scene::InitInputFuncs() {
 }
 
 void Scene::RenderScene() {
-	// Quick delta time
-	GLfloat currentFrame = (GLfloat)glfwGetTime();
-	deltaTime = currentFrame - lastFrame;
-	lastFrame = currentFrame;
+	// Get frame time
+	deltaTime = gameTimer.Time();
+	//std::cout << deltaTime << std::endl;
+
+	// Start new frame time
+	gameTimer.Start();
 
 	// Poll input
 	PollEvents();
@@ -104,8 +110,8 @@ void Scene::RenderScene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Update Matrices
-	m_projMatrix = glm::perspective(m_camera->GetZoom(), 800.0f / 600.0f, 0.1f, 1000.0f); // for scrool zoom
-	m_viewMatrix = m_camera->BuildViewMatrix();
+	CreateProjectionMatrix();
+	CreateViewMatrix();
 
 	// Set uniforms
 	glUniformMatrix4fv(glGetUniformLocation(shader->Program(), "viewMatrix"), 1, false, glm::value_ptr(m_viewMatrix));
@@ -133,6 +139,9 @@ void Scene::RenderScene() {
 
 	// Swap buffers
 	SwapBuffers();
+
+	// End frame time
+	gameTimer.End();
 }
 
 void Movement_Func(Scene* inputData, MGLenum* funcData) {
@@ -150,4 +159,8 @@ void Key_MOUSE_Func(Scene* inputData) {
 void Key_SCROLL_Func(Scene* inputData) {
 	inputData->GetCamera()->MoveCamera(MGL_CAMERA_ZOOM, inputData->GetMouse()->GetScrollY() * 0.1f);
 	inputData->GetMouse()->SetScrollUpdated(GL_FALSE); // reset for next scroll
+}
+
+void key_ESC_Func(Scene* inputData) {
+	inputData->CloseWindow();
 }

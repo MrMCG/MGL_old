@@ -32,8 +32,8 @@ void MGLTexture::AddTexture(GLuint tex, std::string name, MGLenum type) {
 }
 
 void MGLTexture::LoadTexture(std::string fileName, std::string name, 
-		MGLenum type, GLboolean repeat, GLboolean linear) {
-	GLuint tex = MGL::LoadTextureFromFile(fileName); // load tex
+		MGLenum type, GLboolean alpha, GLboolean repeat, GLboolean linear) {
+	GLuint tex = MGL::LoadTextureFromFile(fileName, alpha); // load tex
 	MGL::SetTextureParameters(tex, repeat, linear); // apply attributes
 
 	AddTexture(tex, name, type); // add

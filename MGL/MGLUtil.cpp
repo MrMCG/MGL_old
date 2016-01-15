@@ -26,7 +26,7 @@ void MGL::SetTextureParameters(const GLuint texture, const GLboolean repeat, con
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-GLuint MGL::LoadTextureFromFile(const std::string& fileName, const GLboolean flipY) {
+GLuint MGL::LoadTextureFromFile(const std::string& fileName, const GLboolean alpha, const GLboolean flipY) {
 	GLuint tex = 0;
 
 	try {
@@ -34,13 +34,13 @@ GLuint MGL::LoadTextureFromFile(const std::string& fileName, const GLboolean fli
 
 		stbi_set_flip_vertically_on_load(flipY);
 
-		GLubyte* image = stbi_load(fileName.c_str(), &w, &h, &c, STBI_rgb);
+		GLubyte* image = stbi_load(fileName.c_str(), &w, &h, &c, alpha ? STBI_rgb_alpha : STBI_rgb);
 
 		MGLException_Null::Test(image);
 
 		glGenTextures(1, &tex);
 		glBindTexture(GL_TEXTURE_2D, tex);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+		glTexImage2D(GL_TEXTURE_2D, 0, alpha ? GL_RGBA : GL_RGB, w, h, 0, alpha ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, 0);
 

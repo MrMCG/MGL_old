@@ -6,10 +6,6 @@
 #include "MGLExceptions.h"
 #include "MGLDebug.h"
 
-#include <fstream>
-#include <sstream>
-#include <algorithm>
-
 /*******************************/
 /*********** MGLFile ***********/
 /*******************************/
@@ -90,8 +86,8 @@ MGLMesh* MGLFile::LoadMesh(const MGLvecf* buffer, const GLboolean bufferData) {
 	GLuint loc = 0;
 
 	// build mesh from vector
-	fileVersion = (GLuint)buffer->at(++loc);
-	type = (GLuint)buffer->at(loc);
+	fileVersion = (GLuint)buffer->at(loc);
+	type = (GLuint)buffer->at(++loc);
 	numVertices = (GLuint)buffer->at(++loc);
 	numIndices = (GLuint)buffer->at(++loc);
 	colourVal = (GLint)buffer->at(++loc);
@@ -357,7 +353,6 @@ MGLMesh* MGLFile::LoadOBJ(std::string fileName, GLboolean bufferData) {
 	return mesh;
 }
 
-
 std::stringstream* MGLFile::LoadFileToSS(std::string fileName) {
 	ifstream file(fileName);
 
@@ -546,9 +541,9 @@ MGLMesh* MGLFile::CreateMesh(MGLObjFileData* obj) {
 			maxNorm = (data.normals > maxNorm) ? data.normals : maxNorm;
 		}
 
-		MGLException_IsLessThan::Test(++maxVert, obj->inputVertices.size());
-		MGLException_IsLessThan::Test(++maxTex, obj->inputTexCoords.size());
-		MGLException_IsLessThan::Test(++maxNorm, obj->inputNormals.size());
+		MGLException_IsLessThan::Test(obj->inputVertices.size(), ++maxVert);
+		MGLException_IsLessThan::Test(obj->inputTexCoords.size(), ++maxTex);
+		MGLException_IsLessThan::Test(obj->inputNormals.size(), ++maxNorm);
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << "Mesh size error" << std::endl;

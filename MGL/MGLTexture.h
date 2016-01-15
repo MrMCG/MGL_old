@@ -16,7 +16,7 @@ public:
 	void AddTexture(GLuint tex, std::string name, MGLenum type);
 	// Load a texture from file and apply attributes
 	void LoadTexture(std::string fileName, std::string name, MGLenum type,
-		GLboolean repeat = GL_TRUE, GLboolean linear = GL_TRUE);
+		GLboolean alpha = GL_FALSE, GLboolean repeat = GL_TRUE, GLboolean linear = GL_TRUE);
 	// Get texture by name (return tex refrence or index in vector)
 	GLuint GetTexture(std::string name, GLboolean returnIndex = GL_FALSE);
 	GLuint GetTexture(GLuint index);

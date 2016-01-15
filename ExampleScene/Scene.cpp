@@ -3,14 +3,16 @@
 
 Scene::Scene() : MGLRenderer() {
 	// Create window context
-	CreateNewWindow(800, 600, "MGL Example Window!", MGL_WINDOWTYPE_WINDOWED);
+	CreateNewWindow(1280, 720, "MGL Example Window!", MGL_WINDOWTYPE_WINDOWED);
 	// Init GLEW and other GL features
 	InitGL();
 
+	//MGLFileHandle->ConvertOBJToMGL("tardis.obj", "t", GL_FALSE);
+
 #ifdef MGLDEBUG
 	// For running test cases
-	MGL_TESTS_::MGL_TEST_CLASSES();
-	MGL_TESTS_::MGL_TEST_VARIOUS();
+	//MGL_TESTS_::MGL_TEST_CLASSES();
+	//MGL_TESTS_::MGL_TEST_VARIOUS();
 #endif MGLDEBUG
 
 	// Create new shader program
@@ -21,11 +23,12 @@ Scene::Scene() : MGLRenderer() {
 	shader->Use();
 
 	// Load new texture into handler
-	MGLTexHandle->LoadTexture("textures/raptor.jpg", "raptor", true, true);
-	MGLTexHandle->LoadTexture("textures/bricks.jpg", "bricks", true, true);
+	MGLTexHandle->LoadTexture("raptor.jpg", "raptor", MGL_TEXTURE_DIFFUSE, GL_FALSE);
+	MGLTexHandle->LoadTexture("textures/bricks.jpg", "bricks", MGL_TEXTURE_DIFFUSE);
 
 	// Add a camera
 	m_camera = new MGLCamera();
+	m_camera->SetMoveSpeed(100.0f);
 
 	// Create new timer
 	gameTimer = MGLTimer();
@@ -49,7 +52,7 @@ Scene::~Scene() {
 
 void Scene::loadObjects() {
 	// Load raptor
-	dino = MGLFileHandle->LoadMGL("meshes/raptor.mgl");
+	dino = MGLFileHandle->LoadMGL("raptor.mgl");
 	dino->AddTexture(MGLTexHandle->GetTexture("raptor"));
 
 	dino->SetUniforms([&]() { // just as an example
@@ -127,7 +130,7 @@ void Scene::RenderScene() {
 	// Draw dino
 	m_modelMatrix = glm::translate(glm::mat4(), glm::vec3(-5.0f, 0.0f, -5.0f));
 	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(90.0f), glm::vec3(0, -1, 0));
-	m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(4.0f, 4.0f, 4.0f));
+	m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(0.1f, 0.1f, 0.1f));
 	glUniformMatrix4fv(glGetUniformLocation(shader->Program(), "modelMatrix"), 1, false, glm::value_ptr(m_modelMatrix));
 	dino->Draw();
 
@@ -157,7 +160,7 @@ void Key_MOUSE_Func(Scene* inputData) {
 }
 
 void Key_SCROLL_Func(Scene* inputData) {
-	inputData->GetCamera()->MoveCamera(MGL_CAMERA_ZOOM, inputData->GetMouse()->GetScrollY() * 0.1f);
+	inputData->GetCamera()->MoveCamera(MGL_CAMERA_ZOOM, inputData->GetMouse()->GetScrollY());
 	inputData->GetMouse()->SetScrollUpdated(GL_FALSE); // reset for next scroll
 }
 

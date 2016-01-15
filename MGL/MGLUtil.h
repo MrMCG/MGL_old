@@ -87,10 +87,6 @@
 #define MGLTexHandle MGLTexture::Instance()
 #define MGLLogHandle MGLLog::Instance()
 
-// Use for multithreading
-
-#define MGL_THREADS_FILE 4
-
 /****** Other ******/
 
 #define MGL_DEFAULT_DIRECTORY "_DEFAULTS/"
@@ -168,7 +164,7 @@ namespace MGL {
 	// Set basic texture params      
 	void SetTextureParameters(const GLuint texture, const GLboolean repeat, const GLboolean linear);
 	// Loads a texture and generates mipmaps
-	GLuint LoadTextureFromFile(const std::string& fileName, const GLboolean flipY = GL_TRUE);
+	GLuint LoadTextureFromFile(const std::string& fileName, const GLboolean alpha = GL_FALSE, const GLboolean flipY = GL_TRUE);
 	// Get window info or attributes
 	int GetWindowInfo(GLFWwindow* window, const MGLenum info, const GLint attribute = 0);
 	// Print glm::mat4, uses std::cout

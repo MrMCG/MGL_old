@@ -12,7 +12,7 @@ public:
 	// ISSUE WITH 4 VERTEX FACE! need to implement GL_TRIANGLE_FAN
 	void ConvertOBJToMGL(const std::string fileName, const std::string title, const GLboolean saveColours);
 	// Loads in a .obj file and returns a resultant MGLMesh 
-	// (WORKS BEST WITH FACES WITH 3 VERTICES!)
+	// (WORKS BEST USING FACES WITH 3 VERTICES!)
 	MGLMesh* LoadOBJ(std::string fileName, GLboolean bufferData = GL_TRUE);
 	// Loads a .mgl file and returns a resultant MGLMesh
 	MGLMesh* LoadMGL(std::string fileName, GLboolean bufferData = GL_TRUE);

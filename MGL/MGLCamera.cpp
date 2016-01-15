@@ -21,7 +21,7 @@ MGLCamera::MGLCamera() {
 	m_pitchSpeed = 0.15f;
 	m_yawSpeed = 0.15f;
 
-	m_zoom = 45.0f;
+	m_zoom = 65.0f;
 
 	// map movement directions to function
 	m_movementMap.insert(std::make_pair(MGL_CAMERA_FORWARD, &MGLCamera::MoveForward));
@@ -100,14 +100,14 @@ void MGLCamera::MovePitch(GLfloat offset) {
 }
 
 void MGLCamera::Zoom(GLfloat amount) {
-	if (m_zoom >= 44.0f && m_zoom <= 45.0f)
+	if (m_zoom >= 10.0f && m_zoom <= 65.0f)
 		m_zoom -= amount;
 
-	if (m_zoom <= 44.0f)
-		m_zoom = 44.0f;
+	if (m_zoom <= 10.0f)
+		m_zoom = 10.0f;
 
-	if (m_zoom >= 45.0f)
-		m_zoom = 45.0f;
+	if (m_zoom >= 65.0f)
+		m_zoom = 65.0f;
 
 	std::cout << "ZOOM : " << m_zoom << std::endl;
 }

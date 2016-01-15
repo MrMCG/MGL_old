@@ -230,7 +230,6 @@ void MGLContext::WriteDefinesInfo() {
 	GLuint def_MGLDEBUG = 0;
 
 	GLuint def_FILEVERSION = (GLuint)MGL_FILE_CURRENTVERSION;
-	GLuint def_FILETHREADS = MGL_THREADS_FILE;
 
 	GLuint def_LOGLINESIZE = MGL_LOG_MAXLINESIZE;
 	GLuint def_LOGTOTALSIZE = MGL_LOG_MAXLOGSIZE;
@@ -243,7 +242,6 @@ void MGLContext::WriteDefinesInfo() {
 
 	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8s", "MGLDEBUG", def_MGLDEBUG ? "TRUE" : "FALSE");
 	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_FILE_CURRENTVERSION", def_FILEVERSION);
-	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_THREADS_FILE", def_FILETHREADS);
 	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_LOG_MAXLINESIZE", def_LOGLINESIZE);
 	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_LOG_MAXLOGSIZE", def_LOGTOTALSIZE);
 }
@@ -305,8 +303,8 @@ void MGLRenderer::InitGL() {
 
 void MGLRenderer::CreateProjectionMatrix(const GLboolean orthographic) {
 	m_projMatrix = orthographic ?
-		glm::ortho(-5.0f, 5.0f, -5.0f, 5.0f, 0.1f, 2000.0f) :
-		glm::perspective(m_camera->GetZoom(), ((GLfloat)m_width / (GLfloat)m_height), 0.1f, 2000.0f);	
+		glm::ortho(-5.0f, 5.0f, -5.0f, 5.0f, 0.1f, 5000.0f) :
+		glm::perspective(glm::radians(m_camera->GetZoom()), ((GLfloat)m_width / (GLfloat)m_height), 0.1f, 5000.0f);	
 }
 
 void MGLRenderer::CreateViewMatrix() {

@@ -7,7 +7,7 @@
 #pragma comment(lib, "glew32sd.lib")
 #else
 #pragma comment(lib, "glew32s.lib")
-#endif
+#endif // MGLDEBUG
 
 #pragma comment(lib, "glfw3.lib")
 
@@ -138,24 +138,26 @@ protected:
 	MGLMouse* m_mouse;
 };
 
+#ifdef MGL_USER_INCLUDE_TESTS
 // Test cases for debugging
-#ifdef MGLDEBUG
 namespace MGL_TESTS_ {
 	
 	/****** Utility functions *****/
 
 	// Deletes files created by test cases
 	void MGL_FileCleanup();
-	// Writes current log to temp file
-	void MGL_WriteTempLog(const std::string fileName);
+
+	// Runs all tests
+	void MGL_TEST_ALL();
 
 	/****** Various Tests *****/
 
 	// Run ALL various tests
 	void MGL_TEST_VARIOUS();
-	// Tests load speed of meshes of .obj and .mgl type
-	// Also tests memory usage/leads of mesh generations
+	// Tests load speed of meshes of .obj and .mgl type (takes a while)
 	void MGL_TEST_VARIOUS_FILESPEED();
+	// Tests memory usage by creating and deleting thousands of objects
+	void MGL_TEST_VARIOUS_MEMMORY();
 
 	/****** MGL Classes Test *****/
 
@@ -163,21 +165,16 @@ namespace MGL_TESTS_ {
 	void MGL_TEST_CLASSES(const GLboolean cleanFiles = GL_TRUE);
 
 	GLuint MGL_TEST_MGLFILE();
-	GLuint MGL_TEST_MGLFILE_COTM(); // ConvertOBJToMGL
-	GLuint MGL_TEST_MGLFILE_LO(); // LadOBJ
-	GLuint MGL_TEST_MGLFILE_LM(); // LadMGL
-	GLuint MGL_TEST_MGLFILE_SMTM(); // SaveMeshToMGL
+	GLuint MGL_TEST_MGLFILE_OBJ(); // Load OBJ files
+	GLuint MGL_TEST_MGLFILE_MGL(); // Load MGL files
+	GLuint MGL_TEST_MGLFILE_SMTM(); // save mesh to .mgl file
 
 	// List of files created by tests, to be destroyed by MGL_FileCleanup
 	const MGLvecs createdTestFiles = { // KEEP SIZE EVEN!
-		MGL_DEFAULT_TESTS_DIRECTORY"MGLFILE_LO_1", // 0
+		MGL_DEFAULT_TESTS_DIRECTORY"MGLFILE_SMTM_1", // 0
 		".mgl",
-		MGL_DEFAULT_TESTS_DIRECTORY"MGLFILE_LO_2", // 2
-		".mgl",
-		MGL_DEFAULT_TESTS_DIRECTORY"MGLFILE_SMTM_1", // 4
-		".mgl",
-		MGL_DEFAULT_TESTS_DIRECTORY"MGLFILE_SMTM_2", // 6
+		MGL_DEFAULT_TESTS_DIRECTORY"MGLFILE_SMTM_2", // 2
 		".mgl",
 	};
 }
-#endif
+#endif // MGL_USER_INCLUDE_TESTS

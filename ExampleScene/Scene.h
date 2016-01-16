@@ -15,10 +15,11 @@ public:
 private:
 	void InitInputFuncs();
 	void loadObjects();
+	std::vector<std::thread> threads; // for multi testing
 
 	MGLMesh* dino;
 	MGLMesh* box;
-	MGLMesh* floor;
+	MGLMesh* city;
 
 	MGLShader* shader;
 

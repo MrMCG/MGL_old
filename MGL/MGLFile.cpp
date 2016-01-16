@@ -10,76 +10,216 @@
 /*********** MGLFile ***********/
 /*******************************/
 
-// most commonly used 
-using std::stringstream;
-using std::string;
-using std::ifstream;
+std::stringstream* MGLFile::LoadFileToSS(std::string fileName) {
+	std::ifstream file(fileName, std::ios::in);
 
-void MGLFile::ConvertOBJToMGL(const std::string fileName, const std::string title, const GLboolean saveColours) {
-	MGLMesh* mesh = LoadOBJ(fileName);
-
-	// make sure mesh is not a triangle (error mesh)
+#ifdef MGL_USER_INCLUDE_FILETC
 	try {
-		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4);
+		MGLException_FileError::Test(file.is_open(), fileName);
+		MGLException_File_FileType::Test(fileName, m_fileEXT);
 	}
 	catch (MGLException& e) {
-		//std::cerr << e.what() << ": OBJ LOADING ERROR FROM " << fileName << std::endl;
-		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s%s", e.what(), ": OBJ LOADING ERROR FROM ", fileName.c_str());
-		delete mesh;
-		return;
-	}
+		//std::cerr << e.what() << std::endl;
+		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
 
-	SaveMeshToMGL(mesh, title, saveColours);
-	delete mesh;
+		return nullptr;
+	}
+#endif // MGL_USER_INCLUDE_FILETC
+
+	std::stringstream* stream = new std::stringstream{};
+	*stream << file.rdbuf();
+
+	return stream;
 }
 
-MGLMesh* MGLFile::LoadMGL(std::string fileName, GLboolean bufferData) {
-	
-	ifstream file(fileName, std::ios::in | std::ios::binary);
+template <typename T>
+std::vector<T>* MGLFile::LoadFileToVec(std::string fileName) {
+	std::ifstream file(fileName, std::ios::in | std::ios::binary);
 
 	file.seekg(0, std::ios_base::end);
 	std::size_t size = (std::size_t)file.tellg(); // get file size
 	file.seekg(0, std::ios_base::beg);
 
+#ifdef MGL_USER_INCLUDE_FILETC
 	try {
 		// file is open and has correct extension
 		MGLException_FileError::Test(file.is_open(), fileName);
-		MGLException_File_FileType::Test(fileName, ".mgl");
-
-		// file size is large enough
-		MGLException_FileSTooSmall::Test(fileName, file, MGL_FILE_MINSIZE);
+		MGLException_File_FileType::Test(fileName, m_fileEXT);
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << std::endl;
-		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
-	
-		return new MGLMesh(MGL_MESH_TRIANGLE);
+		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+
+		return nullptr;
 	}
+#endif // MGL_USER_INCLUDE_FILETC
 
 	// read file buffer into vector
-	std::vector<GLfloat>* buffer = new std::vector < GLfloat >((size / MGL_FILE_FLOATSIZE) + 1);
+	std::vector<T>* buffer = new std::vector < GLfloat >((size / sizeof(T)) + 1);
 	file.read((GLchar*)&buffer->at(0), size);
 
-	// file is equal to determined file size
+	return buffer;
+}
+
+void MGLFile::SaveMeshToMGL(MGLMesh* mesh, std::string fileName, GLboolean saveColours) {
+	// open file
+	std::ofstream out(fileName + ".mgl", std::ios::binary);
+
+#ifdef MGL_USER_INCLUDE_FILETC
 	try {
-		MGLException_IsNotEqual::Test(DetermineFileSize(
-			(GLuint)buffer->at(2), (GLuint)buffer->at(3), (GLint)buffer->at(4)), size);
+		MGLException_FileError::Test(out.is_open(), fileName);
+		MGLException_Null::Test(mesh);
 	}
-	catch (MGLException& e) {
+	catch (MGLException_FileError& e) {
+		//std::cerr << e.what() << std::endl;
+		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+
+		return;
+	}
+	catch (MGLException_Null& e) {
+		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), "SMTM Mesh");
+
+		return;
+	}
+#endif // MGL_USER_INCLUDE_FILETC
+
+	GLfloat val = 0;
+	// file version
+	val = (GLfloat)MGL_FILE_CURRENTVERSION;
+	out.write((GLchar*)&val, sizeof(GLfloat));
+	// type
+	val = (GLfloat)mesh->GetType();
+	out.write((GLchar*)&val, sizeof(GLfloat));
+	// numVertices
+	val = (GLfloat)mesh->GetNumVertices();
+	out.write((GLchar*)&val, sizeof(GLfloat));
+	// numIndices
+	val = (GLfloat)mesh->GetNumIndices();
+	out.write((GLchar*)&val, sizeof(GLfloat));
+	// determine colour val
+	GLfloat colourVal = (GLfloat)saveColours;
+	if (colourVal) {
+		// if all the colours are the same, set colourVal to -1
+		if (std::adjacent_find(mesh->GetColours()->begin(), mesh->GetColours()->end(),
+			std::not_equal_to<glm::vec4>()) == mesh->GetColours()->end()) {
+
+			colourVal = -1;
+		}
+	}
+	out.write((GLchar*)&colourVal, sizeof(GLfloat));
+
+	// write mesh to file
+	for (glm::vec3 const& vec : *mesh->GetVertices()) {
+		out.write((GLchar*)&vec.x, sizeof(GLfloat));
+		out.write((GLchar*)&vec.y, sizeof(GLfloat));
+		out.write((GLchar*)&vec.z, sizeof(GLfloat));
+	}
+
+	for (glm::vec2 const& vec : *mesh->GetTexCoords()) {
+		out.write((GLchar*)&vec.x, sizeof(GLfloat));
+		out.write((GLchar*)&vec.y, sizeof(GLfloat));
+	}
+
+	for (glm::vec3 const& vec : *mesh->GetNormals()) {
+		out.write((GLchar*)&vec.x, sizeof(GLfloat));
+		out.write((GLchar*)&vec.y, sizeof(GLfloat));
+		out.write((GLchar*)&vec.z, sizeof(GLfloat));
+	}
+
+	if (colourVal > 1) {
+		for (glm::vec4 const& vec : *mesh->GetColours()) {
+			out.write((GLchar*)&vec.x, sizeof(GLfloat));
+			out.write((GLchar*)&vec.y, sizeof(GLfloat));
+			out.write((GLchar*)&vec.z, sizeof(GLfloat));
+			out.write((GLchar*)&vec.w, sizeof(GLfloat));
+		}
+	}
+	else if (colourVal == -1) {
+		glm::vec4 vec = mesh->GetColours()->at(0);
+		out.write((GLchar*)&vec.x, sizeof(GLfloat));
+		out.write((GLchar*)&vec.y, sizeof(GLfloat));
+		out.write((GLchar*)&vec.z, sizeof(GLfloat));
+		out.write((GLchar*)&vec.w, sizeof(GLfloat));
+	}
+
+	for (GLuint const& ind : *mesh->GetIndices()) {
+		GLfloat val = (GLfloat)ind;
+		out.write((GLchar*)&val, sizeof(GLfloat));
+	}
+
+}
+
+/**********************************/
+/*********** MGLFileMGL ***********/
+/**********************************/
+
+MGLMesh* MGLFileMGL::Load(std::string fileName, GLboolean bufferData) {
+	MGLTimer timer = MGLTimer();
+	timer.Start(); 
+
+	std::vector<GLfloat>* buffer = LoadFileToVec<GLfloat>(fileName);
+
+#ifdef MGL_USER_INCLUDE_FILETC
+	try {
+		// buffers not null
+		MGLException_Null::Test(buffer);
+		// buffer size is large enough (for DetermineFileSize())
+		MGLException_IsLessThan::Test(buffer->size(), (std::size_t)MGL_FILE_BUFFERMINSIZE);
+		// buffer size is what is expected
+		MGLException_IsNotEqual::Test(DetermineFileSize(
+			(GLuint)buffer->at(2), (GLuint)buffer->at(3), (GLint)buffer->at(4)) + 1, buffer->size());
+	}
+	catch (MGLException_Null& e) {
 		//std::cerr << e.what() << ": FILE SIZE ERROR " << fileName << std::endl;
-		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s%s", e.what(), ": FILE SIZE ERROR ", fileName.c_str());
+		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), ": Null Buffer");
 		delete buffer;
 		return new MGLMesh(MGL_MESH_TRIANGLE);
 	}
+	catch (MGLException& e) {
+		//std::cerr << e.what() << ": FILE SIZE ERROR " << fileName << std::endl;
+		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s%s", e.what(), ": FILE SIZE ERROR ", fileName.c_str());
+		delete buffer;
+		return new MGLMesh(MGL_MESH_TRIANGLE);
+	}
+#endif // MGL_USER_INCLUDE_FILETC
 
-	MGLMesh* mesh = LoadMesh(buffer, bufferData);
+	MGLMesh* mesh = LoadMesh(buffer);
+
+	if (bufferData)
+		mesh->BufferAllData();
 
 	delete buffer;
 
-	return mesh;	
+	timer.End();
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "MGL Load: %s : %i vertices in %f", fileName.c_str(), mesh->GetNumVertices(), timer.Time());
+
+	return mesh;
 }
 
-MGLMesh* MGLFile::LoadMesh(const MGLvecf* buffer, const GLboolean bufferData) {
+std::size_t MGLFileMGL::DetermineFileSize(const GLuint numVertices, const GLuint numIndices, const GLint colourVal) {
+	// number of floats in vectors
+	GLuint vec4Size = 4;
+	GLuint vec3Size = 3;
+	GLuint vec2Size = 2;
+
+	GLuint total = 5; // fileVersion, type, numVertices, numIndices, colourVal
+
+	total += numVertices * (vec3Size * 2); // vertices, normals
+	total += numVertices * vec2Size; // texCoords
+
+	if (colourVal == -1) {
+		total += vec4Size; // colours
+	}
+	else if (colourVal > 0) {
+		total += colourVal * vec4Size; // colours
+	}
+
+	total += numIndices;
+
+	return (std::size_t)total;
+}
+
+MGLMesh* MGLFileMGL::LoadMesh(const MGLvecf* buffer) {
 	GLuint fileVersion, type, numVertices, numIndices;
 	GLint colourVal;
 
@@ -171,9 +311,6 @@ MGLMesh* MGLFile::LoadMesh(const MGLvecf* buffer, const GLboolean bufferData) {
 	}
 	mesh->SetIndices(indices);
 
-	if (bufferData)
-		mesh->BufferAllData();
-
 	vertices = nullptr;
 	texCoords = nullptr;
 	normals = nullptr;
@@ -183,112 +320,28 @@ MGLMesh* MGLFile::LoadMesh(const MGLvecf* buffer, const GLboolean bufferData) {
 	return mesh;
 }
 
-void MGLFile::SaveMeshToMGL(MGLMesh* mesh, std::string fileName, GLboolean saveColours) {
-	// open file
-	std::ofstream out(fileName + ".mgl", std::ios::binary);
+/**********************************/
+/*********** MGLFileOBJ ***********/
+/**********************************/
 
-	try {
-		MGLException_FileError::Test(out.is_open(), fileName);
-		MGLException_Null::Test(mesh);
-	}
-	catch (MGLException_FileError& e) {
-		//std::cerr << e.what() << std::endl;
-		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+MGLMesh* MGLFileOBJ::Load(std::string fileName, GLboolean bufferData) {
+	MGLTimer timer = MGLTimer();
+	timer.Start();
 
-		return;
-	}
-	catch (MGLException_Null& e) {
-		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), "SMTM Mesh");
-		
-		return;
-	}
-
-	GLfloat val = 0;
-	// file version
-	val = (GLfloat)MGL_FILE_CURRENTVERSION;
-	out.write((GLchar*)&val, sizeof(GLfloat));
-	// type
-	val = (GLfloat)mesh->GetType();
-	out.write((GLchar*)&val, sizeof(GLfloat));
-	// numVertices
-	val = (GLfloat)mesh->GetNumVertices();
-	out.write((GLchar*)&val, sizeof(GLfloat));
-	// numIndices
-	val = (GLfloat)mesh->GetNumIndices();
-	out.write((GLchar*)&val, sizeof(GLfloat));
-	// determine colour val
-	GLfloat colourVal = (GLfloat)saveColours;
-	if (colourVal) {
-		// if all the colours are the same, set colourVal to -1
-		if (std::adjacent_find(mesh->GetColours()->begin(), mesh->GetColours()->end(),
-			std::not_equal_to<glm::vec4>()) == mesh->GetColours()->end()) {
-
-			colourVal = -1;
-		}
-	}
-	out.write((GLchar*)&colourVal, sizeof(GLfloat));
-
-	// write mesh to file
-	for (glm::vec3 const& vec : *mesh->GetVertices()) {
-		out.write((GLchar*)&vec.x, sizeof(GLfloat));
-		out.write((GLchar*)&vec.y, sizeof(GLfloat));
-		out.write((GLchar*)&vec.z, sizeof(GLfloat));
-	}
-
-	for (glm::vec2 const& vec : *mesh->GetTexCoords()) {
-		out.write((GLchar*)&vec.x, sizeof(GLfloat));
-		out.write((GLchar*)&vec.y, sizeof(GLfloat));
-	}
-
-	for (glm::vec3 const& vec : *mesh->GetNormals()) {
-		out.write((GLchar*)&vec.x, sizeof(GLfloat));
-		out.write((GLchar*)&vec.y, sizeof(GLfloat));
-		out.write((GLchar*)&vec.z, sizeof(GLfloat));
-	}
-
-	if (colourVal > 1) {
-		for (glm::vec4 const& vec : *mesh->GetColours()) {
-			out.write((GLchar*)&vec.x, sizeof(GLfloat));
-			out.write((GLchar*)&vec.y, sizeof(GLfloat));
-			out.write((GLchar*)&vec.z, sizeof(GLfloat));
-			out.write((GLchar*)&vec.w, sizeof(GLfloat));
-		}
-	}
-	else if (colourVal == -1) {
-		glm::vec4 vec = mesh->GetColours()->at(0);
-		out.write((GLchar*)&vec.x, sizeof(GLfloat));
-		out.write((GLchar*)&vec.y, sizeof(GLfloat));
-		out.write((GLchar*)&vec.z, sizeof(GLfloat));
-		out.write((GLchar*)&vec.w, sizeof(GLfloat));
-	}
-
-	for (GLuint const& ind : *mesh->GetIndices()) {
-		GLfloat val = (GLfloat)ind;
-		out.write((GLchar*)&val, sizeof(GLfloat));
-	}
-	
-}
-
-MGLMesh* MGLFile::LoadOBJ(std::string fileName, GLboolean bufferData) {
 	// load file into stringstream
-	stringstream* stream = LoadFileToSS(fileName);
+	std::stringstream* stream = LoadFileToSS(fileName);
 
+#ifdef MGL_USER_INCLUDE_FILETC
 	try {
 		MGLException_Null::Test(stream);
-		MGLException_File_FileType::Test(fileName, ".obj");
 	}
 	catch (MGLException_Null& e) {
 		//std::cerr << e.what() << ": STRINGSTREAM LoadOBJ " << std::endl;
-		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), "StringStream LoadOBJ ");
+		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), "StringStream LoadOBJ ");
 
 		return new MGLMesh(MGL_MESH_TRIANGLE);
 	}
-	catch (MGLException_File_FileType& e) {
-		//std::cerr << e.what() << std::endl;
-		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
-		delete stream;
-		return new MGLMesh(MGL_MESH_TRIANGLE);
-	}
+#endif // MGL_USER_INCLUDE_FILETC
 
 	MGLObjFileData* obj = new MGLObjFileData();
 	// init data with *blanks* for defaults
@@ -296,84 +349,78 @@ MGLMesh* MGLFile::LoadOBJ(std::string fileName, GLboolean bufferData) {
 	obj->inputNormals.push_back(glm::vec3(0, 0, 0));
 	obj->inputTexCoords.push_back(glm::vec2(0, 0));
 
-	string token;
+	std::string token;
 
 	// parse file from line start and build vertex data
 	while (!stream->eof()) {
 		token = "";
 		*stream >> token;
 
-		if (token == "#") { // a comment
-			string line;
+		if (token[0] == '#') { // comment
+			std::string line;  // remove line
 			std::getline(*stream, line);
 			continue;
 		}
-		else if (token == "0") { // empty
-			continue;
+		else if (token[0] == 'v') {
+			if (token[1] == 't') { // texture
+				glm::vec2 vec;
+				*stream >> (GLfloat)vec.x >> (GLfloat)vec.y;
+				obj->inputTexCoords.push_back(vec);
+			}
+			else if (token[1] == 'n') { // normal
+				glm::vec3 vec;
+				*stream >> (GLfloat)vec.x >> (GLfloat)vec.y >> (GLfloat)vec.z;
+				obj->inputNormals.push_back(vec);
+			}
+			else {
+				glm::vec3 vec;
+				*stream >> (GLfloat)vec.x >> (GLfloat)vec.y >> (GLfloat)vec.z;
+				obj->inputVertices.push_back(vec);
+			}
 		}
-		else if (token == "v") { // vertex
-			glm::vec3 vec;
-			*stream >> (GLfloat)vec.x >> (GLfloat)vec.y >> (GLfloat)vec.z;
-			obj->inputVertices.push_back(vec);
-		}
-		else if (token == "vn") { // normals
-			glm::vec3 vec;
-			*stream >> (GLfloat)vec.x >> (GLfloat)vec.y >> (GLfloat)vec.z;
-			obj->inputNormals.push_back(vec);
-		}
-		else if (token == "vt") { // texture coords
-			glm::vec2 vec;
-			*stream >> (GLfloat)vec.x >> (GLfloat)vec.y;
-			obj->inputTexCoords.push_back(vec);
-		}
-		else if (token == "f") { // face
+		else if (token[0] == 'f') { // face
 			std::string line;
 			std::getline(*stream, line);
 
-			HandleOBJFace(line, obj);
+			if (line.length() < 5) { // catch face errors
+				continue;
+			}
+
+			if (!HandleOBJFace(line, obj)) // exception caught?
+				return new MGLMesh(MGL_MESH_TRIANGLE);
 		}
 	}
+
+	// create the mesh
 	MGLMesh* mesh = CreateMesh(obj);
+
 	delete obj;
 	delete stream;
 
+#ifdef MGL_USER_INCLUDE_FILETC
+	// test if mesh caused an error
 	try {
 		MGLException_Null::Test(mesh);
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << " Error creating mesh" << std::endl;
-		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), " Error creating mesh");
+		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), " Error creating mesh");
 		delete mesh;
 		return new MGLMesh(MGL_MESH_TRIANGLE);
 	}
+#endif // MGL_USER_INCLUDE_FILETC
 
 	if (bufferData)
 		mesh->BufferAllData();
 
+	timer.End();
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "OBJ Load: %s : %i vertices in %f", fileName.c_str(), mesh->GetNumVertices(), timer.Time());
+
 	return mesh;
 }
 
-std::stringstream* MGLFile::LoadFileToSS(std::string fileName) {
-	ifstream file(fileName);
-
-	try {
-		MGLException_FileError::Test(file.is_open(), fileName);
-	}
-	catch (MGLException& e) {
-		//std::cerr << e.what() << std::endl;
-		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
-	
-		return nullptr;
-	}
-
-	stringstream* stream = new stringstream{};
-	*stream << file.rdbuf();
-
-	return stream;
-}
-
-GLboolean MGLFile::HandleOBJFace(std::string line, MGLObjFileData* obj) {
-	MGLvecu indicies;
+GLboolean MGLFileOBJ::HandleOBJFace(std::string line, MGLObjFileData* obj) {
+	MGLvecu indices;
 	GLuint data = 0;
 	GLuint spaceCounter = 0;
 	GLuint slashCounter = 0;
@@ -383,13 +430,12 @@ GLboolean MGLFile::HandleOBJFace(std::string line, MGLObjFileData* obj) {
 	GLboolean lastCharSpace = GL_FALSE;
 	GLboolean isPolygon = GL_FALSE;
 
-	if (line.find("//") != std::string::npos) {
+	if (line.find("//") != std::string::npos) { // no textures
 		skipTex = GL_TRUE;
 	}
 
 	for (GLchar& c : line) {
-
-		if (c == ' ') { // count spaces
+		if (c == ' ') { // count spaces ( = number of vertices in face)
 			lastCharSpace = GL_TRUE;
 		}
 		else if (c == '/') { // count slashes
@@ -400,7 +446,6 @@ GLboolean MGLFile::HandleOBJFace(std::string line, MGLObjFileData* obj) {
 			spaceCounter++; 
 			lastCharSpace = GL_FALSE;
 		}
-
 	}
 
 	if (slashCounter / spaceCounter == 1 && !skipTex) { // 2*slashes if normals are skipped
@@ -411,14 +456,15 @@ GLboolean MGLFile::HandleOBJFace(std::string line, MGLObjFileData* obj) {
 		isPolygon = GL_TRUE;
 
 	// create easier data handle
-	stringstream stream(line);
+	std::stringstream stream(line);
 	while (stream >> data) {
-		indicies.push_back(data);
+		indices.push_back(data);
 	}
 
+#ifdef MGL_USER_INCLUDE_FILETC
 	// check if the correct amount of indices have been loaded
 	try {
-		GLuint numIndices = (GLuint)indicies.size();
+		GLuint numIndices = (GLuint)indices.size();
 		GLuint verts = isPolygon ? 4 : 3;
 		GLuint skip = (skipTex || skipNorm) ? 2 : 3;
 		GLuint shouldBe = verts * skip;
@@ -427,85 +473,82 @@ GLboolean MGLFile::HandleOBJFace(std::string line, MGLObjFileData* obj) {
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << std::endl;
-		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
 
 		return GL_FALSE;
 	}
+#endif // MGL_USER_INCLUDE_FILETC
 
-	GLboolean skipvertices = GL_FALSE; // use with polygons
-	if (skipTex || skipNorm) { // any data is skipped
-		for (GLuint i = 0; i < (spaceCounter * 2) - 1; i += 2) {
-			MGLObjVertData vert = MGLObjVertData();
-
-			obj->vertexIndices.push_back(indicies[i]);
-			if (skipTex) { // v1//vn1 v1//vn2
-				obj->texIndices.push_back(0);
-				vert.texture = 0;
-			}
-			else {
-				obj->texIndices.push_back(indicies[i + 1]);
-				vert.texture = indicies[i + 1];
-			}
-			if (skipNorm) { // v1/vt1 v1/vt2
-				obj->texIndices.push_back(0);
-				vert.normals = 0;
-			}
-			else {
-				obj->normalIndices.push_back(indicies[i + 1]);
-				vert.normals = indicies[i + 1];
-			}
-
-			vert.vertex = indicies[i];
-
-			GLuint id = AddOBJVertToList(obj, vert);
-
-			obj->finalIndices.push_back(id);
-
-			if (skipvertices) {
-				i += 4;
-				skipvertices = GL_FALSE;
-			}
-
-			if (i == 4 && isPolygon) {
-				i -= 4;
-				isPolygon = GL_FALSE;
-				skipvertices = GL_TRUE;
-			}
-		}
+	if (skipTex) { 
+		AddFaceMissing(obj, indices, isPolygon, GL_TRUE);
+	}
+	else if (skipNorm) {
+		AddFaceMissing(obj, indices, isPolygon, GL_FALSE);
 	}
 	else { // v1/vt1/nv1 v1/vt2/nv2
-		for (GLuint i = 0; i < (spaceCounter * 3) - 1; i += 3) {
-			obj->vertexIndices.push_back(indicies[i]);
-			obj->texIndices.push_back(indicies[i + 1]);
-			obj->normalIndices.push_back(indicies[i + 2]);
-
-			MGLObjVertData vert = MGLObjVertData();
-			vert.vertex = indicies[i];
-			vert.texture = indicies[i + 1];
-			vert.normals = indicies[i + 2];
-
-			// get id of unique vertex
-			GLuint id = AddOBJVertToList(obj, vert);
-
-			obj->finalIndices.push_back(id);
-
-			if (skipvertices) {
-				i += 6;
-				skipvertices = GL_FALSE;
-			}
-
-			if (i == 6 && isPolygon) {
-				i -= 6;
-				isPolygon = GL_FALSE;
-				skipvertices = GL_TRUE;
-			}
-		}
+		AddFace(obj, indices, isPolygon);
 	}
 
 	return GL_TRUE;
 }
 
-GLuint MGLFile::AddOBJVertToList(MGLObjFileData* obj, MGLObjVertData& vert) {
+void MGLFileOBJ::AddFace(MGLObjFileData* obj, MGLvecu& indices, const GLboolean isPolygon) {
+
+	const GLuint vertices = isPolygon ? 4 : 3;
+
+	MGLvecu ids;
+
+	for (GLuint i = 0; i < vertices * 3; i += 3) {
+		MGLObjVertData vert = MGLObjVertData();
+		vert.vertex = indices[i];
+		vert.texture = indices[i + 1];
+		vert.normals = indices[i + 2];
+
+		// get id of unique vertex
+		GLuint id = AddOBJVertToList(obj, vert);
+		ids.push_back(id);
+	}
+
+	obj->finalIndices.push_back(ids[0]);
+	obj->finalIndices.push_back(ids[1]);
+	obj->finalIndices.push_back(ids[2]);
+
+	if (isPolygon) {
+		obj->finalIndices.push_back(ids[0]);
+		obj->finalIndices.push_back(ids[2]);
+		obj->finalIndices.push_back(ids[3]);
+	}
+}
+
+void MGLFileOBJ::AddFaceMissing(MGLObjFileData* obj, MGLvecu& indices, const GLboolean isPolygon, const GLboolean skipTex) {
+
+	const GLuint vertices = isPolygon ? 4 : 3;
+
+	MGLvecu ids;
+
+	for (GLuint i = 0; i < vertices * 2; i += 2) {
+		MGLObjVertData vert = MGLObjVertData();
+		vert.vertex = indices[i];
+		vert.texture = skipTex ? 0 : indices[i + 1];
+		vert.normals = skipTex ? indices[i + 1] : 0;
+
+		// get id of unique vertex
+		GLuint id = AddOBJVertToList(obj, vert);
+		ids.push_back(id);
+	}
+
+	obj->finalIndices.push_back(ids[0]);
+	obj->finalIndices.push_back(ids[1]);
+	obj->finalIndices.push_back(ids[2]);
+
+	if (isPolygon) {
+		obj->finalIndices.push_back(ids[0]);
+		obj->finalIndices.push_back(ids[2]);
+		obj->finalIndices.push_back(ids[3]);
+	}
+}
+
+GLuint MGLFileOBJ::AddOBJVertToList(MGLObjFileData* obj, MGLObjVertData& vert) {
 	GLboolean vertFound = GL_FALSE;
 	GLuint idOfVert = 0;
 
@@ -528,7 +571,7 @@ GLuint MGLFile::AddOBJVertToList(MGLObjFileData* obj, MGLObjVertData& vert) {
 	return idOfVert;
 }
 
-MGLMesh* MGLFile::CreateMesh(MGLObjFileData* obj) {
+MGLMesh* MGLFileOBJ::CreateMesh(MGLObjFileData* obj) {
 	GLuint numVertices = (GLuint)obj->objVertexList.size();
 
 	// check if the correct amount of vertices have been loaded
@@ -547,7 +590,7 @@ MGLMesh* MGLFile::CreateMesh(MGLObjFileData* obj) {
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << "Mesh size error" << std::endl;
-		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), "Mesh size error");
+		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), "Mesh size error");
 
 		return nullptr;
 	}
@@ -590,28 +633,4 @@ MGLMesh* MGLFile::CreateMesh(MGLObjFileData* obj) {
 	return mesh;
 }
 
-std::size_t MGLFile::DetermineFileSize(const GLuint numVertices, const GLuint numIndices, const GLint colourVal) {
-	// based on numvertices, numindices and colourval, the correct size of file can be determined
-	GLuint vec4Size = 4;
-	GLuint vec3Size = 3;
-	GLuint vec2Size = 2;
-	GLuint bytesInFloat = sizeof(GLfloat);
-	GLuint bytesInGLuint = sizeof(GLuint);
 
-	GLuint total = bytesInFloat * 5; // fileVersion, type, numVertices, numIndices, colourVal
-
-	total += (numVertices * vec3Size * bytesInFloat); // vertices
-	total += (numVertices * vec2Size * bytesInFloat); // texCoords
-	total += (numVertices * vec3Size * bytesInFloat); // normals
-
-	if (colourVal == -1) {
-		total += (vec4Size * bytesInFloat); // colours
-	}
-	else if (colourVal > 0) {
-		total += (colourVal * vec4Size * bytesInFloat); // colours
-	}
-
-	total += (numIndices * bytesInGLuint);
-
-	return (std::size_t)total;
-}

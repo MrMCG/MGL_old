@@ -7,6 +7,13 @@
 	Comments indicate main location of define use
 */
 
+// User set defines for compilation
+
+// include MGL_TESTS_ 
+#define MGL_USER_INCLUDE_TESTS
+// include try-catch blocks in MGLFile
+#define MGL_USER_INCLUDE_FILETC
+
 // MGLShader
 
 #define MGL_SHADER_VERTEX 0
@@ -54,9 +61,8 @@
 
 // MGLFile
 
-#define MGL_FILE_MINSIZE 32
+#define MGL_FILE_BUFFERMINSIZE 5
 #define MGL_FILE_CURRENTVERSION 1.0f
-#define MGL_FILE_FLOATSIZE 4
 
 // MGLTexture
 
@@ -80,12 +86,14 @@
 #define MGL_LOG_ERROR 0
 #define MGL_LOG_MAIN 1
 
-// Instance handlers
+// Singleton instance handlers
 
-#define MGLFileHandle MGLFile::Instance()
-#define MGLComMeshHandle MGLCommonMeshes::Instance()
-#define MGLTexHandle MGLTexture::Instance()
-#define MGLLogHandle MGLLog::Instance()
+#define MGLH_FileMGL MGLFileMGL::Instance()
+#define MGLH_FileOBJ MGLFileOBJ::Instance()
+
+#define MGLH_ComMesh MGLCommonMeshes::Instance()
+#define MGLH_Tex MGLTexture::Instance()
+#define MGLH_Log MGLLog::Instance()
 
 /****** Other ******/
 
@@ -141,10 +149,6 @@ struct MGLObjFileData {
 	MGLvecv2 inputTexCoords;
 	MGLvecv3 inputVertices;
 	MGLvecv3 inputNormals;
-
-	MGLvecu vertexIndices;
-	MGLvecu texIndices;
-	MGLvecu normalIndices;
 
 	std::vector<MGLObjVertData> objVertexList;
 	MGLvecu finalIndices;

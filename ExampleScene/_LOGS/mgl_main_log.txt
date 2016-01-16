@@ -1,24 +1,45 @@
 ******************************************
 *************** New MGLLog ***************
 ******************************************
-[15-1-2016 10:42:38] GLFW INIT: SUCCESS
-[15-1-2016 10:42:39] WINDOW INIT: SUCCESS
-[15-1-2016 10:42:39] GLEW INIT: SUCCESS
-	----- INFO -----
+[16-1-2016 8:12:14] GLFW INIT: SUCCESS
+[16-1-2016 8:12:15] WINDOW INIT: SUCCESS
+[16-1-2016 8:12:15] GLEW INIT: SUCCESS
+----- INFO -----
 	OGL INFO
-[15-1-2016 10:42:39] 3.3.0 NVIDIA 358.91
-[15-1-2016 10:42:39] NVIDIA Corporation
-[15-1-2016 10:42:39] GeForce GTX 970/PCIe/SSE2
-[15-1-2016 10:42:39] 3.30 NVIDIA via Cg compiler
+[16-1-2016 8:12:15] 3.3.0 NVIDIA 358.91
+[16-1-2016 8:12:15] NVIDIA Corporation
+[16-1-2016 8:12:15] GeForce GTX 970/PCIe/SSE2
+[16-1-2016 8:12:15] 3.30 NVIDIA via Cg compiler
 	MGL DEFINES
-[15-1-2016 10:42:39] MGLDEBUG                        TRUE    
-[15-1-2016 10:42:39] MGL_FILE_CURRENTVERSION         1       
-[15-1-2016 10:42:39] MGL_LOG_MAXLINESIZE             512     
-[15-1-2016 10:42:39] MGL_LOG_MAXLOGSIZE              512     
+[16-1-2016 8:12:15] MGLDEBUG                        FALSE   
+[16-1-2016 8:12:15] MGL_FILE_CURRENTVERSION         1       
+[16-1-2016 8:12:15] MGL_LOG_MAXLINESIZE             512     
+[16-1-2016 8:12:15] MGL_LOG_MAXLOGSIZE              512     
 	WINDOW INFO
-[15-1-2016 10:42:39] Resolution                      1280    720     
-[15-1-2016 10:42:39] Refresh                         0       
-[15-1-2016 10:42:39] Type                            1       
-	----- INFO -----
-[15-1-2016 10:42:39] Compiling Shader : shaders/vert.glsl - SUCCESS
-[15-1-2016 10:42:39] Compiling Shader : shaders/frag.glsl - SUCCESS
+[16-1-2016 8:12:15] Resolution                      1280    720     
+[16-1-2016 8:12:15] Refresh                         0       
+[16-1-2016 8:12:15] Type                            1       
+----- INFO -----
+[16-1-2016 8:12:15] MGL Load: _DEFAULTS/cube.mgl : 24 vertices in 0.000273
+[16-1-2016 8:12:15] MGL Load: _DEFAULTS/sphere.mgl : 323 vertices in 0.000358
+[16-1-2016 8:12:15] MGL Load: _DEFAULTS/cone.mgl : 63 vertices in 0.000280
+[16-1-2016 8:12:19] OBJ Load: _DEFAULTS/TESTS/at-at.obj : 79452 vertices in 4.102160
+[16-1-2016 8:12:24] OBJ Load: _DEFAULTS/TESTS/at-at.obj : 79452 vertices in 5.449333
+[16-1-2016 8:12:28] OBJ Load: _DEFAULTS/TESTS/at-at.obj : 79452 vertices in 4.142570
+[16-1-2016 8:12:33] OBJ Load: _DEFAULTS/TESTS/at-at.obj : 79452 vertices in 4.347025
+[16-1-2016 8:12:37] OBJ Load: _DEFAULTS/TESTS/at-at.obj : 79452 vertices in 4.261522
+[16-1-2016 8:12:37] MGL Load: _DEFAULTS/TESTS/at-at.mgl : 79452 vertices in 0.005974
+[16-1-2016 8:12:37] MGL Load: _DEFAULTS/TESTS/at-at.mgl : 79452 vertices in 0.005684
+[16-1-2016 8:12:37] MGL Load: _DEFAULTS/TESTS/at-at.mgl : 79452 vertices in 0.005693
+[16-1-2016 8:12:37] MGL Load: _DEFAULTS/TESTS/at-at.mgl : 79452 vertices in 0.006033
+[16-1-2016 8:12:37] MGL Load: _DEFAULTS/TESTS/at-at.mgl : 79452 vertices in 0.008928
+[16-1-2016 8:13:19] OBJ Load: _DEFAULTS/TESTS/death-star-II.obj : 214856 vertices in 41.566612
+[16-1-2016 8:13:19] MGL Load: _DEFAULTS/TESTS/death-star-II.mgl : 214856 vertices in 0.021736
+[16-1-2016 8:13:19] MGL Load: _DEFAULTS/TESTS/death-star-II.mgl : 214856 vertices in 0.022758
+[16-1-2016 8:13:19] MGL Load: _DEFAULTS/TESTS/death-star-II.mgl : 214856 vertices in 0.020424
+[16-1-2016 8:13:19] MGL Load: _DEFAULTS/TESTS/death-star-II.mgl : 214856 vertices in 0.020500
+[16-1-2016 8:13:19] MGL Load: _DEFAULTS/TESTS/death-star-II.mgl : 214856 vertices in 0.020851
+[16-1-2016 8:13:19] Compiling Shader : shaders/vert.glsl - SUCCESS
+[16-1-2016 8:13:19] Compiling Shader : shaders/frag.glsl - SUCCESS
+[16-1-2016 8:13:19] MGL Load: meshes/raptor.mgl : 3372 vertices in 0.048302
+[16-1-2016 8:13:19] OBJ Load: monkey3.obj : 3034 vertices in 0.099014

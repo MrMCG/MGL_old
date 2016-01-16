@@ -1,0 +1,16 @@
+******************************************
+*************** New MGLLog ***************
+******************************************
+
+	BEGIN - MGL_TEST_VARIOUS
+
+	BEGIN - MGL_TEST_VARIOUS_FILESPEED
+
+[16-1-2016 8:12:37] Load of 5 at-at.obj averaged :  4.460762s
+[16-1-2016 8:12:37] Load of 5 at-at.mgl averaged :  0.006690s
+[16-1-2016 8:13:19] Load of 1 death-star-II.obj :  41.567390s
+[16-1-2016 8:13:19] Load of 5 death-star-II.mgl averaged :  0.022247s
+
+	END MGL_TEST_VARIOUS_FILESPEED
+
+	END MGL_TEST_VARIOUS

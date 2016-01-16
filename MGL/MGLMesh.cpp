@@ -247,19 +247,15 @@ void MGLMesh::BufferNormalsData(GLboolean genBuffers, const GLenum usage) {
 /***************************************/
 
 MGLCommonMeshes::MGLCommonMeshes() {
-	// init dependencies if not already initialised
-	MGLFileHandle->Init();
-	MGLTexHandle->Init();
-
 	// load default texture
-	GLuint m_defaultTex = MGLTexHandle->GetTexture("DEFAULT");
+	GLuint m_defaultTex = MGLH_Tex->GetTexture("DEFAULT");
 
 	// create meshes
 	m_quad = new MGLMesh(MGL_MESH_QUAD);
 	m_triangle = new MGLMesh(MGL_MESH_TRIANGLE);
-	m_cube = MGLFileHandle->LoadMGL(MGL_DEFAULT_CUBE);
-	m_sphere = MGLFileHandle->LoadMGL(MGL_DEFAULT_SPHERE);
-	m_cone = MGLFileHandle->LoadMGL(MGL_DEFAULT_CONE);
+	m_cube = MGLH_FileMGL->Load(MGL_DEFAULT_CUBE);
+	m_sphere = MGLH_FileMGL->Load(MGL_DEFAULT_SPHERE);
+	m_cone = MGLH_FileMGL->Load(MGL_DEFAULT_CONE);
 
 	// apply default textures
 	m_quad->AddTexture(m_defaultTex);

@@ -7,13 +7,8 @@ Scene::Scene() : MGLRenderer() {
 	// Init GLEW and other GL features
 	InitGL();
 
-	//MGLFileHandle->ConvertOBJToMGL("tardis.obj", "t", GL_FALSE);
-
-#ifdef MGLDEBUG
 	// For running test cases
-	//MGL_TESTS_::MGL_TEST_CLASSES();
-	//MGL_TESTS_::MGL_TEST_VARIOUS();
-#endif MGLDEBUG
+	MGL_TESTS_::MGL_TEST_VARIOUS();
 
 	// Create new shader program
 	shader = new MGLShader();
@@ -23,12 +18,13 @@ Scene::Scene() : MGLRenderer() {
 	shader->Use();
 
 	// Load new texture into handler
-	MGLTexHandle->LoadTexture("raptor.jpg", "raptor", MGL_TEXTURE_DIFFUSE, GL_FALSE);
-	MGLTexHandle->LoadTexture("textures/bricks.jpg", "bricks", MGL_TEXTURE_DIFFUSE);
+	MGLH_Tex->LoadTexture("textures/raptor.jpg", "raptor", MGL_TEXTURE_DIFFUSE, GL_FALSE);
+	MGLH_Tex->LoadTexture("textures/cty1.jpg", "city", MGL_TEXTURE_DIFFUSE, GL_TRUE);
 
 	// Add a camera
 	m_camera = new MGLCamera();
 	m_camera->SetMoveSpeed(100.0f);
+	m_camera->SetPosition(glm::vec3(0,20,0));
 
 	// Create new timer
 	gameTimer = MGLTimer();
@@ -46,32 +42,33 @@ Scene::Scene() : MGLRenderer() {
 Scene::~Scene() {
 	// NOTE: we dont delete box, as it is a MGLCommonMesh!
 	delete dino;
-	delete floor;
+	delete city;
 	delete shader;
 }
 
 void Scene::loadObjects() {
+	dino = MGLH_FileMGL->Load("meshes/raptor.mgl");
 	// Load raptor
-	dino = MGLFileHandle->LoadMGL("raptor.mgl");
-	dino->AddTexture(MGLTexHandle->GetTexture("raptor"));
+	//dino = MGLFileHandle->Load("meshes/raptor.mgl");
+	dino->AddTexture(MGLH_Tex->GetTexture("raptor"));
 
 	dino->SetUniforms([&]() { // just as an example
 		glUniform1i(glGetUniformLocation(shader->Program(), "tex"), 0);
 	});
 
 	// Load box
-	box = MGLComMeshHandle->Cube();
-	box->AddTexture(MGLTexHandle->GetTexture("DEFAULT"));
+	box = MGLH_ComMesh->Cube();
+	box->AddTexture(MGLH_Tex->GetTexture("DEFAULT"));
 
 	box->SetUniforms([&]() { // just as an example
 		glUniform1i(glGetUniformLocation(shader->Program(), "tex"), 0);
 	});
 
-	// Load flooar
-	floor = new MGLMesh(MGL_MESH_QUAD);
-	floor->AddTexture(MGLTexHandle->GetTexture("bricks"));
+	// Load city
+	city = MGLH_FileOBJ->Load("monkey3.obj");
+	city->AddTexture(MGLH_Tex->GetTexture("city"));
 
-	floor->SetUniforms([&]() { // just as an example
+	city->SetUniforms([&]() { // just as an example
 		glUniform1i(glGetUniformLocation(shader->Program(), "tex"), 0);
 	});
 }
@@ -120,17 +117,16 @@ void Scene::RenderScene() {
 	glUniformMatrix4fv(glGetUniformLocation(shader->Program(), "viewMatrix"), 1, false, glm::value_ptr(m_viewMatrix));
 	glUniformMatrix4fv(glGetUniformLocation(shader->Program(), "projMatrix"), 1, false, glm::value_ptr(m_projMatrix));
 
-	// Draw floor
+	// Draw city
 	m_modelMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, -5.0f, 0.0f));
-	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(90.0f), glm::vec3(-1, 0, 0));
-	m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(25.0f, 25.0f, 1.0f));
+	m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(0.5f, 0.5f, 0.5f));
 	glUniformMatrix4fv(glGetUniformLocation(shader->Program(), "modelMatrix"), 1, false, glm::value_ptr(m_modelMatrix));
-	floor->Draw();
+	city->Draw();
 
 	// Draw dino
-	m_modelMatrix = glm::translate(glm::mat4(), glm::vec3(-5.0f, 0.0f, -5.0f));
+	m_modelMatrix = glm::translate(glm::mat4(), glm::vec3(150.0f, 106.0f, -100.0f));
 	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(90.0f), glm::vec3(0, -1, 0));
-	m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(0.1f, 0.1f, 0.1f));
+	m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(20.0f, 20.0f, 20.0f));
 	glUniformMatrix4fv(glGetUniformLocation(shader->Program(), "modelMatrix"), 1, false, glm::value_ptr(m_modelMatrix));
 	dino->Draw();
 

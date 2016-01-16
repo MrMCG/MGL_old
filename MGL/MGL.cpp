@@ -13,7 +13,7 @@ MGLContext::MGLContext(GLuint major, GLuint minor, GLboolean resizable) {
 	}
 	catch (const MGLException& e) {
 		//std::cerr << e.what() << std::endl;
-		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
 		return;
 	}
 
@@ -37,7 +37,7 @@ MGLContext::MGLContext(GLuint major, GLuint minor, GLboolean resizable) {
 	m_window = nullptr;
 
 	//std::cout << "GLFW INIT: SUCCESS" << std::endl;
-	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "GLFW INIT: SUCCESS");
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "GLFW INIT: SUCCESS");
 
 }
 
@@ -55,19 +55,19 @@ void MGLContext::InitGL() {
 	}
 	catch (const MGLException& e) {
 		//std::cerr << e.what() << std::endl;
-		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
 
 		return;
 	}
 
 	//std::cout << "GLEW INIT: SUCCESS" << std::endl;
-	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "GLEW INIT: SUCCESS");
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "GLEW INIT: SUCCESS");
 	
-	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_FALSE, "\t----- INFO -----");
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_FALSE, "----- INFO -----");
 	WriteOGLInfo();
 	WriteDefinesInfo();
 	WriteWindowInfo();
-	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_FALSE, "\t----- INFO -----");
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_FALSE, "----- INFO -----");
 }
 
 void MGLContext::SetWindow(GLFWwindow* win) {
@@ -142,8 +142,8 @@ void MGLContext::CreateNewWindow(GLuint width, GLuint height, std::string title,
 	catch (const MGLException& e) {
 		//std::cerr << e.what() << " MGLContext::CreateNewWindow" << std::endl;
 		//std::cerr << " !! Creating Default Window !! " << std::endl;
-		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), " MGLContext::CreateNewWindow");
-		MGLLogHandle->AddLog(MGL_LOG_ERROR, GL_TRUE, " !! Creating Default Window !! ");
+		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), " MGLContext::CreateNewWindow");
+		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, " !! Creating Default Window !! ");
 
 		window = glfwCreateWindow(800, 600, "MGL: Default Window", nullptr, nullptr);
 		m_width = 800;
@@ -155,7 +155,7 @@ void MGLContext::CreateNewWindow(GLuint width, GLuint height, std::string title,
 	SetWindow(window);
 
 	//std::cout << "WINDOW INIT: SUCCESS" << std::endl;
-	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "WINDOW INIT: SUCCESS");
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "WINDOW INIT: SUCCESS");
 
 }
 
@@ -238,29 +238,29 @@ void MGLContext::WriteDefinesInfo() {
 	def_MGLDEBUG = 1;
 #endif
 
-	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_FALSE, "\tMGL DEFINES");
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_FALSE, "\tMGL DEFINES");
 
-	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8s", "MGLDEBUG", def_MGLDEBUG ? "TRUE" : "FALSE");
-	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_FILE_CURRENTVERSION", def_FILEVERSION);
-	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_LOG_MAXLINESIZE", def_LOGLINESIZE);
-	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_LOG_MAXLOGSIZE", def_LOGTOTALSIZE);
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8s", "MGLDEBUG", def_MGLDEBUG ? "TRUE" : "FALSE");
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_FILE_CURRENTVERSION", def_FILEVERSION);
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_LOG_MAXLINESIZE", def_LOGLINESIZE);
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_LOG_MAXLOGSIZE", def_LOGTOTALSIZE);
 }
 
 void MGLContext::WriteOGLInfo() {
-	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_FALSE, "\tOGL INFO");
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_FALSE, "\tOGL INFO");
 
-	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, (GLchar*)glGetString(GL_VERSION));
-	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, (GLchar*)glGetString(GL_VENDOR));
-	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, (GLchar*)glGetString(GL_RENDERER));
-	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, (GLchar*)glGetString(GL_SHADING_LANGUAGE_VERSION));
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, (GLchar*)glGetString(GL_VERSION));
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, (GLchar*)glGetString(GL_VENDOR));
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, (GLchar*)glGetString(GL_RENDERER));
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, (GLchar*)glGetString(GL_SHADING_LANGUAGE_VERSION));
 }
 
 void MGLContext::WriteWindowInfo() {
-	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_FALSE, "\tWINDOW INFO");
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_FALSE, "\tWINDOW INFO");
 
-	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i%-8i", "Resolution", m_width, m_height);
-	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "Refresh", MGL::GetWindowInfo(m_window, MGL_WINDOWINFO_ATTRIBUTE, GLFW_REFRESH_RATE));
-	MGLLogHandle->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "Type", m_windowType);
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i%-8i", "Resolution", m_width, m_height);
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "Refresh", MGL::GetWindowInfo(m_window, MGL_WINDOWINFO_ATTRIBUTE, GLFW_REFRESH_RATE));
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "Type", m_windowType);
 }
 
 /***********************************/
@@ -274,15 +274,16 @@ MGLRenderer::MGLRenderer() : MGLContext() {
 }
 
 MGLRenderer::~MGLRenderer() {
-	MGLLogHandle->WriteToFile(MGL_LOG_FILENAME_MAIN, GL_TRUE); // write main to file
-	MGLLogHandle->WriteToFile(MGL_LOG_FILENAME_ERROR, GL_FALSE); // write errors to file
+	MGLH_Log->WriteToFile(MGL_LOG_FILENAME_MAIN, MGL_LOG_MAIN, GL_TRUE); // write main to file
+	MGLH_Log->WriteToFile(MGL_LOG_FILENAME_ERROR, MGL_LOG_ERROR, GL_TRUE); // write errors to file
 
 	delete m_camera;
 	delete m_keyboad;
 	delete m_mouse;
 
 	MGLTexture::Release();
-	MGLFile::Release();
+	MGLFileMGL::Release();
+	MGLFileOBJ::Init();
 	MGLCommonMeshes::Release();
 	MGLLog::Release();
 }
@@ -314,7 +315,8 @@ void MGLRenderer::CreateViewMatrix() {
 void MGLRenderer::InitInstances() {
 	// ORDER IS IMPORTANT
 	MGLTexture::Init();
-	MGLFile::Init();
+	MGLFileMGL::Init();
+	MGLFileOBJ::Init();
 	MGLCommonMeshes::Init();
 	MGLLog::Init();
 }

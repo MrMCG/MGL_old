@@ -8,7 +8,7 @@
 	are caught and handled at runtime.
 
 	That said, there is no standard result from these functions
-	or what they test, they are used for debugging purposes
+	or what they test, they are used purely for debugging purposes
 */
 
 #ifdef MGL_USER_INCLUDE_TESTS
@@ -16,6 +16,7 @@
 /****** Test options *****/
 
 #define FILESPEED_ITERATIONS 5
+#define MEMORY_ITERATIONS 100000
 
 /*********************************************/
 /*********** MGL Utility Functions ***********/
@@ -54,6 +55,7 @@ void MGL_TESTS_::MGL_TEST_VARIOUS() {
 	MGLH_Log->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n\tBEGIN - MGL_TEST_VARIOUS");
 
 	MGL_TEST_VARIOUS_FILESPEED();
+	//MGL_TEST_VARIOUS_MEMMORY();
 	
 	MGLH_Log->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n\tEND MGL_TEST_VARIOUS");
 
@@ -110,6 +112,28 @@ void MGL_TESTS_::MGL_TEST_VARIOUS_FILESPEED() {
 
 
 	MGLH_Log->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n\tEND MGL_TEST_VARIOUS_FILESPEED");
+}
+
+void MGL_TESTS_::MGL_TEST_VARIOUS_MEMMORY() {
+	MGLH_Log->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n\tBEGIN - MGL_TEST_VARIOUS_MEMORY\n");
+	MGLH_Log->Disable(MGL_LOG_MAIN); // prevent logging of thousands of loads
+
+	MGLMesh* mesh = nullptr;
+
+	// mesh loading from obj
+	for (GLuint i = 0; i < MEMORY_ITERATIONS; ++i) {
+		mesh = MGLH_FileOBJ->Load(MGL_DEFAULT_TESTS_DIRECTORY"cube.obj", GL_FALSE);
+		delete mesh;
+	}
+
+	// mesh loading from mgl
+	for (GLuint i = 0; i < MEMORY_ITERATIONS; ++i) {
+		mesh = MGLH_FileMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"cube.mgl", GL_FALSE);
+		delete mesh;
+	}
+
+	MGLH_Log->Enable(MGL_LOG_MAIN); // enable main log
+	MGLH_Log->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n\tEND MGL_TEST_VARIOUS_MEMORY");
 }
 
 /****************************************/

@@ -20,6 +20,7 @@ private:
 	MGLMesh* dino;
 	MGLMesh* box;
 	MGLMesh* city;
+	MGLMesh* deathStar;
 
 	MGLShader* shader;
 

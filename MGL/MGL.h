@@ -30,7 +30,7 @@ class MGLContext {
 public:
 	// Defaults: MGL(3,3,true)
 	MGLContext();
-	MGLContext(GLuint major, GLuint minor, GLboolean resizable = GL_TRUE);
+	MGLContext(GLuint major, GLuint minor, GLboolean resizable, GLuint refreshRate, GLuint msaa);
 	virtual ~MGLContext();
 
 	// Render loop
@@ -38,11 +38,11 @@ public:
 	// Init openGL options (use AFTER window is linked)
 	virtual void InitGL();
 	// Writes user optional / settings based defines to main log file
-	void WriteDefinesInfo();
+	virtual void WriteDefinesInfo();
 	// Writes some OpenGL info to main log - !!! uses OGL version > 3.0 !!!
-	void WriteOGLInfo();
+	virtual void WriteOGLInfo();
 	// Writes window info to main log
-	void WriteWindowInfo();
+	virtual void WriteWindowInfo();
 	// Create a new window for use 
 	virtual void CreateNewWindow(GLuint width, GLuint height, std::string title, MGLenum windowType, GLFWmonitor* monito = nullptr);
 	// Should the window close
@@ -51,8 +51,7 @@ public:
 	virtual void CloseWindow() { glfwSetWindowShouldClose(m_window, GL_TRUE); }
 	// Set callback on window resize (if m_resizable=true and window!=NULL)
 	void SetResizeCallback(GLFWwindowsizefun func);
-
-	void SetWindow(GLFWwindow* win);
+	// Returns the window
 	GLFWwindow* GetWindow() const { return m_window; }
 
 protected:
@@ -75,6 +74,9 @@ protected:
 	virtual void HandleMouseScroll(GLdouble xOffset, GLdouble yOffset);
 	// Handle window.mouse focus
 	virtual void HandleMouseFocus(GLboolean focused);
+	// Sets window attributes
+	void SetWindow(GLFWwindow* win);
+	
 
 	static void ResizeCallBack(GLFWwindow* window, GLuint width, GLuint height);
 	static void KeyInputCallBack(GLFWwindow* window, GLuint key, GLuint scancode, GLuint action, GLuint mods);
@@ -91,11 +93,14 @@ protected:
 	GLuint m_width;
 	GLuint m_height;
 	GLboolean m_inFocus;
+	GLuint m_refreshRate;
+	GLuint m_samples;
 }; 
 
 class MGLRenderer : public MGLContext {
 public:
 	MGLRenderer();
+	MGLRenderer(GLuint major, GLuint minor, GLboolean resizable, GLuint refreshRate, GLuint msaa);
 	virtual ~MGLRenderer();
 
 	// Init openGL options (use AFTER window is linked)

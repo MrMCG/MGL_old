@@ -8,7 +8,7 @@ Scene::Scene() : MGLRenderer() {
 	InitGL();
 
 	// For running test cases
-	MGL_TESTS_::MGL_TEST_VARIOUS();
+	MGL_TESTS_::MGL_TEST_ALL();
 
 	// Create new shader program
 	shader = new MGLShader();
@@ -20,9 +20,9 @@ Scene::Scene() : MGLRenderer() {
 	// Load new texture into handler
 	MGLH_Tex->LoadTexture("textures/raptor.jpg", "raptor", MGL_TEXTURE_DIFFUSE, GL_FALSE);
 	MGLH_Tex->LoadTexture("textures/cty1.jpg", "city", MGL_TEXTURE_DIFFUSE, GL_TRUE);
+	MGLH_Tex->LoadTexture("textures/ds.jpg", "death star", MGL_TEXTURE_DIFFUSE, GL_FALSE);
 
-	// Add a camera
-	m_camera = new MGLCamera();
+	// set camera options
 	m_camera->SetMoveSpeed(100.0f);
 	m_camera->SetPosition(glm::vec3(0,20,0));
 
@@ -65,10 +65,18 @@ void Scene::loadObjects() {
 	});
 
 	// Load city
-	city = MGLH_FileOBJ->Load("monkey3.obj");
+	city = MGLH_FileOBJ->Load("meshes/The City.obj");
 	city->AddTexture(MGLH_Tex->GetTexture("city"));
 
 	city->SetUniforms([&]() { // just as an example
+		glUniform1i(glGetUniformLocation(shader->Program(), "tex"), 0);
+	});
+
+	// Load death star
+	deathStar = MGLH_FileMGL->Load("meshes/death-star-II.mgl");
+	deathStar->AddTexture(MGLH_Tex->GetTexture("death star"));
+
+	deathStar->SetUniforms([&]() { // just as an example
 		glUniform1i(glGetUniformLocation(shader->Program(), "tex"), 0);
 	});
 }
@@ -135,6 +143,12 @@ void Scene::RenderScene() {
 	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(90.0f), glm::vec3(0, -1, 0));
 	glUniformMatrix4fv(glGetUniformLocation(shader->Program(), "modelMatrix"), 1, false, glm::value_ptr(m_modelMatrix));
 	box->Draw();
+
+	// Draw death star
+	m_modelMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, 750.0f, 0.0f));
+	m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(0.5f, 0.5f, 0.5f));
+	glUniformMatrix4fv(glGetUniformLocation(shader->Program(), "modelMatrix"), 1, false, glm::value_ptr(m_modelMatrix));
+	deathStar->Draw();
 
 	// Swap buffers
 	SwapBuffers();

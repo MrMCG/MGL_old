@@ -5,8 +5,8 @@
 /*********** MGL ***********/
 /***************************/
 
-MGLContext::MGLContext() : MGLContext(3, 3, true) {}
-MGLContext::MGLContext(GLuint major, GLuint minor, GLboolean resizable) {
+MGLContext::MGLContext() : MGLContext(3, 3, GL_TRUE, 60, 2) {}
+MGLContext::MGLContext(GLuint major, GLuint minor, GLboolean resizable, GLuint refreshRate, GLuint msaa) {
 	MGLLog::Init();
 	try {
 		MGLException_Init_GLFW::Test(glfwInit());
@@ -22,6 +22,8 @@ MGLContext::MGLContext(GLuint major, GLuint minor, GLboolean resizable) {
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // remove depreciated OGL code
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, resizable);
+	glfwWindowHint(GLFW_REFRESH_RATE, refreshRate);
+	glfwWindowHint(GLFW_SAMPLES, msaa);
 
 #ifdef MGLDEBUG
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
@@ -32,6 +34,8 @@ MGLContext::MGLContext(GLuint major, GLuint minor, GLboolean resizable) {
 	m_width = 0;
 	m_height = 0;
 	m_windowType = 0;
+	m_samples = msaa;
+	m_refreshRate = refreshRate;
 
 	// init pointers
 	m_window = nullptr;
@@ -227,20 +231,36 @@ void MGLContext::HandleMouseFocus(GLboolean focused) {
 }
 
 void MGLContext::WriteDefinesInfo() {
+	// get define states
 	GLuint def_MGLDEBUG = 0;
-
 	GLuint def_FILEVERSION = (GLuint)MGL_FILE_CURRENTVERSION;
-
 	GLuint def_LOGLINESIZE = MGL_LOG_MAXLINESIZE;
 	GLuint def_LOGTOTALSIZE = MGL_LOG_MAXLOGSIZE;
+	std::string def_BUILDCONFIG = "unknown";
+	GLuint def_USER_TC = 0;
+	GLuint def_USER_TESTS = 0;
 
+	// define logic
 #ifdef MGLDEBUG
 	def_MGLDEBUG = 1;
-#endif
+#endif // MGLDEBUG
+#ifdef MGL_USER_INCLUDE_TESTS
+	def_USER_TESTS = 1;
+#endif // MGL_USER_INCLUDE_TESTS
+#ifdef MGL_USER_INCLUDE_FILETC
+	def_USER_TC = 1;
+#endif // MGL_USER_INCLUDE_FILETC
+#ifdef MGL_BUILD_CONFIG
+	def_BUILDCONFIG = MGL_BUILD_CONFIG;
+#endif // MGL_BUILD_CONFIG
 
+	// log variables
 	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_FALSE, "\tMGL DEFINES");
 
 	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8s", "MGLDEBUG", def_MGLDEBUG ? "TRUE" : "FALSE");
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8s", "MGL_BUILD_CONFIG", def_BUILDCONFIG.c_str());
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8s", "MGL_USER_INCLUDE_TESTS", def_USER_TESTS ? "TRUE" : "FALSE");
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8s", "MGL_USER_INCLUDE_FILETC", def_USER_TC ? "TRUE" : "FALSE");
 	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_FILE_CURRENTVERSION", def_FILEVERSION);
 	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_LOG_MAXLINESIZE", def_LOGLINESIZE);
 	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_LOG_MAXLOGSIZE", def_LOGTOTALSIZE);
@@ -259,7 +279,8 @@ void MGLContext::WriteWindowInfo() {
 	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_FALSE, "\tWINDOW INFO");
 
 	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i%-8i", "Resolution", m_width, m_height);
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "Refresh", MGL::GetWindowInfo(m_window, MGL_WINDOWINFO_ATTRIBUTE, GLFW_REFRESH_RATE));
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "Refresh", m_refreshRate);
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MSAA", m_samples);
 	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "Type", m_windowType);
 }
 
@@ -268,7 +289,7 @@ void MGLContext::WriteWindowInfo() {
 /***********************************/
 
 MGLRenderer::MGLRenderer() : MGLContext() {
-	m_camera = nullptr;
+	m_camera = new MGLCamera();
 	m_keyboad = new MGLKeyboard();
 	m_mouse = new MGLMouse();
 }
@@ -290,7 +311,7 @@ MGLRenderer::~MGLRenderer() {
 
 void MGLRenderer::InitGL() {
 	MGLContext::InitGL();
-	glfwWindowHint(GL_SAMPLES, 2);
+	glfwWindowHint(GL_SAMPLES, m_samples);
 
 	glViewport(0, 0, m_width, m_height);
 

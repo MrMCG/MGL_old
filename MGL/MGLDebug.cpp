@@ -9,10 +9,13 @@
 
 MGLLog::MGLLog() {
 	m_logs = new std::vector<MGLvecs*>(MGL_LOG_AMOUNT);
+	m_enabled = new MGLvecu(MGL_LOG_AMOUNT);
 
 	for (GLuint i = 0; i < MGL_LOG_AMOUNT; ++i) {
 		m_logs->at(i) = new MGLvecs;
 		m_logs->at(i)->reserve(MGL_LOG_MAXLOGSIZE);
+
+		m_enabled->at(i) = 1;
 	}
 }
 
@@ -21,6 +24,7 @@ MGLLog::~MGLLog() {
 		delete vec;
 	}
 
+	delete m_enabled;
 	delete m_logs;
 }
 
@@ -49,6 +53,9 @@ void MGLLog::WriteToFile(const std::string fileName, const GLuint log, const GLb
 }
 
 void MGLLog::AddLog(const GLuint log, const GLboolean timeStamp, const std::string line, ...) {
+	if (!m_enabled->at(log))
+		return;
+
 	// get arguments
 	va_list args;
 	va_start(args, line);

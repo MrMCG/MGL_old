@@ -14,6 +14,11 @@ public:
 	// Delete strings in current log (not the .txt file)
 	void Flush(const GLuint log = 1);
 
+	// Disables logging to particular log
+	void Disable(const GLuint log) { m_enabled->at(log) = 0; }
+	// Enables logging to particular log
+	void Enable(const GLuint log) { m_enabled->at(log) = 1; }
+
 	MGLvecs* GetLog(const GLuint index) const { return m_logs->at(index); }
 protected:
 	MGLLog();
@@ -22,6 +27,7 @@ protected:
 	/****** Data ******/
 
 	std::vector<MGLvecs*>* m_logs;
+	MGLvecu* m_enabled;
 
 	//MGLvecs* m_mainLog;
 	//MGLvecs* m_errorLog;

@@ -11,6 +11,8 @@
 
 #pragma comment(lib, "glfw3.lib")
 
+#include "MGLWindow.h"
+
 #include "MGLUtil.h"
 #include "MGLExceptions.h"
 #include "MGLDebug.h"
@@ -28,64 +30,43 @@
 
 class MGLContext {
 public:
-	// Defaults: MGL(3,3,true)
 	MGLContext();
 	MGLContext(GLuint major, GLuint minor, GLboolean resizable, GLuint refreshRate, GLuint msaa);
 	virtual ~MGLContext();
 
-	// Render loop
 	virtual void RenderScene() = 0;
-	// Init openGL options (use AFTER window is linked)
-	virtual void InitGL();
-	// Writes user optional / settings based defines to main log file
+	virtual void InitGL(); // use AFTER window is linked
 	virtual void WriteDefinesInfo();
 	// Writes some OpenGL info to main log - !!! uses OGL version > 3.0 !!!
 	virtual void WriteOGLInfo();
-	// Writes window info to main log
 	virtual void WriteWindowInfo();
-	// Create a new window for use 
 	virtual void CreateNewWindow(GLuint width, GLuint height, std::string title, MGLenum windowType, GLFWmonitor* monito = nullptr);
-	// Should the window close
 	virtual GLint ShouldClose() { return glfwWindowShouldClose(m_window); }
-	// Close the window
 	virtual void CloseWindow() { glfwSetWindowShouldClose(m_window, GL_TRUE); }
 	// Set callback on window resize (if m_resizable=true and window!=NULL)
 	void SetResizeCallback(GLFWwindowsizefun func);
-	// Returns the window
 	GLFWwindow* GetWindow() const { return m_window; }
 
 protected:
 
-	/****** Methods ******/
-
-	// Polls events
 	inline virtual void PollEvents() { glfwPollEvents(); }
-	// Swaps screen buffers
 	inline virtual void SwapBuffers() { glfwSwapBuffers(m_window); }
-	// Handle keyboard input
+
 	virtual void HandleKeyInput(GLuint key, GLuint scancode, GLuint action, GLuint mods);
-	// Handle mouse button input
 	virtual void HandleMouseButton(GLuint button, GLuint action, GLuint mods);
-	// Handle window resize
 	virtual void HandleResize(GLuint width, GLuint height);
-	// Handle mouse position
 	virtual void HandleMousePosition(GLdouble xPos, GLdouble yPos);
-	// Handle mouse scroll
 	virtual void HandleMouseScroll(GLdouble xOffset, GLdouble yOffset);
-	// Handle window.mouse focus
 	virtual void HandleMouseFocus(GLboolean focused);
-	// Sets window attributes
+
 	void SetWindow(GLFWwindow* win);
 	
-
 	static void ResizeCallBack(GLFWwindow* window, GLuint width, GLuint height);
 	static void KeyInputCallBack(GLFWwindow* window, GLuint key, GLuint scancode, GLuint action, GLuint mods);
 	static void MouseButtonCallBack(GLFWwindow* window, GLuint button, GLuint action, GLuint mods);
 	static void MousePositionCallBack(GLFWwindow* window, GLdouble xPos, GLdouble yPos);
 	static void MouseScrollCallBack(GLFWwindow* window, GLdouble xOffset, GLdouble yOffset);
 	static void MouseFocusCallBack(GLFWwindow* window, GLboolean focused);
-
-	/****** Data ******/
 
 	GLFWwindow* m_window;
 	GLboolean m_resizable;
@@ -95,6 +76,11 @@ protected:
 	GLboolean m_inFocus;
 	GLuint m_refreshRate;
 	GLuint m_samples;
+
+private:
+	void SetHintsGLVersion(GLuint major, GLuint Minor);
+	void SetHintsSamples(GLuint samples);
+	void SetHints
 }; 
 
 class MGLRenderer : public MGLContext {
@@ -103,7 +89,6 @@ public:
 	MGLRenderer(GLuint major, GLuint minor, GLboolean resizable, GLuint refreshRate, GLuint msaa);
 	virtual ~MGLRenderer();
 
-	// Init openGL options (use AFTER window is linked)
 	virtual void InitGL() override;
 
 	MGLCamera* GetCamera() { return m_camera; }
@@ -117,17 +102,10 @@ public:
 
 protected:
 
-	/****** Methods ******/
-
-	// Polls events (including user mouse and keyboard)
 	virtual void PollEvents();
-	// Init singleton instances
 	virtual void InitInstances();
-	// Creates and sets a view matrix based on the camera
 	virtual void CreateViewMatrix();
-	// Creates a projection matrix based on camera
 	virtual void CreateProjectionMatrix(const GLboolean orthographic = GL_FALSE);
-	// Handlers for window 
 
 	virtual void HandleResize(GLuint width, GLuint height) override;
 	virtual void HandleKeyInput(GLuint key, GLuint scancode, GLuint action, GLuint mods) override;
@@ -136,12 +114,12 @@ protected:
 	virtual void HandleMouseFocus(GLboolean focused) override;
 	virtual void HandleMouseScroll(GLdouble xOffset, GLdouble yOffset);
 
-	/****** Data ******/
-
 	MGLCamera* m_camera;
 	MGLKeyboard* m_keyboad;
 	MGLMouse* m_mouse;
 };
+
+
 
 #ifdef MGL_USER_INCLUDE_TESTS
 // Test cases for debugging

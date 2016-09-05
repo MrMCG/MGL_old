@@ -8,7 +8,7 @@ Scene::Scene() : MGLRenderer() {
 	InitGL();
 
 	// For running test cases
-	MGL_TESTS_::MGL_TEST_ALL();
+	//MGL_TESTS_::MGL_TEST_ALL();
 
 	// Create new shader program
 	shader = new MGLShader();

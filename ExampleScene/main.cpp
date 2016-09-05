@@ -5,7 +5,7 @@ int main() {
 	// Create new MGLRenderer
 	Scene* scene = new Scene();
 	
-	while (!scene->ShouldClose()) {
+	while (!scene->GetWindow()->ShouldClose()) {
 		scene->RenderScene();
 	}
 	

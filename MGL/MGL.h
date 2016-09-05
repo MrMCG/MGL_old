@@ -31,69 +31,32 @@
 class MGLContext {
 public:
 	MGLContext();
-	MGLContext(GLuint major, GLuint minor, GLboolean resizable, GLuint refreshRate, GLuint msaa);
 	virtual ~MGLContext();
 
 	virtual void RenderScene() = 0;
-	virtual void InitGL(); // use AFTER window is linked
-	virtual void WriteDefinesInfo();
+
 	// Writes some OpenGL info to main log - !!! uses OGL version > 3.0 !!!
 	virtual void WriteOGLInfo();
 	virtual void WriteWindowInfo();
-	virtual void CreateNewWindow(GLuint width, GLuint height, std::string title, MGLenum windowType, GLFWmonitor* monito = nullptr);
-	virtual GLint ShouldClose() { return glfwWindowShouldClose(m_window); }
-	virtual void CloseWindow() { glfwSetWindowShouldClose(m_window, GL_TRUE); }
-	// Set callback on window resize (if m_resizable=true and window!=NULL)
-	void SetResizeCallback(GLFWwindowsizefun func);
-	GLFWwindow* GetWindow() const { return m_window; }
+	virtual void WriteDefinesInfo();
+
+	MGLWindow* GetWindow() const { return window; }
 
 protected:
 
-	inline virtual void PollEvents() { glfwPollEvents(); }
-	inline virtual void SwapBuffers() { glfwSwapBuffers(m_window); }
+	virtual void PollEvents() { glfwPollEvents(); window->PollInput(); };
+	virtual void SwapBuffers() { glfwSwapBuffers(window->GetGLFWWindow()); }
 
-	virtual void HandleKeyInput(GLuint key, GLuint scancode, GLuint action, GLuint mods);
-	virtual void HandleMouseButton(GLuint button, GLuint action, GLuint mods);
-	virtual void HandleResize(GLuint width, GLuint height);
-	virtual void HandleMousePosition(GLdouble xPos, GLdouble yPos);
-	virtual void HandleMouseScroll(GLdouble xOffset, GLdouble yOffset);
-	virtual void HandleMouseFocus(GLboolean focused);
-
-	void SetWindow(GLFWwindow* win);
-	
-	static void ResizeCallBack(GLFWwindow* window, GLuint width, GLuint height);
-	static void KeyInputCallBack(GLFWwindow* window, GLuint key, GLuint scancode, GLuint action, GLuint mods);
-	static void MouseButtonCallBack(GLFWwindow* window, GLuint button, GLuint action, GLuint mods);
-	static void MousePositionCallBack(GLFWwindow* window, GLdouble xPos, GLdouble yPos);
-	static void MouseScrollCallBack(GLFWwindow* window, GLdouble xOffset, GLdouble yOffset);
-	static void MouseFocusCallBack(GLFWwindow* window, GLboolean focused);
-
-	GLFWwindow* m_window;
-	GLboolean m_resizable;
-	GLuint m_windowType;
-	GLuint m_width;
-	GLuint m_height;
-	GLboolean m_inFocus;
-	GLuint m_refreshRate;
-	GLuint m_samples;
-
-private:
-	void SetHintsGLVersion(GLuint major, GLuint Minor);
-	void SetHintsSamples(GLuint samples);
-	void SetHints
+	MGLWindow* window;
 }; 
 
 class MGLRenderer : public MGLContext {
 public:
 	MGLRenderer();
-	MGLRenderer(GLuint major, GLuint minor, GLboolean resizable, GLuint refreshRate, GLuint msaa);
 	virtual ~MGLRenderer();
 
-	virtual void InitGL() override;
-
 	MGLCamera* GetCamera() { return m_camera; }
-	MGLMouse* GetMouse() { return m_mouse; }
-
+	
 	/****** TEMP ******/
 	glm::mat4 m_projMatrix;
 	glm::mat4 m_viewMatrix;
@@ -102,21 +65,11 @@ public:
 
 protected:
 
-	virtual void PollEvents();
 	virtual void InitInstances();
 	virtual void CreateViewMatrix();
 	virtual void CreateProjectionMatrix(const GLboolean orthographic = GL_FALSE);
 
-	virtual void HandleResize(GLuint width, GLuint height) override;
-	virtual void HandleKeyInput(GLuint key, GLuint scancode, GLuint action, GLuint mods) override;
-	virtual void HandleMousePosition(GLdouble xPos, GLdouble yPos) override;
-	virtual void HandleMouseButton(GLuint button, GLuint action, GLuint mods) override;
-	virtual void HandleMouseFocus(GLboolean focused) override;
-	virtual void HandleMouseScroll(GLdouble xOffset, GLdouble yOffset);
-
 	MGLCamera* m_camera;
-	MGLKeyboard* m_keyboad;
-	MGLMouse* m_mouse;
 };
 
 

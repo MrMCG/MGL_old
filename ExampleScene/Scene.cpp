@@ -2,11 +2,6 @@
 //#include <direct.h>
 
 Scene::Scene() : MGLRenderer() {
-	// Create window context
-	CreateNewWindow(1280, 720, "MGL Example Window!", MGL_WINDOWTYPE_WINDOWED);
-	// Init GLEW and other GL features
-	InitGL();
-
 	// For running test cases
 	//MGL_TESTS_::MGL_TEST_ALL();
 
@@ -83,24 +78,24 @@ void Scene::loadObjects() {
 
 void Scene::InitInputFuncs() {
 	// Add movements keyboard functions to keys
-	m_keyboad->AddKeyFunction(GLFW_KEY_W, GLFW_REPEAT, GLFW_PRESS, (MGLFunction2)Movement_Func, new MGLenum(MGL_CAMERA_FORWARD));
-	m_keyboad->AddKeyFunction(GLFW_KEY_A, GLFW_REPEAT, GLFW_PRESS, (MGLFunction2)Movement_Func, new MGLenum(MGL_CAMERA_LEFT));
-	m_keyboad->AddKeyFunction(GLFW_KEY_S, GLFW_REPEAT, GLFW_PRESS, (MGLFunction2)Movement_Func, new MGLenum(MGL_CAMERA_BACKWARD));
-	m_keyboad->AddKeyFunction(GLFW_KEY_D, GLFW_REPEAT, GLFW_PRESS, (MGLFunction2)Movement_Func, new MGLenum(MGL_CAMERA_RIGHT));
-	m_keyboad->AddKeyFunction(GLFW_KEY_UP, GLFW_REPEAT, GLFW_PRESS, (MGLFunction2)Movement_Func, new MGLenum(MGL_CAMERA_UP));
-	m_keyboad->AddKeyFunction(GLFW_KEY_DOWN, GLFW_REPEAT, GLFW_PRESS, (MGLFunction2)Movement_Func, new MGLenum(MGL_CAMERA_DOWN));
+	window->GetKeyboard()->AddKeyFunction(GLFW_KEY_W, GLFW_REPEAT, GLFW_PRESS, (MGLFunction2)Movement_Func, new MGLenum(MGL_CAMERA_FORWARD));
+	window->GetKeyboard()->AddKeyFunction(GLFW_KEY_A, GLFW_REPEAT, GLFW_PRESS, (MGLFunction2)Movement_Func, new MGLenum(MGL_CAMERA_LEFT));
+	window->GetKeyboard()->AddKeyFunction(GLFW_KEY_S, GLFW_REPEAT, GLFW_PRESS, (MGLFunction2)Movement_Func, new MGLenum(MGL_CAMERA_BACKWARD));
+	window->GetKeyboard()->AddKeyFunction(GLFW_KEY_D, GLFW_REPEAT, GLFW_PRESS, (MGLFunction2)Movement_Func, new MGLenum(MGL_CAMERA_RIGHT));
+	window->GetKeyboard()->AddKeyFunction(GLFW_KEY_UP, GLFW_REPEAT, GLFW_PRESS, (MGLFunction2)Movement_Func, new MGLenum(MGL_CAMERA_UP));
+	window->GetKeyboard()->AddKeyFunction(GLFW_KEY_DOWN, GLFW_REPEAT, GLFW_PRESS, (MGLFunction2)Movement_Func, new MGLenum(MGL_CAMERA_DOWN));
 
-	m_keyboad->AddKeyFunction(GLFW_KEY_1, GLFW_PRESS, (MGLFunction2)MGL::EnableWireframe, nullptr);
-	m_keyboad->AddKeyFunction(GLFW_KEY_2, GLFW_PRESS, (MGLFunction2)MGL::DisableWireframe, nullptr);
-	m_keyboad->AddKeyFunction(GLFW_KEY_ESCAPE, GLFW_PRESS, (MGLFunction2)key_ESC_Func, nullptr);
+	window->GetKeyboard()->AddKeyFunction(GLFW_KEY_1, GLFW_PRESS, (MGLFunction2)MGL::EnableWireframe, nullptr);
+	window->GetKeyboard()->AddKeyFunction(GLFW_KEY_2, GLFW_PRESS, (MGLFunction2)MGL::DisableWireframe, nullptr);
+	window->GetKeyboard()->AddKeyFunction(GLFW_KEY_ESCAPE, GLFW_PRESS, (MGLFunction2)key_ESC_Func, nullptr);
 
 	// Add mouse functions
-	m_mouse->AddKeyFunction(GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE, (MGLFunction2)Key_MOUSE_Func, nullptr);
-	m_mouse->AddScrollFunction((MGLFunction2)Key_SCROLL_Func, nullptr);
+	window->GetMouse()->AddKeyFunction(GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE, (MGLFunction2)Key_MOUSE_Func, nullptr);
+	window->GetMouse()->AddScrollFunction((MGLFunction2)Key_SCROLL_Func, nullptr);
 
 	// Set user data pointers for access in functions
-	m_keyboad->SetDataPointer(this);
-	m_mouse->SetDataPointer(this);
+	window->GetKeyboard()->SetDataPointer(this);
+	window->GetMouse()->SetDataPointer(this);
 }
 
 void Scene::RenderScene() {
@@ -162,18 +157,18 @@ void Movement_Func(Scene* inputData, MGLenum* funcData) {
 }
 
 void Key_MOUSE_Func(Scene* inputData) {
-	if (inputData->GetMouse()->GetHasUpdated()) { // check if camera has moved
-		inputData->GetCamera()->MoveCamera(MGL_CAMERA_PITCH, inputData->GetMouse()->GetOffsetY());
-		inputData->GetCamera()->MoveCamera(MGL_CAMERA_YAW, inputData->GetMouse()->GetOffsetX());
-		inputData->GetMouse()->SetHasUpdated(GL_FALSE); // reset for next update
+	if (inputData->GetWindow()->GetMouse()->GetHasUpdated()) { // check if camera has moved
+		inputData->GetCamera()->MoveCamera(MGL_CAMERA_PITCH, inputData->GetWindow()->GetMouse()->GetOffsetY());
+		inputData->GetCamera()->MoveCamera(MGL_CAMERA_YAW, inputData->GetWindow()->GetMouse()->GetOffsetX());
+		inputData->GetWindow()->GetMouse()->SetHasUpdated(GL_FALSE); // reset for next update
 	}
 }
 
 void Key_SCROLL_Func(Scene* inputData) {
-	inputData->GetCamera()->MoveCamera(MGL_CAMERA_ZOOM, inputData->GetMouse()->GetScrollY());
-	inputData->GetMouse()->SetScrollUpdated(GL_FALSE); // reset for next scroll
+	inputData->GetCamera()->MoveCamera(MGL_CAMERA_ZOOM, inputData->GetWindow()->GetMouse()->GetScrollY());
+	inputData->GetWindow()->GetMouse()->SetScrollUpdated(GL_FALSE); // reset for next scroll
 }
 
 void key_ESC_Func(Scene* inputData) {
-	inputData->CloseWindow();
+	inputData->GetWindow()->CloseWindow();
 }

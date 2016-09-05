@@ -35,10 +35,6 @@
 
 // MGLenums
 
-#define MGL_WINDOWTYPE_WINDOWED 1
-#define MGL_WINDOWTYPE_FULLSCREEN 2
-#define MGL_WINDOWTYPE_FULLWINDOWED 3
-
 #define MGL_WINDOWINFO_WIDTH 1
 #define MGL_WINDOWINFO_HEIGHT 2
 #define MGL_WINDOWINFO_XPOS 3
@@ -109,7 +105,7 @@
 
 /****** Typedefs ******/
 
-typedef GLuint MGLenum;
+typedef GLuint MGLenum; // MGLEnum meerly indicates a MGL_ defined variable
 typedef void(*MGLFunction1)(void*);
 typedef void(*MGLFunction2)(void*, void*);
 

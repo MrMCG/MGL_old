@@ -37,6 +37,8 @@ void key_ESC_Func(Scene* inputData);
 
 void Movement_Func(Scene* inputData, MGLenum* funcData);
 
+void windowTest(Scene* inputData);
+
 
 
 

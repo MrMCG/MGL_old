@@ -4,7 +4,7 @@
 
 #define MGL_WINDOWTYPE_WINDOWED 1
 #define MGL_WINDOWTYPE_FULLSCREEN 2
-#define MGL_WINDOWTYPE_FULLWINDOWED 3
+#define MGL_WINDOWTYPE_BORDERLESS 3
 
 class MGLWindow {
 public:
@@ -13,17 +13,15 @@ public:
 
 	GLint ShouldClose() { return glfwWindowShouldClose(window); }
 	void CloseWindow() { glfwSetWindowShouldClose(window, GL_TRUE); }
-	void GenerateNewGLFWWindow();
 	void PollInput();
 
-	// Set callback on window resize (if m_resizable=true and window!=NULL)
-	void SetResizeCallback(GLFWwindowsizefun func);
-
+	// TODO make setters read from file
 	void SetGLVersion(GLuint major, GLuint minor);
-	void SetSize(GLuint newWidth, GLuint newHeight);
+	void SetWindowSize(GLuint newWidth, GLuint newHeight);
 	void SetResizable(GLboolean resizable);
 	void SetRefreshRate(GLboolean refresh);
 	void SetSamples(GLuint samples);
+	void SetWindowType(MGLenum type);
 
 	GLFWwindow* GetGLFWWindow() { return window; }
 	GLboolean GetResizable() { return isResizable; }
@@ -45,16 +43,23 @@ protected:
 	virtual void HandleMouseScroll(GLdouble xOffset, GLdouble yOffset);
 	virtual void HandleMouseFocus(GLboolean focused);
 
+	virtual void SetGLOptions();
+
 private:
 
+	GLboolean GenerateWindow();
 	void SetGLFWWindowContext();
 	void InitInput();
-	void InitGL();
+	void InitGLEW();
 	void InitWindowHints();
+	void InitWindow();
 
 	void MakeWindowFullscreen();
 	void MakeWindowWindowed();
 	void MakeWindowBorderless();
+
+	// Set callback on window resize (if m_resizable=true and window!=NULL)
+	void SetResizeCallback(GLFWwindowsizefun func);
 
 	static void ResizeCallBack(GLFWwindow* window, GLuint width, GLuint height);
 	static void KeyInputCallBack(GLFWwindow* window, GLuint key, GLuint scancode, GLuint action, GLuint mods);

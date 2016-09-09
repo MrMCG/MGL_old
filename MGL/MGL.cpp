@@ -1,11 +1,13 @@
 #include "stdafx.h"
 #include "MGL.h"
-
+#include <windows.h>
 /***************************/
 /*********** MGL ***********/
 /***************************/
 
 MGLContext::MGLContext() {
+	
+	FreeConsole();
 
 	MGLLog::Init();
 	try {

@@ -38,7 +38,7 @@ public:
 	// Writes some OpenGL info to main log - !!! uses OGL version > 3.0 !!!
 	virtual void WriteOGLInfo();
 	virtual void WriteWindowInfo();
-	virtual void WriteDefinesInfo();
+	virtual void WriteDefinesInfo();  
 
 	MGLWindow* GetWindow() const { return window; }
 

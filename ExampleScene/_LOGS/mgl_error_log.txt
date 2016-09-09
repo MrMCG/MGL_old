@@ -1,0 +1,5 @@
+******************************************
+*************** New MGLLog ***************
+******************************************
+[6-9-2016 2:0:43] MGLEXCEPTION ERROR - FILE ERROR : meshes/The City.obj  
+[6-9-2016 2:0:43] MGLEXCEPTION ERROR - POINTER NULL :  StringStream LoadOBJ 

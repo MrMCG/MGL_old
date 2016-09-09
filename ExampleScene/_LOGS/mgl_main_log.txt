@@ -1,0 +1,33 @@
+******************************************
+*************** New MGLLog ***************
+******************************************
+[6-9-2016 2:0:42] WINDOW INIT...
+[6-9-2016 2:0:43] GLEW INIT: SUCCESS
+[6-9-2016 2:0:43] GLFW INIT: SUCCESS
+[6-9-2016 2:0:43] MGL Load: _DEFAULTS/cube.mgl : 24 vertices in 0.000485
+[6-9-2016 2:0:43] MGL Load: _DEFAULTS/sphere.mgl : 323 vertices in 0.001860
+[6-9-2016 2:0:43] MGL Load: _DEFAULTS/cone.mgl : 63 vertices in 0.000528
+----- INFO -----
+	OGL INFO
+[6-9-2016 2:0:43] 3.3.0 NVIDIA 372.54
+[6-9-2016 2:0:43] NVIDIA Corporation
+[6-9-2016 2:0:43] GeForce GTX 970/PCIe/SSE2
+[6-9-2016 2:0:43] 3.30 NVIDIA via Cg compiler
+	MGL DEFINES
+[6-9-2016 2:0:43] MGLDEBUG                        TRUE    
+[6-9-2016 2:0:43] MGL_BUILD_CONFIG                Win32   
+[6-9-2016 2:0:43] MGL_USER_INCLUDE_TESTS          TRUE    
+[6-9-2016 2:0:43] MGL_USER_INCLUDE_FILETC         TRUE    
+[6-9-2016 2:0:43] MGL_FILE_CURRENTVERSION         1       
+[6-9-2016 2:0:43] MGL_LOG_MAXLINESIZE             512     
+[6-9-2016 2:0:43] MGL_LOG_MAXLOGSIZE              512     
+	WINDOW INFO
+[6-9-2016 2:0:43] Resolution                      800     600     
+[6-9-2016 2:0:43] Refresh                         60      
+[6-9-2016 2:0:43] MSAA                            0       
+[6-9-2016 2:0:43] Type                            1       
+----- INFO -----
+[6-9-2016 2:0:43] Compiling Shader : shaders/vert.glsl - SUCCESS
+[6-9-2016 2:0:43] Compiling Shader : shaders/frag.glsl - SUCCESS
+[6-9-2016 2:0:43] MGL Load: meshes/raptor.mgl : 3372 vertices in 0.022707
+[6-9-2016 2:0:44] MGL Load: meshes/death-star-II.mgl : 214856 vertices in 1.080191

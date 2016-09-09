@@ -1,9 +1,15 @@
 #include "Scene.h"
 //#include <direct.h>
 
+// 1. derive from MGL or MGLRenderer
 Scene::Scene() : MGLRenderer() {
-	// For running test cases
-	//MGL_TESTS_::MGL_TEST_ALL();
+
+	// 2. Build window
+
+	// 3. Init GL features and Instances
+
+	// 4. Create your scene!
+
 
 	// Create new shader program
 	shader = new MGLShader();
@@ -84,6 +90,8 @@ void Scene::InitInputFuncs() {
 	window->GetKeyboard()->AddKeyFunction(GLFW_KEY_D, GLFW_REPEAT, GLFW_PRESS, (MGLFunction2)Movement_Func, new MGLenum(MGL_CAMERA_RIGHT));
 	window->GetKeyboard()->AddKeyFunction(GLFW_KEY_UP, GLFW_REPEAT, GLFW_PRESS, (MGLFunction2)Movement_Func, new MGLenum(MGL_CAMERA_UP));
 	window->GetKeyboard()->AddKeyFunction(GLFW_KEY_DOWN, GLFW_REPEAT, GLFW_PRESS, (MGLFunction2)Movement_Func, new MGLenum(MGL_CAMERA_DOWN));
+	
+	window->GetKeyboard()->AddKeyFunction(GLFW_KEY_Y, GLFW_PRESS, (MGLFunction2)windowTest, nullptr);
 
 	window->GetKeyboard()->AddKeyFunction(GLFW_KEY_1, GLFW_PRESS, (MGLFunction2)MGL::EnableWireframe, nullptr);
 	window->GetKeyboard()->AddKeyFunction(GLFW_KEY_2, GLFW_PRESS, (MGLFunction2)MGL::DisableWireframe, nullptr);
@@ -171,4 +179,8 @@ void Key_SCROLL_Func(Scene* inputData) {
 
 void key_ESC_Func(Scene* inputData) {
 	inputData->GetWindow()->CloseWindow();
+}
+
+void windowTest(Scene* inputData) {
+	inputData->GetWindow()->SetWindowSize(1000, 800);
 }

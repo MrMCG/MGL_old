@@ -38,6 +38,7 @@
 #include <functional>
 #include <ctime>
 #include <mutex>
+#include <memory>
 
 #include <sstream>
 #include <algorithm>

@@ -165,16 +165,12 @@ void Movement_Func(Scene* inputData, MGLenum* funcData) {
 }
 
 void Key_MOUSE_Func(Scene* inputData) {
-	if (inputData->GetWindow()->GetMouse()->GetHasUpdated()) { // check if camera has moved
-		inputData->GetCamera()->MoveCamera(MGL_CAMERA_PITCH, inputData->GetWindow()->GetMouse()->GetOffsetY());
-		inputData->GetCamera()->MoveCamera(MGL_CAMERA_YAW, inputData->GetWindow()->GetMouse()->GetOffsetX());
-		inputData->GetWindow()->GetMouse()->SetHasUpdated(GL_FALSE); // reset for next update
-	}
+	inputData->GetCamera()->MoveCamera(MGL_CAMERA_PITCH, inputData->GetWindow()->GetMouse()->GetMouseOffsetY());
+	inputData->GetCamera()->MoveCamera(MGL_CAMERA_YAW, inputData->GetWindow()->GetMouse()->GetMouseOffsetX());
 }
 
 void Key_SCROLL_Func(Scene* inputData) {
 	inputData->GetCamera()->MoveCamera(MGL_CAMERA_ZOOM, inputData->GetWindow()->GetMouse()->GetScrollY());
-	inputData->GetWindow()->GetMouse()->SetScrollUpdated(GL_FALSE); // reset for next scroll
 }
 
 void key_ESC_Func(Scene* inputData) {

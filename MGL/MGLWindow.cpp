@@ -183,13 +183,11 @@ void MGLWindow::HandleResize(GLuint newWidth, GLuint newHeight) {
 }
 
 void MGLWindow::HandleKeyInput(GLuint key, GLuint scancode, GLuint action, GLuint mods) {
-	keyboadInput->UpdateKey(key, action);
-	keyboadInput->UpdateMod(mods);
+	keyboadInput->UpdateKey(key, mods, action);
 }
 
 void MGLWindow::HandleMouseButton(GLuint button, GLuint action, GLuint mods) {
-	mouseInput->UpdateKey(button, action);
-	mouseInput->UpdateMod(mods);
+	mouseInput->UpdateKey(button, mods, action);
 }
 
 void MGLWindow::HandleMousePosition(GLdouble xPos, GLdouble yPos) {
@@ -199,6 +197,7 @@ void MGLWindow::HandleMousePosition(GLdouble xPos, GLdouble yPos) {
 
 void MGLWindow::HandleMouseScroll(GLdouble xOffset, GLdouble yOffset) {
 	mouseInput->UpdateScroll((GLfloat)xOffset, (GLfloat)yOffset);
+	mouseInput->UpdateKey(MGL_SCROLLKEY_VALUE, 0, MGL_INPUT_SCROLLACTION);
 }
 
 void MGLWindow::HandleMouseFocus(GLboolean focused) {

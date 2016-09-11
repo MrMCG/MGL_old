@@ -36,19 +36,7 @@
     <ClInclude Include="MGLExceptions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MGLShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MGLMesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MGLUtil.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MGLCamera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MGLTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MGLFile.h">
@@ -75,24 +63,24 @@
     <ClInclude Include="MGLInputItem.h">
       <Filter>Header Files\Input</Filter>
     </ClInclude>
+    <ClInclude Include="MGLTexture.h">
+      <Filter>Header Files\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="MGLShader.h">
+      <Filter>Header Files\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="MGLMesh.h">
+      <Filter>Header Files\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="MGLCamera.h">
+      <Filter>Header Files\Main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MGLShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MGLMesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MGLCamera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MGLUtil.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MGLTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MGLFile.cpp">
@@ -118,6 +106,18 @@
     </ClCompile>
     <ClCompile Include="MGLInputItem.cpp">
       <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="MGLCamera.cpp">
+      <Filter>Source Files\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="MGLMesh.cpp">
+      <Filter>Source Files\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="MGLShader.cpp">
+      <Filter>Source Files\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="MGLTexture.cpp">
+      <Filter>Source Files\Main</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

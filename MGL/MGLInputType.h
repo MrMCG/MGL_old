@@ -6,28 +6,32 @@
 
 class MGLInputType {
 public:
-	MGLInputType() : dataPointer(nullptr), inputCounter(0), currentMod(0) {}
-	~MGLInputType() { dataPointer = nullptr; }
+	MGLInputType();
+	~MGLInputType();
 
-	virtual void AddKeyFunction(GLuint key,
-		GLuint action, MGLFunction2 func, void* funcData, GLuint mod = 0);
-	virtual void AddKeyFunction(GLuint key,
-		GLuint firstAction, GLuint secondAction, MGLFunction2 func, void* funcData, GLuint mod = 0);
+	virtual void AddKeyFunction(GLuint keyVal,	GLuint action, MGLFunction2 callbackFunc, void* funcData, GLuint mod = 0);
+	virtual void AddKeyFunction(GLuint keyVal,	GLuint firstAction, GLuint secondAction, MGLFunction2 callbackFunc, void* funcData, GLuint mod = 0);
 
-	virtual void UpdateKey(GLuint Key, GLuint action);
+	virtual void UpdateKey(GLuint keyVal, GLuint mod, GLuint action);
 	virtual void RunKeys();
-	void UpdateMod(GLuint mod) { currentMod = mod; }
+
 	void SetDataPointer(void* pointer) { dataPointer = pointer; }
 
 protected:
 
 	void RunSingleKey(MGLInputItem& key);
+	void UpdateRegisteredKey(MGLInputItem& key);
+	GLboolean FindRegisteredKey(MGLInputItem& key);
 
+	void SetCurrentData(GLuint keyVal, GLuint mod, GLuint action);
 
-	GLuint inputCounter;
-	GLuint currentMod;
-	void* dataPointer; // primary data for all key functions
+	GLuint inputCounter = 0;
+	void* dataPointer = nullptr; // primary data for all key functions
 
-	std::vector<MGLInputItem> inputVector;
-	std::unordered_map<GLuint, MGLFunction2> inputMap;
+	std::unique_ptr<std::vector<MGLInputItem>> activeKeysVector;
+	std::unique_ptr<std::unordered_map<GLuint, MGLFunction2>> keyFunctionsMap;
+
+	GLuint currentMod = -1;
+	GLuint currentKey = -1;
+	GLuint currentAction = -1;
 };

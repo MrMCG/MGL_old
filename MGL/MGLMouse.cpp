@@ -4,26 +4,32 @@
 #include "MGLMouse.h"
 
 void MGLMouse::RunKeys() {
-	for (MGLInputItem& obj : inputVector) {
-		if (obj.inUse) {
-			if (!obj.keyMod)
-				(inputMap[obj.index])(dataPointer, obj.functionData);
-			else if (obj.keyMod == currentMod)
-				(inputMap[obj.index])(dataPointer, obj.functionData);
-		}
-		else if (obj.keyValue == scrollKey && obj.action1 == MGL_INPUT_SCROLLACTION && scrollUpdated)
-			(inputMap[obj.index])(dataPointer, obj.functionData);
-	}
+	MGLInputType::RunKeys();
+	ResetMouseOffset();
+	ResetScrollOffset();
 }
 
 void MGLMouse::AddScrollFunction(MGLFunction2 func, void* funcData, GLuint mod) {
-	AddKeyFunction(scrollKey, MGL_INPUT_SCROLLACTION, func, funcData, mod);
+	AddKeyFunction(MGL_SCROLLKEY_VALUE, MGL_INPUT_SCROLLACTION, func, funcData, mod);
 }
 
 void MGLMouse::UpdatePosition(GLfloat xPos, GLfloat yPos) {
-	offsetX = xPos - lastX;
-	offsetY = lastY - yPos;
-	lastX = xPos;
-	lastY = yPos;
-	hasUpdated = GL_TRUE;
+	mouseOffsetX = xPos - mouseLastX;
+	mouseOffsetY = mouseLastY - yPos;
+	mouseLastX = xPos;
+	mouseLastY = yPos;
+}
+
+void MGLMouse::UpdateScroll(GLfloat x, GLfloat y) {
+	scrollX = x; scrollY = y;
+}
+
+void MGLMouse::ResetMouseOffset() {
+	mouseOffsetX = 0;
+	mouseOffsetY = 0;
+}
+
+void MGLMouse::ResetScrollOffset() {
+	scrollX = 0;
+	scrollY = 0;
 }

@@ -9,7 +9,3 @@ MGLInputItem::MGLInputItem(GLuint k, GLuint a1, GLuint a2, GLuint i, GLuint m, v
 	keyMod = m; 
 	functionData = funcData;
 }
-
-GLboolean MGLInputItem::KeyShouldRun() {
-	return false;
-}

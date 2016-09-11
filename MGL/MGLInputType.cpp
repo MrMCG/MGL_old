@@ -1,39 +1,61 @@
 #include "stdafx.h"
 #include "MGLInputType.h"
 
-void MGLInputType::AddKeyFunction(GLuint key, GLuint action, MGLFunction2 func, void* funcData, GLuint mod) {
-	AddKeyFunction(key, action, action, func, funcData, mod);
+MGLInputType::MGLInputType() {
+	activeKeysVector = std::make_unique<std::vector<MGLInputItem>>();
+	keyFunctionsMap = std::make_unique<std::unordered_map<GLuint, MGLFunction2>>();
+	dataPointer = nullptr;
 }
 
-void MGLInputType::AddKeyFunction(GLuint key, GLuint firstAction, GLuint secondAction, MGLFunction2 func, void* funcData, GLuint mod) {
-	GLuint index = ++inputCounter; // increase index count
-	inputVector.push_back(MGLInputItem(key, firstAction, secondAction, index, mod, funcData)); // add function
-	inputMap.insert(std::make_pair(index, func)); // map index to function
+MGLInputType::~MGLInputType() {
 }
 
-void MGLInputType::UpdateKey(GLuint key, GLuint action) {
-	for (MGLInputItem& obj : inputVector) {
-		if (obj.keyValue == key) { // key has a function
-			if (obj.action1 == action || obj.action2 == action) { // correct action
-				obj.inUse = GL_TRUE;
-			}
-			else
-				obj.inUse = GL_FALSE;
+void MGLInputType::AddKeyFunction(GLuint keyVal, GLuint action, MGLFunction2 callbackFunc, void* funcData, GLuint mod) {
+	AddKeyFunction(keyVal, action, action, callbackFunc, funcData, mod);
+}
+
+void MGLInputType::AddKeyFunction(GLuint keyVal, GLuint firstAction, GLuint secondAction, MGLFunction2 callbackFunc, void* funcData, GLuint mod) {
+	GLuint index = ++inputCounter;
+	activeKeysVector->push_back(MGLInputItem(keyVal, firstAction, secondAction, index, mod, funcData)); 
+	keyFunctionsMap->insert(std::make_pair(index, callbackFunc));
+}
+
+void MGLInputType::UpdateKey(GLuint keyVal, GLuint mod, GLuint action) {
+	SetCurrentData(keyVal, mod, action);
+
+	for (MGLInputItem& key : *activeKeysVector) {
+		if (FindRegisteredKey(key)) {
+			UpdateRegisteredKey(key);
+			break;
 		}
 	}
 }
 
+void MGLInputType::SetCurrentData(GLuint keyVal, GLuint mod, GLuint action) {
+	currentMod = mod;
+	currentKey = keyVal;
+	currentAction = action;
+}
+
+GLboolean MGLInputType::FindRegisteredKey(MGLInputItem& key) {
+	return key.keyValue == currentKey ? GL_TRUE : GL_FALSE;
+}
+
+void MGLInputType::UpdateRegisteredKey(MGLInputItem& key) {
+	if (key.action1 == currentAction || key.action2 == currentAction) 
+		key.SetActive(GL_TRUE);
+	else
+		key.SetActive(GL_FALSE);
+}
+
 void MGLInputType::RunKeys() {
-	for (MGLInputItem& obj : inputVector) {
-		if (obj.inUse) { // keys in use
-			if (!obj.keyMod) // doesnt require mod
-				(inputMap[obj.index])(dataPointer, obj.functionData);
-			else if (obj.keyMod == currentMod) // requires mod
-				(inputMap[obj.index])(dataPointer, obj.functionData);
+	for (MGLInputItem& key : *activeKeysVector) {
+		if (key.KeyShouldRun()) { 
+			RunSingleKey(key);		
 		}
 	}
 }
 
 void MGLInputType::RunSingleKey(MGLInputItem& key) {
-
+	keyFunctionsMap->at(key.index)(dataPointer, key.functionData);
 }

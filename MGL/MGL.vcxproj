@@ -182,6 +182,7 @@
     <ClInclude Include="MGLDebug.h" />
     <ClInclude Include="MGLExceptions.h" />
     <ClInclude Include="MGLFile.h" />
+    <ClInclude Include="MGLInput.h" />
     <ClInclude Include="MGLInputItem.h" />
     <ClInclude Include="MGLInputType.h" />
     <ClInclude Include="MGLKeyboard.h" />
@@ -198,6 +199,7 @@
     <ClCompile Include="MGLCamera.cpp" />
     <ClCompile Include="MGLDebug.cpp" />
     <ClCompile Include="MGLFile.cpp" />
+    <ClCompile Include="MGLInput.cpp" />
     <ClCompile Include="MGLInputItem.cpp" />
     <ClCompile Include="MGLInputType.cpp" />
     <ClCompile Include="MGLMouse.cpp" />

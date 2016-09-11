@@ -23,6 +23,7 @@ Thumbs.db
 *.sbr
 *.ipch
 *.sdf
+*.opendb
 obj/
 [Rr]elease*/
 _ReSharper*/

@@ -1,6 +1,8 @@
 #pragma once
 #include "stdafx.h"
-#include "MGLInput.h"
+
+#include "MGLMouse.h"
+#include "MGLKeyboard.h"
 
 #define MGL_WINDOWTYPE_WINDOWED 1
 #define MGL_WINDOWTYPE_FULLSCREEN 2

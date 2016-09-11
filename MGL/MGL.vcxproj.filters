@@ -19,6 +19,12 @@
     <Filter Include="Source Files\Main">
       <UniqueIdentifier>{775925fc-be21-4003-bd0b-14797bd7e7dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Input">
+      <UniqueIdentifier>{608c2961-8308-4cd9-92e5-bec3ebef13e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Input">
+      <UniqueIdentifier>{09038399-9064-4352-88b8-cbabcaef4b49}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -42,9 +48,6 @@
     <ClInclude Include="MGLCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MGLInput.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MGLTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -60,6 +63,18 @@
     <ClInclude Include="MGLWindow.h">
       <Filter>Header Files\Main</Filter>
     </ClInclude>
+    <ClInclude Include="MGLKeyboard.h">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="MGLMouse.h">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="MGLInputType.h">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="MGLInputItem.h">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -72,9 +87,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MGLCamera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MGLInput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MGLUtil.cpp">
@@ -97,6 +109,15 @@
     </ClCompile>
     <ClCompile Include="MGLWindow.cpp">
       <Filter>Source Files\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="MGLMouse.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="MGLInputType.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="MGLInputItem.cpp">
+      <Filter>Source Files\Input</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -20,7 +20,6 @@
 #include "MGLMesh.h"
 #include "MGLShader.h"
 #include "MGLCamera.h"
-#include "MGLInput.h"
 #include "MGLTexture.h"
 #include "MGLFile.h"
 #include "MGLDebug.h"

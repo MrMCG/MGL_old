@@ -1,12 +1,8 @@
 #include "stdafx.h"
-#include "MGLMesh.h"
 
+#include "MGLMesh.h"
 #include "MGLTexture.h"
 #include "MGLFile.h"
-
-/*******************************/
-/*********** MGLMesh ***********/
-/*******************************/
 
 MGLMesh::MGLMesh(MGLenum mgl_mesh_type) {
 

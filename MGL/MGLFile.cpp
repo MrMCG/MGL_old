@@ -1,8 +1,7 @@
 #include "stdafx.h"
+
 #include "MGLFile.h"
-
 #include "MGLMesh.h"
-
 #include "MGLExceptions.h"
 #include "MGLDebug.h"
 

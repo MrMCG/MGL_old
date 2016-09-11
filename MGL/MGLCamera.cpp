@@ -1,11 +1,7 @@
 #include "stdafx.h"
+
 #include "MGLCamera.h"
-
 #include "MGLExceptions.h"
-
-/*********************************/
-/*********** MGLCamera ***********/
-/*********************************/
 
 MGLCamera::MGLCamera() {
 	m_pitch = 0.0f;

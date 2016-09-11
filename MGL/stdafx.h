@@ -14,17 +14,6 @@
 //#include <stdlib.h>
 //#include <crtdbg.h>
 
-// Third Party
-
-#include "glew.h"
-#include "glfw3.h"
-#include "glm.hpp"
-#include "gtc/matrix_transform.hpp"
-#include "gtc/type_ptr.hpp"
-#include "stb_image.h"
-
-// MGL
-
 // STL
 
 #include <iostream>
@@ -43,3 +32,24 @@
 #include <sstream>
 #include <algorithm>
 #include <thread>
+
+#include <windows.h>
+
+// Third Party
+
+#include "glew.h"
+#include "glfw3.h"
+#include "glm.hpp"
+#include "gtc/matrix_transform.hpp"
+#include "gtc/type_ptr.hpp"
+#include "stb_image.h"
+
+#pragma comment(lib, "opengl32.lib")
+
+#ifdef MGLDEBUG
+#pragma comment(lib, "libglew32d.lib")
+#else
+#pragma comment(lib, "libglew32.lib")
+#endif // MGLDEBUG
+
+#pragma comment(lib, "glfw3.lib")

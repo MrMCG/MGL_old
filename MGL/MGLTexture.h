@@ -3,6 +3,9 @@
 
 #include "MGLUtil.h"
 
+#define MGL_TEXTURE_DIFFUSE 1
+#define MGL_TEXTURE_SPECULAR 2
+
 // TODO: make adding/loading textures handle 
 // loading existing textures safer
 

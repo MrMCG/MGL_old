@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "MGLUtil.h"
 
+#include "MGLUtil.h"
 #include "MGLExceptions.h"
 
 /*************************************/

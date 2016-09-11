@@ -3,6 +3,17 @@
 
 #include "MGLUtil.h"
 
+#define MGL_LOG_MAXLINESIZE 512
+#define MGL_LOG_MAXLOGSIZE 512
+#define MGL_LOG_AMOUNT 2
+
+#define MGL_LOG_DIRECTORY "_LOGS/"
+#define MGL_LOG_FILENAME_MAIN MGL_LOG_DIRECTORY"mgl_main_log.txt"
+#define MGL_LOG_FILENAME_ERROR MGL_LOG_DIRECTORY"mgl_error_log.txt"
+
+#define MGL_LOG_ERROR 0
+#define MGL_LOG_MAIN 1
+
 class MGLLog : public MGLSingleton < MGLLog > {
 	friend class MGLSingleton < MGLLog > ;
 public:

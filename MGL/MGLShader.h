@@ -1,7 +1,10 @@
 #pragma once
 #include "stdafx.h"
 
-#include "MGLUtil.h"
+#define MGL_SHADER_VERTEX 0
+#define MGL_SHADER_FRAGMENT 1
+#define MGL_SHADER_GEOMETRY 2
+#define MGL_SHADER_MAX 3
 
 // TODO: Add a singleton shader handler to hold program refrences
 

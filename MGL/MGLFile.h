@@ -3,6 +3,9 @@
 
 #include "MGLUtil.h"
 
+#define MGL_FILE_BUFFERMINSIZE 5
+#define MGL_FILE_CURRENTVERSION 1.0f
+
 /*
 	TODO: Add multithreaded obj loader
 	TODO: Add grouping/multiple mesh loading to obj loader

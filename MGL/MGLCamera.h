@@ -1,7 +1,17 @@
-#include "stdafx.h"
 #pragma once
+#include "stdafx.h"
 
 #include "MGLUtil.h"
+
+#define MGL_CAMERA_FORWARD 0
+#define MGL_CAMERA_BACKWARD 1
+#define MGL_CAMERA_LEFT 2
+#define MGL_CAMERA_RIGHT 3
+#define MGL_CAMERA_UP 4
+#define MGL_CAMERA_DOWN 5
+#define MGL_CAMERA_PITCH 6
+#define MGL_CAMERA_YAW 7
+#define MGL_CAMERA_ZOOM 8
 
 class MGLCamera {
 public: 

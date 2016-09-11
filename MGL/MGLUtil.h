@@ -14,25 +14,6 @@
 // include try-catch blocks in MGLFile
 #define MGL_USER_INCLUDE_FILETC
 
-// MGLShader
-
-#define MGL_SHADER_VERTEX 0
-#define MGL_SHADER_FRAGMENT 1
-#define MGL_SHADER_GEOMETRY 2
-#define MGL_SHADER_MAX 3
-
-// MGLMesh
-
-#define MGL_BUFFER_VERTEX 0
-#define MGL_BUFFER_TEXTURES 1
-#define MGL_BUFFER_NORMALS 2
-#define MGL_BUFFER_COLOURS 3
-#define MGL_BUFFER_INDICES 4
-#define MGL_BUFFER_MAX 5
-
-#define MGL_MESH_QUAD 1
-#define MGL_MESH_TRIANGLE 2
-
 // MGLenums
 
 #define MGL_WINDOWINFO_WIDTH 1
@@ -42,45 +23,6 @@
 #define MGL_WINDOWINFO_ATTRIBUTE 5
 #define MGL_WINDOWINFO_M_XPOS 6
 #define MGL_WINDOWINFO_M_YPOS 7
-
-// MGLCamera
-
-#define MGL_CAMERA_FORWARD 0
-#define MGL_CAMERA_BACKWARD 1
-#define MGL_CAMERA_LEFT 2
-#define MGL_CAMERA_RIGHT 3
-#define MGL_CAMERA_UP 4
-#define MGL_CAMERA_DOWN 5
-#define MGL_CAMERA_PITCH 6
-#define MGL_CAMERA_YAW 7
-#define MGL_CAMERA_ZOOM 8
-
-// MGLFile
-
-#define MGL_FILE_BUFFERMINSIZE 5
-#define MGL_FILE_CURRENTVERSION 1.0f
-
-// MGLTexture
-
-#define MGL_TEXTURE_DIFFUSE 1
-#define MGL_TEXTURE_SPECULAR 2
-
-// MGLInput
-
-
-
-// MGLLog
-
-#define MGL_LOG_MAXLINESIZE 512
-#define MGL_LOG_MAXLOGSIZE 512
-#define MGL_LOG_AMOUNT 2
-
-#define MGL_LOG_DIRECTORY "_LOGS/"
-#define MGL_LOG_FILENAME_MAIN MGL_LOG_DIRECTORY"mgl_main_log.txt"
-#define MGL_LOG_FILENAME_ERROR MGL_LOG_DIRECTORY"mgl_error_log.txt"
-
-#define MGL_LOG_ERROR 0
-#define MGL_LOG_MAIN 1
 
 // Singleton instance handlers
 

@@ -3,6 +3,16 @@
 
 #include "MGLUtil.h"
 
+#define MGL_BUFFER_VERTEX 0
+#define MGL_BUFFER_TEXTURES 1
+#define MGL_BUFFER_NORMALS 2
+#define MGL_BUFFER_COLOURS 3
+#define MGL_BUFFER_INDICES 4
+#define MGL_BUFFER_MAX 5
+
+#define MGL_MESH_QUAD 1
+#define MGL_MESH_TRIANGLE 2
+
 class MGLMesh {
 public:
 	MGLMesh(MGLenum mgl_mesh_type = 0);

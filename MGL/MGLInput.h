@@ -47,6 +47,4 @@ protected:
 	std::unique_ptr<MGLMouse> mouseInput;
 	std::weak_ptr<MGLWindow> window;
 
-	
-	
 };

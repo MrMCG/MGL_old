@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "MGLInputItem.h"
 
 MGLInputItem::MGLInputItem(GLuint k, GLuint a1, GLuint a2, GLuint i, GLuint m, void* funcData) {

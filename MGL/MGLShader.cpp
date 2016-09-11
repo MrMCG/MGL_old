@@ -1,8 +1,9 @@
 #include "stdafx.h"
-#include "MGLShader.h"
 
+#include "MGLShader.h"
 #include "MGLExceptions.h"
 #include "MGLDebug.h"
+#include "MGLMesh.h"
 
 MGLShader::MGLShader() {
 	m_program = glCreateProgram();

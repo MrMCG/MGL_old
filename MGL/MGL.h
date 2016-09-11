@@ -1,22 +1,11 @@
 #pragma once
 #include "stdafx.h"
 
-#pragma comment(lib, "opengl32.lib")
-
-#ifdef MGLDEBUG
-#pragma comment(lib, "glew32sd.lib")
-#else
-#pragma comment(lib, "glew32s.lib")
-#endif // MGLDEBUG
-
-#pragma comment(lib, "glfw3.lib")
-
-#include "MGLWindow.h"
-
 #include "MGLUtil.h"
 #include "MGLExceptions.h"
 #include "MGLDebug.h"
 
+#include "MGLWindow.h"
 #include "MGLMesh.h"
 #include "MGLShader.h"
 #include "MGLCamera.h"

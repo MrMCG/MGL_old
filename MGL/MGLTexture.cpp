@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "MGLTexture.h"
 
 MGLTexture::MGLTexture() {

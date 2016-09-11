@@ -67,7 +67,7 @@
 
 // MGLInput
 
-#define MGL_INPUT_SCROLLACTION 5
+
 
 // MGLLog
 

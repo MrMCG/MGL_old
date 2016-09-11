@@ -15,7 +15,6 @@ public:
 
 	GLint ShouldClose() { return glfwWindowShouldClose(window); }
 	void CloseWindow() { glfwSetWindowShouldClose(window, GL_TRUE); }
-	void PollInput();
 
 	// TODO make setters read from file
 	void SetGLVersion(GLuint major, GLuint minor);
@@ -24,6 +23,7 @@ public:
 	void SetRefreshRate(GLboolean refresh);
 	void SetSamples(GLuint samples);
 	void SetWindowType(MGLenum type);
+	void SetInFocus(GLboolean focus);
 
 	GLFWwindow* GetGLFWWindow() { return window; }
 	GLboolean GetResizable() { return isResizable; }
@@ -33,25 +33,18 @@ public:
 	GLuint GetHeight() { return height; }
 	GLuint GetRefreshRate() { return refreshRate; }
 	GLuint GetSamples() { return samples; }
-	MGLMouse* GetMouse() { return mouseInput; }
-	MGLKeyboard* GetKeyboard() { return keyboadInput; }
 
 protected:
 
-	virtual void HandleKeyInput(GLuint key, GLuint scancode, GLuint action, GLuint mods);
-	virtual void HandleMouseButton(GLuint button, GLuint action, GLuint mods);
-	virtual void HandleResize(GLuint width, GLuint height);
-	virtual void HandleMousePosition(GLdouble xPos, GLdouble yPos);
-	virtual void HandleMouseScroll(GLdouble xOffset, GLdouble yOffset);
-	virtual void HandleMouseFocus(GLboolean focused);
+	static void ResizeCallBack(GLFWwindow* window, GLuint width, GLuint height);
 
+	virtual void HandleResize(GLuint width, GLuint height);
 	virtual void SetGLOptions();
 
 private:
 
 	GLboolean GenerateWindow();
 	void SetGLFWWindowContext();
-	void InitInput();
 	void InitGLEW();
 	void InitWindowHints();
 	void InitWindow();
@@ -63,17 +56,8 @@ private:
 	// Set callback on window resize (if m_resizable=true and window!=NULL)
 	void SetResizeCallback(GLFWwindowsizefun func);
 
-	static void ResizeCallBack(GLFWwindow* window, GLuint width, GLuint height);
-	static void KeyInputCallBack(GLFWwindow* window, GLuint key, GLuint scancode, GLuint action, GLuint mods);
-	static void MouseButtonCallBack(GLFWwindow* window, GLuint button, GLuint action, GLuint mods);
-	static void MousePositionCallBack(GLFWwindow* window, GLdouble xPos, GLdouble yPos);
-	static void MouseScrollCallBack(GLFWwindow* window, GLdouble xOffset, GLdouble yOffset);
-	static void MouseFocusCallBack(GLFWwindow* window, GLboolean focused);
-	
 	GLFWwindow* window = nullptr;
 	GLFWmonitor* monitor = nullptr;
-	MGLKeyboard* keyboadInput = nullptr;
-	MGLMouse* mouseInput = nullptr;
 
 	GLboolean isResizable = GL_FALSE;
 	GLboolean inFocus = GL_TRUE;

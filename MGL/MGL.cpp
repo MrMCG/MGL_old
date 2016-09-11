@@ -19,7 +19,9 @@ MGLContext::MGLContext() {
 	}
 
 	// init pointers
-	window = new MGLWindow();
+	window = std::make_shared<MGLWindow>();
+	input = new MGLInput();
+	input->AttatchInputToWindow(window);
 
 	//std::cout << "GLFW INIT: SUCCESS" << std::endl;
 	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "GLFW INIT: SUCCESS");
@@ -27,7 +29,7 @@ MGLContext::MGLContext() {
 }
 
 MGLContext::~MGLContext() {
-	delete window;
+	delete input;
 	glfwTerminate();
 }
 

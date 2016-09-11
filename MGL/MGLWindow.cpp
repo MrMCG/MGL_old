@@ -9,12 +9,6 @@ MGLWindow::MGLWindow() {
 	GenerateWindow();
 	InitGLEW();
 	SetGLOptions();
-	InitInput();
-}
-
-void MGLWindow::InitInput() {
-	keyboadInput = new MGLKeyboard();
-	mouseInput = new MGLMouse();
 }
 
 void MGLWindow::InitGLEW() {
@@ -27,11 +21,6 @@ void MGLWindow::InitGLEW() {
 		return;
 	}
 	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "GLEW INIT: SUCCESS");
-}
-
-void MGLWindow::PollInput() {
-	keyboadInput->RunKeys();
-	mouseInput->RunKeys();
 }
 
 void MGLWindow::SetGLOptions() {
@@ -81,13 +70,6 @@ void MGLWindow::InitWindowHints() {
 void MGLWindow::SetGLFWWindowContext() {
 	glfwMakeContextCurrent(window);
 	glfwSetWindowUserPointer(window, this);
-
-	glfwSetKeyCallback(window, (GLFWkeyfun)this->KeyInputCallBack);
-	glfwSetCursorEnterCallback(window, (GLFWcursorenterfun)this->MouseFocusCallBack);
-
-	glfwSetMouseButtonCallback(window, (GLFWmousebuttonfun)this->MouseButtonCallBack);
-	glfwSetCursorPosCallback(window, (GLFWcursorposfun)this->MousePositionCallBack);
-	glfwSetScrollCallback(window, (GLFWscrollfun)this->MouseScrollCallBack);
 
 	SetResizeCallback((GLFWwindowsizefun)this->ResizeCallBack);
 }
@@ -141,11 +123,8 @@ void MGLWindow::SetWindowType(MGLenum type) {
 	windowType = type;
 }
 
-void MGLWindow::SetResizeCallback(GLFWwindowsizefun func) {
-	if (!isResizable || !window)
-		return;
-
-	glfwSetWindowSizeCallback(window, func);
+void MGLWindow::SetInFocus(GLboolean focus) {
+	inFocus = focus;
 }
 
 void MGLWindow::ResizeCallBack(GLFWwindow* window, GLuint width, GLuint height) {
@@ -153,54 +132,14 @@ void MGLWindow::ResizeCallBack(GLFWwindow* window, GLuint width, GLuint height) 
 	game->HandleResize(width, height);
 }
 
-void MGLWindow::KeyInputCallBack(GLFWwindow* window, GLuint key, GLuint scancode, GLuint action, GLuint mods) {
-	MGLWindow* game = static_cast<MGLWindow*>(glfwGetWindowUserPointer(window));
-	game->HandleKeyInput(key, scancode, action, mods);
-}
+void MGLWindow::SetResizeCallback(GLFWwindowsizefun func) {
+	if (!isResizable || !window)
+		return;
 
-void MGLWindow::MouseButtonCallBack(GLFWwindow* window, GLuint button, GLuint action, GLuint mods) {
-	MGLWindow* game = static_cast<MGLWindow*>(glfwGetWindowUserPointer(window));
-	game->HandleMouseButton(button, action, mods);
-}
-
-void MGLWindow::MousePositionCallBack(GLFWwindow* window, GLdouble xPos, GLdouble yPos) {
-	MGLWindow* game = static_cast<MGLWindow*>(glfwGetWindowUserPointer(window));
-	game->HandleMousePosition(xPos, yPos);
-}
-
-void MGLWindow::MouseScrollCallBack(GLFWwindow* window, GLdouble xOffset, GLdouble yOffset) {
-	MGLWindow* game = static_cast<MGLWindow*>(glfwGetWindowUserPointer(window));
-	game->HandleMouseScroll(xOffset, yOffset);
-}
-
-void MGLWindow::MouseFocusCallBack(GLFWwindow* window, GLboolean focused) {
-	MGLWindow* game = static_cast<MGLWindow*>(glfwGetWindowUserPointer(window));
-	game->HandleMouseFocus(focused);
+	glfwSetWindowSizeCallback(window, func);
 }
 
 void MGLWindow::HandleResize(GLuint newWidth, GLuint newHeight) {
 	SetWindowSize(newWidth, newHeight);
 }
 
-void MGLWindow::HandleKeyInput(GLuint key, GLuint scancode, GLuint action, GLuint mods) {
-	keyboadInput->UpdateKey(key, mods, action);
-}
-
-void MGLWindow::HandleMouseButton(GLuint button, GLuint action, GLuint mods) {
-	mouseInput->UpdateKey(button, mods, action);
-}
-
-void MGLWindow::HandleMousePosition(GLdouble xPos, GLdouble yPos) {
-	if (inFocus)
-		mouseInput->UpdatePosition((GLfloat)xPos, (GLfloat)yPos);
-}
-
-void MGLWindow::HandleMouseScroll(GLdouble xOffset, GLdouble yOffset) {
-	mouseInput->UpdateScroll((GLfloat)xOffset, (GLfloat)yOffset);
-	mouseInput->UpdateKey(MGL_SCROLLKEY_VALUE, 0, MGL_INPUT_SCROLLACTION);
-}
-
-void MGLWindow::HandleMouseFocus(GLboolean focused) {
-	inFocus = focused;
-	glfwSetInputMode(window, GLFW_CURSOR, focused ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
-}

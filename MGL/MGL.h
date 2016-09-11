@@ -23,6 +23,7 @@
 #include "MGLTexture.h"
 #include "MGLFile.h"
 #include "MGLDebug.h"
+#include "MGLInput.h"
 
 // images: http://opengameart.org/content/50-free-textures-4-normalmaps
 // http://bgfons.com/upload/stars_texture2944.jpg
@@ -39,14 +40,16 @@ public:
 	virtual void WriteWindowInfo();
 	virtual void WriteDefinesInfo();  
 
-	MGLWindow* GetWindow() const { return window; }
+	std::shared_ptr<MGLWindow> GetWindow() const { return window; }
+	MGLInput* GetInput() const { return input; }
 
 protected:
 
-	virtual void PollEvents() { glfwPollEvents(); window->PollInput(); };
+	virtual void PollEvents() { glfwPollEvents(); input->PollInput(); };
 	virtual void SwapBuffers() { glfwSwapBuffers(window->GetGLFWWindow()); }
 
-	MGLWindow* window;
+	std::shared_ptr<MGLWindow> window;
+	MGLInput* input;
 }; 
 
 class MGLRenderer : public MGLContext {

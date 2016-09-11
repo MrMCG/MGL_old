@@ -9,10 +9,6 @@ void MGLMouse::RunKeys() {
 	ResetScrollOffset();
 }
 
-void MGLMouse::AddScrollFunction(MGLFunction2 func, void* funcData, GLuint mod) {
-	AddKeyFunction(MGL_SCROLLKEY_VALUE, MGL_INPUT_SCROLLACTION, func, funcData, mod);
-}
-
 void MGLMouse::UpdatePosition(GLfloat xPos, GLfloat yPos) {
 	mouseOffsetX = xPos - mouseLastX;
 	mouseOffsetY = mouseLastY - yPos;

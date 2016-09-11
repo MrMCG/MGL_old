@@ -3,7 +3,8 @@
 
 #include "MGLInputType.h"
 
-#define MGL_SCROLLKEY_VALUE 40
+#define MGL_INPUT_SCROLLKEY 40
+#define MGL_INPUT_SCROLLACTION 5
 
 class MGLMouse : public MGLInputType {
 public:
@@ -14,7 +15,6 @@ public:
 	virtual void UpdateScroll(GLfloat x, GLfloat y);
 
 	virtual void RunKeys() override;
-	virtual void AddScrollFunction(MGLFunction2 func, void* funcData, GLuint mod = 0);
 
 	GLfloat GetMouseOffsetX() const { return mouseOffsetX; }
 	GLfloat GetMouseOffsetY() const { return mouseOffsetY; }

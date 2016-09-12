@@ -15,9 +15,10 @@ MGLContext::MGLContext() {
 		return;
 	}
 
-	// init pointers
 	window = std::make_shared<MGLWindow>();
 	input = std::make_shared<MGLInput>();
+	timer = std::make_unique<MGLTimer>();
+
 	input->AttatchInputToWindow(window);
 
 	//std::cout << "GLFW INIT: SUCCESS" << std::endl;
@@ -63,6 +64,21 @@ void MGLContext::WriteDefinesInfo() {
 	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_FILE_CURRENTVERSION", def_FILEVERSION);
 	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_LOG_MAXLINESIZE", def_LOGLINESIZE);
 	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_LOG_MAXLOGSIZE", def_LOGTOTALSIZE);
+}
+
+GLdouble MGLContext::GetFrameDelta() const {
+	return timer->GetTime();
+}
+
+void MGLContext::PollEvents() {
+	timer->End();
+	timer->Start();
+	glfwPollEvents(); 
+	input->PollInput();
+}
+
+void MGLContext::SwapBuffers() {
+	glfwSwapBuffers(window->GetGLFWWindow());
 }
 
 void MGLContext::WriteOGLInfo() {

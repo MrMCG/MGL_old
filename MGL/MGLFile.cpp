@@ -4,6 +4,7 @@
 #include "MGLMesh.h"
 #include "MGLExceptions.h"
 #include "MGLDebug.h"
+#include "MGLTimer.h"
 
 /*******************************/
 /*********** MGLFile ***********/
@@ -190,7 +191,7 @@ MGLMesh* MGLFileMGL::Load(std::string fileName, GLboolean bufferData) {
 	delete buffer;
 
 	timer.End();
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "MGL Load: %s : %i vertices in %f", fileName.c_str(), mesh->GetNumVertices(), timer.Time());
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "MGL Load: %s : %i vertices in %f", fileName.c_str(), mesh->GetNumVertices(), timer.GetTime());
 
 	return mesh;
 }
@@ -413,7 +414,7 @@ MGLMesh* MGLFileOBJ::Load(std::string fileName, GLboolean bufferData) {
 		mesh->BufferAllData();
 
 	timer.End();
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "OBJ Load: %s : %i vertices in %f", fileName.c_str(), mesh->GetNumVertices(), timer.Time());
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "OBJ Load: %s : %i vertices in %f", fileName.c_str(), mesh->GetNumVertices(), timer.GetTime());
 
 	return mesh;
 }

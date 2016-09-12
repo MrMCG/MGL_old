@@ -54,25 +54,6 @@ void MGLInputType::RunKeys() {
 	}
 }
 
-MGLInputType::MGLInputType(const MGLInputType& other){
-	this->dataPointer = other.dataPointer;
-}
-
-MGLInputType::MGLInputType(const MGLInputType&& other) noexcept
-{
-	this->dataPointer = other.dataPointer;
-}
-
-MGLInputType& MGLInputType::operator=(const MGLInputType& other){
-	this->dataPointer = other.dataPointer;
-	return *this;
-}
-
-MGLInputType& MGLInputType::operator=(const MGLInputType&& other){
-	this->dataPointer = other.dataPointer;
-	return *this;
-}
-
 void MGLInputType::RunSingleKey(const MGLInputItem& key) const {
 	keyFunctionsMap->at(key.index)(dataPointer, key.functionData);
 }

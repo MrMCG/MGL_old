@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "MGLMouse.h"
+
 void MGLMouse::RunKeys() {
 	MGLInputType::RunKeys();
 	ResetMouseOffset();

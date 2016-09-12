@@ -10,8 +10,6 @@ public:
 
 	void RenderScene() override;
 
-	GLfloat GetDeltaTime() const { return deltaTime; }
-
 private:
 	void InitInputFuncs();
 	void loadObjects();
@@ -23,10 +21,6 @@ private:
 	MGLMesh* deathStar;
 
 	MGLShader* shader;
-
-	MGLTimer gameTimer;
-
-	GLfloat deltaTime;
 };
 
 /****** Input functions ******/

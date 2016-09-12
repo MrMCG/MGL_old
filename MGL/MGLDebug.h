@@ -14,6 +14,8 @@
 #define MGL_LOG_ERROR 0
 #define MGL_LOG_MAIN 1
 
+#define MGLH_Log MGLLog::Instance()
+
 class MGLLog : public MGLSingleton < MGLLog > {
 	friend class MGLSingleton < MGLLog > ;
 public:

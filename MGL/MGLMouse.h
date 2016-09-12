@@ -21,6 +21,11 @@ public:
 	GLfloat GetScrollX() const { return scrollX; }
 	GLfloat GetScrollY() const { return scrollY; }
 
+	MGLMouse(const MGLMouse& other) = delete;
+	MGLMouse(const MGLMouse&& other) = delete;
+	MGLMouse& operator=(const MGLMouse& other) = delete;
+	MGLMouse& operator=(const MGLMouse&& other) = delete;
+
 protected:
 
 	void ResetMouseOffset();

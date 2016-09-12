@@ -4,6 +4,7 @@
 #include "MGLUtil.h"
 #include "MGLWindow.h"
 #include "MGLInput.h"
+#include "MGLTimer.h"
 #include "MGLDebug.h"
 #include "MGLExceptions.h"
 #include "MGLFile.h"
@@ -24,10 +25,12 @@ public:
 	std::shared_ptr<MGLWindow> GetWindow() const { return window; }
 	std::shared_ptr<MGLInput> GetInput() const { return input; }
 
+	GLdouble GetFrameDelta() const;
+
 protected:
 
-	virtual void PollEvents() { glfwPollEvents(); input->PollInput(); };
-	virtual void SwapBuffers() { glfwSwapBuffers(window->GetGLFWWindow()); }
+	virtual void PollEvents();
+	virtual void SwapBuffers();
 
 	virtual void WriteOGLInfo();
 	virtual void WriteWindowInfo();
@@ -35,6 +38,7 @@ protected:
 
 	std::shared_ptr<MGLWindow> window;
 	std::shared_ptr<MGLInput> input;
+	std::unique_ptr<MGLTimer> timer;
 }; 
 
 #ifdef MGL_USER_INCLUDE_TESTS

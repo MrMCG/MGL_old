@@ -3,7 +3,8 @@
 
 class MGLInputItem {
 public:
-	MGLInputItem(GLuint k, GLuint a1, GLuint a2, GLuint i, GLuint m, void* funcData);
+	MGLInputItem(GLuint key, GLuint action1, GLuint action2, GLuint index, GLuint mod, void* funcData);
+	~MGLInputItem() { functionData = nullptr; }
 
 	void SetActive(GLboolean active) { inUse = active; }
 	GLboolean KeyShouldRun() const { return inUse; }

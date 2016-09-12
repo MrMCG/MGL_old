@@ -27,12 +27,6 @@ Scene::Scene() : MGLRenderer() {
 	camera->SetMoveSpeed(100.0f);
 	camera->SetPosition(glm::vec3(0,20,0));
 
-	// Create new timer
-	gameTimer = MGLTimer();
-
-	// Init delta time variables
-	deltaTime = 0.0f;
-
 	// load objects
 	loadObjects();
 
@@ -106,13 +100,6 @@ void Scene::InitInputFuncs() {
 }
 
 void Scene::RenderScene() {
-	// Get frame time
-	deltaTime = gameTimer.Time();
-	//std::cout << deltaTime << std::endl;
-
-	// Start new frame time
-	gameTimer.Start();
-
 	// Poll input
 	PollEvents();
 
@@ -154,13 +141,10 @@ void Scene::RenderScene() {
 
 	// Swap buffers
 	SwapBuffers();
-
-	// End frame time
-	gameTimer.End();
 }
 
 void Movement_Func(Scene* inputData, MGLenum* funcData) {
-	inputData->GetCamera()->MoveCamera(*funcData, inputData->GetDeltaTime());
+	inputData->GetCamera()->MoveCamera(*funcData, inputData->GetFrameDelta());
 }
 
 void Key_MOUSE_Func(Scene* inputData) {

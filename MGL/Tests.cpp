@@ -80,7 +80,7 @@ void MGL_TESTS_::MGL_TEST_VARIOUS_FILESPEED() {
 		delete mesh;
 	}
 	timer.End();
-	MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "Load of %i at-at.obj averaged :  %fs", FILESPEED_ITERATIONS, timer.Time() / (GLfloat)FILESPEED_ITERATIONS);
+	MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "Load of %i at-at.obj averaged :  %fs", FILESPEED_ITERATIONS, timer.GetTime() / (GLfloat)FILESPEED_ITERATIONS);
 
 	// load at-at.mgl
 	timer.Start();
@@ -89,7 +89,7 @@ void MGL_TESTS_::MGL_TEST_VARIOUS_FILESPEED() {
 		delete mesh;
 	}
 	timer.End();
-	MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "Load of %i at-at.mgl averaged :  %fs", FILESPEED_ITERATIONS, timer.Time() / (GLfloat)FILESPEED_ITERATIONS);
+	MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "Load of %i at-at.mgl averaged :  %fs", FILESPEED_ITERATIONS, timer.GetTime() / (GLfloat)FILESPEED_ITERATIONS);
 	
 	/****** MGL ******/
 
@@ -98,7 +98,7 @@ void MGL_TESTS_::MGL_TEST_VARIOUS_FILESPEED() {
 	mesh = MGLH_FileOBJ->Load(MGL_DEFAULT_TESTS_DIRECTORY"death-star-II.obj", GL_FALSE);
 	delete mesh;
 	timer.End();
-	MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "Load of 1 death-star-II.obj :  %fs", timer.Time());
+	MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "Load of 1 death-star-II.obj :  %fs", timer.GetTime());
 
 	
 	// load death-star-II.mgl
@@ -108,7 +108,7 @@ void MGL_TESTS_::MGL_TEST_VARIOUS_FILESPEED() {
 		delete mesh;
 	}
 	timer.End();
-	MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "Load of %i death-star-II.mgl averaged :  %fs", FILESPEED_ITERATIONS, timer.Time() / (GLfloat)FILESPEED_ITERATIONS);
+	MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "Load of %i death-star-II.mgl averaged :  %fs", FILESPEED_ITERATIONS, timer.GetTime() / (GLfloat)FILESPEED_ITERATIONS);
 
 
 	MGLH_Log->AddLog(MGL_LOG_ERROR, GL_FALSE, "\n\tEND MGL_TEST_VARIOUS_FILESPEED");

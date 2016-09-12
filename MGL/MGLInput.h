@@ -27,10 +27,10 @@ public:
 	GLfloat GetScrollX() const { return mouseInput->GetScrollX(); }
 	GLfloat GetScrollY() const { return mouseInput->GetScrollY(); }
 
-	MGLInput(const MGLInput& other) = delete; // copy constructor
-	MGLInput(const MGLInput&& other) = delete; // move constructor
-	MGLInput& operator=(const MGLInput& other) = delete; // copy assignment
-	MGLInput& operator=(const MGLInput&& other) = delete; // move assignment
+	MGLInput(const MGLInput& other) = delete; 
+	MGLInput(const MGLInput&& other) = delete; 
+	MGLInput& operator=(const MGLInput& other) = delete; 
+	MGLInput& operator=(const MGLInput&& other) = delete; 
 
 private:
 

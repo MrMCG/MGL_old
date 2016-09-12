@@ -1,14 +1,6 @@
 #pragma once
 #include "stdafx.h"
 
-/****** Defines ******/
-
-/*
-	Comments indicate main location of define use
-*/
-
-// User set defines for compilation
-
 // include MGL_TESTS_ 
 #define MGL_USER_INCLUDE_TESTS
 // include try-catch blocks in MGLFile
@@ -23,15 +15,6 @@
 #define MGL_WINDOWINFO_ATTRIBUTE 5
 #define MGL_WINDOWINFO_M_XPOS 6
 #define MGL_WINDOWINFO_M_YPOS 7
-
-// Singleton instance handlers
-
-#define MGLH_FileMGL MGLFileMGL::Instance()
-#define MGLH_FileOBJ MGLFileOBJ::Instance()
-
-#define MGLH_ComMesh MGLCommonMeshes::Instance()
-#define MGLH_Tex MGLTexture::Instance()
-#define MGLH_Log MGLLog::Instance()
 
 /****** Other ******/
 
@@ -120,28 +103,10 @@ namespace MGL {
 	const glm::vec4 GREEN = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 }
 
-// Timer in milliseconds
-class MGLTimer {
-public:
-	MGLTimer();
-	~MGLTimer(){};
-
-	// Start the timer
-	void Start(); 
-	// End the timer
-	void End();
-	// Get the time since Start()   
-	GLfloat Time();
-
-protected:
-	GLfloat start;
-	GLfloat end;
-};
-
 template<typename T>
 class MGLSingleton {
 public:
-	static inline T* Instance() { return m_instance; }
+	static T* Instance() { return m_instance; }
 	static void Init() {
 		if (!m_instance) {
 			std::lock_guard<std::mutex> lock(m_init);

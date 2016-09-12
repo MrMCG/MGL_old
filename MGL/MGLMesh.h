@@ -13,6 +13,9 @@
 #define MGL_MESH_QUAD 1
 #define MGL_MESH_TRIANGLE 2
 
+#define MGLH_ComMesh MGLCommonMeshes::Instance()
+#define MGLH_Tex MGLTexture::Instance()
+
 class MGLMesh {
 public:
 	MGLMesh(MGLenum mgl_mesh_type = 0);

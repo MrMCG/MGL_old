@@ -6,6 +6,9 @@
 #define MGL_FILE_BUFFERMINSIZE 5
 #define MGL_FILE_CURRENTVERSION 1.0f
 
+#define MGLH_FileMGL MGLFileMGL::Instance()
+#define MGLH_FileOBJ MGLFileOBJ::Instance()
+
 /*
 	TODO: Add multithreaded obj loader
 	TODO: Add grouping/multiple mesh loading to obj loader

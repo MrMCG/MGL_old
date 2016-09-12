@@ -3,10 +3,6 @@
 #include "MGLUtil.h"
 #include "MGLExceptions.h"
 
-/*************************************/
-/*********** MGL Namespace ***********/
-/*************************************/
-
 void MGL::EnableWireframe() {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glDisable(GL_CULL_FACE);
@@ -106,26 +102,4 @@ void MGL::PrintMat4(const glm::mat4& matrix) {
 	std::cout << val[4] << "\t" << val[5] << "\t" << val[6] << "\t" << val[7] << std::endl;
 	std::cout << val[8] << "\t" << val[9] << "\t" << val[10] << "\t" << val[11] << std::endl;
 	std::cout << val[12] << "\t" << val[13] << "\t" << val[14] << "\t" << val[15] << std::endl;
-}
-
-/********************************/
-/*********** MGLTimer ***********/
-/********************************/
-
-MGLTimer::MGLTimer() {
-	// init times to now
-	Start();
-	End();
-}
-
-void MGLTimer::Start() {
-	start = (GLfloat)glfwGetTime();
-}
-
-void MGLTimer::End() {
-	end = (GLfloat)glfwGetTime();
-}
-
-GLfloat MGLTimer::Time() {
-	return end - start;
 }

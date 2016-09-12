@@ -17,11 +17,6 @@ public:
 
 	void SetDataPointer(void* pointer) { dataPointer = pointer; }
 
-	MGLInputType(const MGLInputType& other); 
-	MGLInputType(const MGLInputType&& other) noexcept; 
-	MGLInputType& operator=(const MGLInputType& other); 
-	MGLInputType& operator=(const MGLInputType&& other); 
-
 protected:
 
 	void RunSingleKey(const MGLInputItem& key) const;

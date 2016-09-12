@@ -191,6 +191,7 @@
     <ClInclude Include="MGLRenderer.h" />
     <ClInclude Include="MGLShader.h" />
     <ClInclude Include="MGLTexture.h" />
+    <ClInclude Include="MGLTimer.h" />
     <ClInclude Include="MGLUtil.h" />
     <ClInclude Include="MGLWindow.h" />
     <ClInclude Include="stdafx.h" />
@@ -208,6 +209,7 @@
     <ClCompile Include="MGLRenderer.cpp" />
     <ClCompile Include="MGLShader.cpp" />
     <ClCompile Include="MGLTexture.cpp" />
+    <ClCompile Include="MGLTimer.cpp" />
     <ClCompile Include="MGLUtil.cpp" />
     <ClCompile Include="MGLWindow.cpp" />
     <ClCompile Include="stdafx.cpp">

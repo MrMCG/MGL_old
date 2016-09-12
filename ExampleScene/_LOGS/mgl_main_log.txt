@@ -1,33 +1,33 @@
 ******************************************
 *************** New MGLLog ***************
 ******************************************
-[11-9-2016 23:36:51] WINDOW INIT...
-[11-9-2016 23:36:51] GLEW INIT: SUCCESS
-[11-9-2016 23:36:51] GLFW INIT: SUCCESS
-[11-9-2016 23:36:51] MGL Load: _DEFAULTS/cube.mgl : 24 vertices in 0.000641
-[11-9-2016 23:36:51] MGL Load: _DEFAULTS/sphere.mgl : 323 vertices in 0.000888
-[11-9-2016 23:36:51] MGL Load: _DEFAULTS/cone.mgl : 63 vertices in 0.000826
+[12-9-2016 14:3:47] WINDOW INIT...
+[12-9-2016 14:3:47] GLEW INIT: SUCCESS
+[12-9-2016 14:3:47] GLFW INIT: SUCCESS
+[12-9-2016 14:3:47] MGL Load: _DEFAULTS/cube.mgl : 24 vertices in 0.000468
+[12-9-2016 14:3:47] MGL Load: _DEFAULTS/sphere.mgl : 323 vertices in 0.001821
+[12-9-2016 14:3:47] MGL Load: _DEFAULTS/cone.mgl : 63 vertices in 0.000506
 ----- INFO -----
 	OGL INFO
-[11-9-2016 23:36:51] 3.3.0 NVIDIA 372.54
-[11-9-2016 23:36:51] NVIDIA Corporation
-[11-9-2016 23:36:51] GeForce GTX 970/PCIe/SSE2
-[11-9-2016 23:36:51] 3.30 NVIDIA via Cg compiler
+[12-9-2016 14:3:47] 3.3.0 NVIDIA 372.54
+[12-9-2016 14:3:47] NVIDIA Corporation
+[12-9-2016 14:3:47] GeForce GTX 970/PCIe/SSE2
+[12-9-2016 14:3:47] 3.30 NVIDIA via Cg compiler
 	MGL DEFINES
-[11-9-2016 23:36:51] MGLDEBUG                        FALSE   
-[11-9-2016 23:36:51] MGL_BUILD_CONFIG                Win32   
-[11-9-2016 23:36:51] MGL_USER_INCLUDE_TESTS          TRUE    
-[11-9-2016 23:36:51] MGL_USER_INCLUDE_FILETC         TRUE    
-[11-9-2016 23:36:51] MGL_FILE_CURRENTVERSION         1       
-[11-9-2016 23:36:51] MGL_LOG_MAXLINESIZE             512     
-[11-9-2016 23:36:51] MGL_LOG_MAXLOGSIZE              512     
+[12-9-2016 14:3:47] MGLDEBUG                        TRUE    
+[12-9-2016 14:3:47] MGL_BUILD_CONFIG                Win32   
+[12-9-2016 14:3:47] MGL_USER_INCLUDE_TESTS          TRUE    
+[12-9-2016 14:3:47] MGL_USER_INCLUDE_FILETC         TRUE    
+[12-9-2016 14:3:47] MGL_FILE_CURRENTVERSION         1       
+[12-9-2016 14:3:47] MGL_LOG_MAXLINESIZE             512     
+[12-9-2016 14:3:47] MGL_LOG_MAXLOGSIZE              512     
 	WINDOW INFO
-[11-9-2016 23:36:51] Resolution                      800     600     
-[11-9-2016 23:36:51] Refresh                         60      
-[11-9-2016 23:36:51] MSAA                            0       
-[11-9-2016 23:36:51] Type                            1       
+[12-9-2016 14:3:47] Resolution                      800     600     
+[12-9-2016 14:3:47] Refresh                         60      
+[12-9-2016 14:3:47] MSAA                            0       
+[12-9-2016 14:3:47] Type                            1       
 ----- INFO -----
-[11-9-2016 23:36:51] Compiling Shader : shaders/vert.glsl - SUCCESS
-[11-9-2016 23:36:51] Compiling Shader : shaders/frag.glsl - SUCCESS
-[11-9-2016 23:36:51] MGL Load: meshes/raptor.mgl : 3372 vertices in 0.007784
-[11-9-2016 23:36:51] MGL Load: meshes/death-star-II.mgl : 214856 vertices in 0.029251
+[12-9-2016 14:3:47] Compiling Shader : shaders/vert.glsl - SUCCESS
+[12-9-2016 14:3:47] Compiling Shader : shaders/frag.glsl - SUCCESS
+[12-9-2016 14:3:48] MGL Load: meshes/raptor.mgl : 3372 vertices in 0.028215
+[12-9-2016 14:3:49] MGL Load: meshes/death-star-II.mgl : 214856 vertices in 1.055743

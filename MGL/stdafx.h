@@ -14,6 +14,8 @@
 //#include <stdlib.h>
 //#include <crtdbg.h>
 
+#pragma warning(push, 0) // disable third party/stl warnings
+
 // STL
 
 #include <iostream>
@@ -53,3 +55,5 @@
 #endif // MGLDEBUG
 
 #pragma comment(lib, "glfw3.lib")
+
+#pragma warning(pop) // wnable warnigns again

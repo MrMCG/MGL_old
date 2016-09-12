@@ -7,23 +7,20 @@ MGLInputType::MGLInputType() {
 	dataPointer = nullptr;
 }
 
-MGLInputType::~MGLInputType() {
-}
-
 void MGLInputType::AddKeyFunction(GLuint keyVal, GLuint action, MGLFunction2 callbackFunc, void* funcData, GLuint mod) {
 	AddKeyFunction(keyVal, action, action, callbackFunc, funcData, mod);
 }
 
 void MGLInputType::AddKeyFunction(GLuint keyVal, GLuint firstAction, GLuint secondAction, MGLFunction2 callbackFunc, void* funcData, GLuint mod) {
-	GLuint index = ++inputCounter;
-	activeKeysVector->push_back(MGLInputItem(keyVal, firstAction, secondAction, index, mod, funcData)); 
-	keyFunctionsMap->insert(std::make_pair(index, callbackFunc));
+	++inputCounter;
+	activeKeysVector->push_back(MGLInputItem(keyVal, firstAction, secondAction, inputCounter, mod, funcData));
+	keyFunctionsMap->insert(std::make_pair(inputCounter, callbackFunc));
 }
 
 void MGLInputType::UpdateKey(GLuint keyVal, GLuint mod, GLuint action) {
 	SetCurrentData(keyVal, mod, action);
 
-	for (MGLInputItem& key : *activeKeysVector) {
+	for (auto& key : *activeKeysVector) {
 		if (FindRegisteredKey(key)) {
 			UpdateRegisteredKey(key);
 			break;
@@ -37,11 +34,12 @@ void MGLInputType::SetCurrentData(GLuint keyVal, GLuint mod, GLuint action) {
 	currentAction = action;
 }
 
-GLboolean MGLInputType::FindRegisteredKey(MGLInputItem& key) {
+GLboolean MGLInputType::FindRegisteredKey(const MGLInputItem& key) const {
 	return key.keyValue == currentKey ? GL_TRUE : GL_FALSE;
 }
 
-void MGLInputType::UpdateRegisteredKey(MGLInputItem& key) {
+void MGLInputType::UpdateRegisteredKey(MGLInputItem& key) const
+{
 	if (key.action1 == currentAction || key.action2 == currentAction) 
 		key.SetActive(GL_TRUE);
 	else
@@ -49,13 +47,32 @@ void MGLInputType::UpdateRegisteredKey(MGLInputItem& key) {
 }
 
 void MGLInputType::RunKeys() {
-	for (MGLInputItem& key : *activeKeysVector) {
+	for (auto& key : *activeKeysVector) {
 		if (key.KeyShouldRun()) { 
 			RunSingleKey(key);		
 		}
 	}
 }
 
-void MGLInputType::RunSingleKey(MGLInputItem& key) {
+MGLInputType::MGLInputType(const MGLInputType& other){
+	this->dataPointer = other.dataPointer;
+}
+
+MGLInputType::MGLInputType(const MGLInputType&& other) noexcept
+{
+	this->dataPointer = other.dataPointer;
+}
+
+MGLInputType& MGLInputType::operator=(const MGLInputType& other){
+	this->dataPointer = other.dataPointer;
+	return *this;
+}
+
+MGLInputType& MGLInputType::operator=(const MGLInputType&& other){
+	this->dataPointer = other.dataPointer;
+	return *this;
+}
+
+void MGLInputType::RunSingleKey(const MGLInputItem& key) const {
 	keyFunctionsMap->at(key.index)(dataPointer, key.functionData);
 }

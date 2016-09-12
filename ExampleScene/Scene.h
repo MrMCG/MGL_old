@@ -1,5 +1,5 @@
 #pragma once
-#include "MGL.h"
+#include "MGLRenderer.h"
 
 #define testtest
 

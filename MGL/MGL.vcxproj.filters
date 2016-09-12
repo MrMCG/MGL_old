@@ -45,9 +45,6 @@
     <ClInclude Include="MGLDebug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MGL.h">
-      <Filter>Header Files\Main</Filter>
-    </ClInclude>
     <ClInclude Include="MGLWindow.h">
       <Filter>Header Files\Main</Filter>
     </ClInclude>
@@ -78,6 +75,12 @@
     <ClInclude Include="MGLInput.h">
       <Filter>Header Files\Input</Filter>
     </ClInclude>
+    <ClInclude Include="MGLRenderer.h">
+      <Filter>Header Files\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="MGLContext.h">
+      <Filter>Header Files\Main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -94,9 +97,6 @@
     </ClCompile>
     <ClCompile Include="Tests.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MGL.cpp">
-      <Filter>Source Files\Main</Filter>
     </ClCompile>
     <ClCompile Include="MGLWindow.cpp">
       <Filter>Source Files\Main</Filter>
@@ -124,6 +124,12 @@
     </ClCompile>
     <ClCompile Include="MGLInput.cpp">
       <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="MGLRenderer.cpp">
+      <Filter>Source Files\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="MGLContext.cpp">
+      <Filter>Source Files\Main</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

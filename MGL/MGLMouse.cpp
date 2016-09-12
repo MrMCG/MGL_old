@@ -1,8 +1,6 @@
-#pragma once
 #include "stdafx.h"
 
 #include "MGLMouse.h"
-
 void MGLMouse::RunKeys() {
 	MGLInputType::RunKeys();
 	ResetMouseOffset();
@@ -29,3 +27,4 @@ void MGLMouse::ResetScrollOffset() {
 	scrollX = 0;
 	scrollY = 0;
 }
+

@@ -7,7 +7,7 @@
 class MGLInputType {
 public:
 	MGLInputType();
-	~MGLInputType();
+	virtual ~MGLInputType() {};
 
 	virtual void AddKeyFunction(GLuint keyVal,	GLuint action, MGLFunction2 callbackFunc, void* funcData, GLuint mod = 0);
 	virtual void AddKeyFunction(GLuint keyVal,	GLuint firstAction, GLuint secondAction, MGLFunction2 callbackFunc, void* funcData, GLuint mod = 0);
@@ -17,11 +17,16 @@ public:
 
 	void SetDataPointer(void* pointer) { dataPointer = pointer; }
 
+	MGLInputType(const MGLInputType& other); 
+	MGLInputType(const MGLInputType&& other) noexcept; 
+	MGLInputType& operator=(const MGLInputType& other); 
+	MGLInputType& operator=(const MGLInputType&& other); 
+
 protected:
 
-	void RunSingleKey(MGLInputItem& key);
-	void UpdateRegisteredKey(MGLInputItem& key);
-	GLboolean FindRegisteredKey(MGLInputItem& key);
+	void RunSingleKey(const MGLInputItem& key) const;
+	void UpdateRegisteredKey(MGLInputItem& key) const; 
+	GLboolean FindRegisteredKey(const MGLInputItem& key) const;
 
 	void SetCurrentData(GLuint keyVal, GLuint mod, GLuint action);
 
@@ -31,7 +36,7 @@ protected:
 	std::unique_ptr<std::vector<MGLInputItem>> activeKeysVector;
 	std::unique_ptr<std::unordered_map<GLuint, MGLFunction2>> keyFunctionsMap;
 
-	GLuint currentMod = -1;
-	GLuint currentKey = -1;
-	GLuint currentAction = -1;
+	GLuint currentMod = 0;
+	GLuint currentKey = 0;
+	GLuint currentAction = 0;
 };

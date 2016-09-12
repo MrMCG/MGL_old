@@ -9,22 +9,28 @@ class MGLWindow;
 class MGLInput {
 public:
 	MGLInput();
-	~MGLInput() {}
+	explicit MGLInput(const std::shared_ptr<MGLWindow> windo);
+	virtual ~MGLInput() {}
 
 	void AttatchInputToWindow(const std::shared_ptr<MGLWindow> windo);
-	void PollInput();
+	void PollInput() const;
 
 	virtual void AddKeyboardFunction(GLuint keyVal, GLuint action, MGLFunction2 callbackFunc, void* funcData, GLuint mod = 0);
 	virtual void AddKeyboardFunction(GLuint keyVal, GLuint firstAction, GLuint secondAction, MGLFunction2 callbackFunc, void* funcData, GLuint mod = 0);
 	virtual void AddMouseFunction(GLuint keyVal, GLuint action, MGLFunction2 callbackFunc, void* funcData, GLuint mod = 0);
 	virtual void AddMouseFunction(GLuint keyVal, GLuint firstAction, GLuint secondAction, MGLFunction2 callbackFunc, void* funcData, GLuint mod = 0);
 	virtual void AddScrollFunction(MGLFunction2 func, void* funcData, GLuint mod = 0);
-	void SetDataPointer(void* data);
+	void SetDataPointer(void* data) const;
 
 	GLfloat GetMouseOffsetX() const { return mouseInput->GetMouseOffsetX(); }
 	GLfloat GetMouseOffsetY() const { return mouseInput->GetMouseOffsetY(); }
 	GLfloat GetScrollX() const { return mouseInput->GetScrollX(); }
 	GLfloat GetScrollY() const { return mouseInput->GetScrollY(); }
+
+	MGLInput(const MGLInput& other) = delete; // copy constructor
+	MGLInput(const MGLInput&& other) = delete; // move constructor
+	MGLInput& operator=(const MGLInput& other) = delete; // copy assignment
+	MGLInput& operator=(const MGLInput&& other) = delete; // move assignment
 
 private:
 

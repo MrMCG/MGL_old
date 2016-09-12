@@ -9,12 +9,12 @@
 class MGLMouse : public MGLInputType {
 public:
 	MGLMouse() {}
-	~MGLMouse() {}
+	virtual ~MGLMouse() {}
 
 	virtual void UpdatePosition(GLfloat xPos, GLfloat yPos);
 	virtual void UpdateScroll(GLfloat x, GLfloat y);
 
-	virtual void RunKeys() override;
+	void RunKeys() override;
 
 	GLfloat GetMouseOffsetX() const { return mouseOffsetX; }
 	GLfloat GetMouseOffsetY() const { return mouseOffsetY; }

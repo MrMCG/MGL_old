@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "MGL.h"
+#include "MGLContext.h"
 
 /*
 	Test cases for debugging some MGL classes.

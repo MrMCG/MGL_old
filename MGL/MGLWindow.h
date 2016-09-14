@@ -1,8 +1,11 @@
 #pragma once
 #include "stdafx.h"
 
-#include "MGLMouse.h"
-#include "MGLKeyboard.h"
+#include "MGLDebug.h"
+
+/*
+ * TODO: create window config file for loading options
+ */
 
 #define MGL_WINDOWTYPE_WINDOWED 1
 #define MGL_WINDOWTYPE_FULLSCREEN 2
@@ -12,11 +15,11 @@ class MGLWindow {
 public:
 
 	MGLWindow();
+	virtual ~MGLWindow() {}
 
-	GLint ShouldClose() { return glfwWindowShouldClose(window); }
-	void CloseWindow() { glfwSetWindowShouldClose(window, GL_TRUE); }
+	GLint ShouldClose() const { return glfwWindowShouldClose(window); }
+	void CloseWindow() const { glfwSetWindowShouldClose(window, GL_TRUE); }
 
-	// TODO make setters read from file
 	void SetGLVersion(GLuint major, GLuint minor);
 	void SetWindowSize(GLuint newWidth, GLuint newHeight);
 	void SetResizable(GLboolean resizable);
@@ -25,14 +28,19 @@ public:
 	void SetWindowType(MGLenum type);
 	void SetInFocus(GLboolean focus);
 
-	GLFWwindow* GetGLFWWindow() { return window; }
-	GLboolean GetResizable() { return isResizable; }
-	GLboolean GetInFocus() { return inFocus; }
-	GLuint GetWindowType() { return windowType; }
-	GLuint GetWidth() { return width; }
-	GLuint GetHeight() { return height; }
-	GLuint GetRefreshRate() { return refreshRate; }
-	GLuint GetSamples() { return samples; }
+	GLFWwindow* GetGLFWWindow() const { return window; }
+	GLboolean GetResizable() const { return isResizable; }
+	GLboolean GetInFocus() const { return inFocus; }
+	GLuint GetWindowType() const { return windowType; }
+	GLuint GetWidth() const { return width; }
+	GLuint GetHeight() const { return height; }
+	GLuint GetRefreshRate() const { return refreshRate; }
+	GLuint GetSamples() const { return samples; }
+
+	MGLWindow(const MGLWindow& other) = delete;
+	MGLWindow(const MGLWindow&& other) = delete;
+	MGLWindow& operator=(const MGLWindow& other) = delete;
+	MGLWindow& operator=(const MGLWindow&& other) = delete;
 
 protected:
 
@@ -40,13 +48,14 @@ protected:
 
 	virtual void HandleResize(GLuint width, GLuint height);
 	virtual void SetGLOptions();
+	virtual void InitWindowHints() const;
+
 
 private:
 
 	GLboolean GenerateWindow();
 	void SetGLFWWindowContext();
-	void InitGLEW();
-	void InitWindowHints();
+	static void InitGLEW();
 	void InitWindow();
 
 	void MakeWindowFullscreen();
@@ -54,7 +63,7 @@ private:
 	void MakeWindowBorderless();
 
 	// Set callback on window resize (if m_resizable=true and window!=NULL)
-	void SetResizeCallback(GLFWwindowsizefun func);
+	void SetResizeCallback(GLFWwindowsizefun func) const;
 
 	GLFWwindow* window = nullptr;
 	GLFWmonitor* monitor = nullptr;

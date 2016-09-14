@@ -3,29 +3,20 @@
 #include "MGLInput.h"
 #include "MGLWindow.h"
 
-MGLInput::MGLInput() {
-	keyboadInput = std::make_unique<MGLKeyboard>();
-	mouseInput = std::make_unique<MGLMouse>();
-}
-
-MGLInput::MGLInput(const std::shared_ptr<MGLWindow> windo) {
-	keyboadInput = std::make_unique<MGLKeyboard>();
-	mouseInput = std::make_unique<MGLMouse>();
+MGLInput::MGLInput(MGLWindow* windo) : MGLInput() {
 	AttatchInputToWindow(windo);
 }
 
-void MGLInput::AttatchInputToWindow(const std::shared_ptr<MGLWindow> windo) {
+void MGLInput::AttatchInputToWindow(MGLWindow* windo) {
 	window = windo;
-	if (auto win = window.lock()) {
-		glfwSetWindowUserPointer(win->GetGLFWWindow(), this);
+	glfwSetWindowUserPointer(window->GetGLFWWindow(), this);
 
-		glfwSetKeyCallback(win->GetGLFWWindow(), reinterpret_cast<GLFWkeyfun>(this->KeyInputCallBack));
-		glfwSetCursorEnterCallback(win->GetGLFWWindow(), reinterpret_cast<GLFWcursorenterfun>(this->MouseFocusCallBack));
+	glfwSetKeyCallback(window->GetGLFWWindow(), reinterpret_cast<GLFWkeyfun>(this->KeyInputCallBack));
+	glfwSetCursorEnterCallback(window->GetGLFWWindow(), reinterpret_cast<GLFWcursorenterfun>(this->MouseFocusCallBack));
 
-		glfwSetMouseButtonCallback(win->GetGLFWWindow(), reinterpret_cast<GLFWmousebuttonfun>(this->MouseButtonCallBack));
-		glfwSetCursorPosCallback(win->GetGLFWWindow(), reinterpret_cast<GLFWcursorposfun>(this->MousePositionCallBack));
-		glfwSetScrollCallback(win->GetGLFWWindow(), reinterpret_cast<GLFWscrollfun>(this->MouseScrollCallBack));
-	}
+	glfwSetMouseButtonCallback(window->GetGLFWWindow(), reinterpret_cast<GLFWmousebuttonfun>(this->MouseButtonCallBack));
+	glfwSetCursorPosCallback(window->GetGLFWWindow(), reinterpret_cast<GLFWcursorposfun>(this->MousePositionCallBack));
+	glfwSetScrollCallback(window->GetGLFWWindow(), reinterpret_cast<GLFWscrollfun>(this->MouseScrollCallBack));
 }
 
 void MGLInput::PollInput() const {
@@ -92,11 +83,10 @@ void MGLInput::HandleMouseButton(GLuint button, GLuint action, GLuint mods) {
 }
 
 void MGLInput::HandleMousePosition(GLdouble xPos, GLdouble yPos) {
-	if (auto win = window.lock()) {
-		if (win->GetInFocus()) {
-			mouseInput->UpdatePosition(static_cast<GLfloat>(xPos), static_cast<GLfloat>(yPos));
-		}
+	if (window->GetInFocus()) {
+		mouseInput->UpdatePosition(static_cast<GLfloat>(xPos), static_cast<GLfloat>(yPos));
 	}
+	
 }
 
 void MGLInput::HandleMouseScroll(GLdouble xOffset, GLdouble yOffset) {
@@ -105,8 +95,7 @@ void MGLInput::HandleMouseScroll(GLdouble xOffset, GLdouble yOffset) {
 }
 
 void MGLInput::HandleMouseFocus(GLboolean focused) {
-	if (auto win = window.lock()) {
-		win->SetInFocus(focused);
-		glfwSetInputMode(win->GetGLFWWindow(), GLFW_CURSOR, focused ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
-	}
+	window->SetInFocus(focused);
+	glfwSetInputMode(window->GetGLFWWindow(), GLFW_CURSOR, focused ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
+	
 }

@@ -8,7 +8,7 @@ MGLWindow::MGLWindow() {
 	monitor = glfwGetPrimaryMonitor();
 	GenerateWindow();
 	InitGLEW();
-	SetGLOptions();
+	MGLWindow::SetGLOptions();
 }
 
 void MGLWindow::InitGLEW() {
@@ -57,7 +57,7 @@ void MGLWindow::InitWindow() {
 	}
 }
 
-void MGLWindow::InitWindowHints() {
+void MGLWindow::InitWindowHints() const {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glVersionMajor);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glVersionMinor);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // remove depreciated OGL code
@@ -71,7 +71,7 @@ void MGLWindow::SetGLFWWindowContext() {
 	glfwMakeContextCurrent(window);
 	glfwSetWindowUserPointer(window, this);
 
-	SetResizeCallback((GLFWwindowsizefun)this->ResizeCallBack);
+	SetResizeCallback(reinterpret_cast<GLFWwindowsizefun>(this->ResizeCallBack));
 }
 
 void MGLWindow::MakeWindowFullscreen() {
@@ -83,7 +83,7 @@ void MGLWindow::MakeWindowWindowed() {
 }
 
 void MGLWindow::MakeWindowBorderless() {
-	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+	auto mode = glfwGetVideoMode(monitor);
 
 	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
 	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
@@ -91,8 +91,6 @@ void MGLWindow::MakeWindowBorderless() {
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
 	window = glfwCreateWindow(mode->width, mode->height, title.c_str(), monitor, nullptr);
-
-	//delete mode;
 }
 
 void MGLWindow::SetGLVersion(GLuint major, GLuint minor) {
@@ -132,7 +130,7 @@ void MGLWindow::ResizeCallBack(GLFWwindow* window, GLuint width, GLuint height) 
 	game->HandleResize(width, height);
 }
 
-void MGLWindow::SetResizeCallback(GLFWwindowsizefun func) {
+void MGLWindow::SetResizeCallback(GLFWwindowsizefun func) const {
 	if (!isResizable || !window)
 		return;
 

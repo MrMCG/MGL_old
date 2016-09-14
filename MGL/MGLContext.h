@@ -21,9 +21,13 @@ public:
 	virtual ~MGLContext();
 
 	virtual void RenderScene() = 0;
+	virtual void InitMGL();
 
-	std::shared_ptr<MGLWindow> GetWindow() const { return window; }
-	std::shared_ptr<MGLInput> GetInput() const { return input; }
+	MGLWindow* GetWindow() const { return window; }
+	MGLInput* GetInput() const { return input; }
+
+	virtual void BuildWindow();
+	virtual void BuildWindow(MGLWindow*  windo);
 
 	GLdouble GetFrameDelta() const;
 
@@ -36,9 +40,15 @@ protected:
 	virtual void WriteWindowInfo();
 	virtual void WriteDefinesInfo();
 
-	std::shared_ptr<MGLWindow> window;
-	std::shared_ptr<MGLInput> input;
-	std::unique_ptr<MGLTimer> timer;
+	MGLWindow* window = nullptr;
+	MGLInput* input = new MGLInput();
+	MGLTimer* timer = new MGLTimer();
+
+private:
+
+	static void InitGLFW();
+	static void InitInstances();
+
 }; 
 
 #ifdef MGL_USER_INCLUDE_TESTS

@@ -6,10 +6,10 @@
 
 class MGLRenderer : public MGLContext {
 public:
-	MGLRenderer();
+	MGLRenderer() {}
 	virtual ~MGLRenderer();
 
-	std::shared_ptr<MGLCamera> GetCamera() const { return camera; }
+	MGLCamera* GetCamera() const { return camera; }
 
 	/****** TEMP ******/
 	glm::mat4 projMatrix;
@@ -19,9 +19,8 @@ public:
 
 protected:
 
-	virtual void InitInstances();
 	virtual void CreateViewMatrix();
 	virtual void CreateProjectionMatrix(const GLboolean orthographic = GL_FALSE);
 
-	std::shared_ptr<MGLCamera> camera;
+	MGLCamera* camera = new MGLCamera();
 };

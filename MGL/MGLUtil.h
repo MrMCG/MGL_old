@@ -46,36 +46,7 @@ typedef std::vector<MGLenum> MGLvecm;
 
 /****** Structs ******/
 
-struct MGLObjVertData {
-	GLuint vertex = 0;
-	GLuint texture = 0;
-	GLuint normals = 0;
-	GLuint id = 0;
 
-	GLboolean Compare(const MGLObjVertData& o2) {
-		if (this->vertex == o2.vertex &&
-			this->texture == o2.texture &&
-			this->normals == o2.normals)
-			return GL_TRUE;
-
-		return GL_FALSE;
-	}
-
-	GLboolean operator<(const MGLObjVertData& o) const {
-		return this->id < o.id ? GL_TRUE : GL_FALSE;
-	}
-};
-
-struct MGLObjFileData {
-	MGLvecv2 inputTexCoords;
-	MGLvecv3 inputVertices;
-	MGLvecv3 inputNormals;
-
-	std::vector<MGLObjVertData> objVertexList;
-	MGLvecu finalIndices;
-
-	GLuint idCounter = 0;
-};
 
 /****** Utilities ******/
 

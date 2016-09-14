@@ -2,14 +2,15 @@
 //#include <direct.h>
 
 // 1. derive from MGL or MGLRenderer
-Scene::Scene() : MGLRenderer() {
+Scene::Scene() {
 
 	// 2. Build window
+	MGLContext::BuildWindow(new MGLWindow());
 
 	// 3. Init GL features and Instances
+	MGLContext::InitMGL();
 
 	// 4. Create your scene!
-
 
 	// Create new shader program
 	shader = new MGLShader();

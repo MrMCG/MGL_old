@@ -68,14 +68,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\..\EXTERNALS\GLEW\include\GL;..\MGL;..\..\EXTERNALS\STB;..\..\EXTERNALS\GLM;..\..\EXTERNALS\GLFW;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\EXTERNALS\GLEW\include\GL;..\MGL;..\..\EXTERNALS\STB;..\..\EXTERNALS\GLM;..\..\EXTERNALS\GLFW;..\..\EXTERNALS\TINYOBJLOADER;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\EXTERNALS\GLEW\lib\$(Configuration)\$(Platform);..\..\EXTERNALS\GLFW\$(Configuration)\$(Platform);$(LibraryPath)</LibraryPath>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\..\EXTERNALS\GLEW\include\GL;..\MGL;..\..\EXTERNALS\STB;..\..\EXTERNALS\GLM;..\..\EXTERNALS\GLFW;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\EXTERNALS\GLEW\include\GL;..\MGL;..\..\EXTERNALS\STB;..\..\EXTERNALS\GLM;..\..\EXTERNALS\GLFW;..\..\EXTERNALS\TINYOBJLOADER;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\EXTERNALS\GLEW\lib\$(Configuration)\$(Platform);..\..\EXTERNALS\GLFW\$(Configuration)\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

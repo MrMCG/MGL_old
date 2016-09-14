@@ -39,12 +39,13 @@
 
 // Third Party
 
-#include "glew.h"
-#include "glfw3.h"
-#include "glm.hpp"
-#include "gtc/matrix_transform.hpp"
-#include "gtc/type_ptr.hpp"
-#include "stb_image.h"
+#include <glew.h>
+#include <glfw3.h>
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
+#include <stb_image.h>
+#include <tiny_obj_loader.h>
 
 #pragma comment(lib, "opengl32.lib")
 

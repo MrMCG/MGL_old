@@ -15,6 +15,8 @@
 */
 
 class MGLMesh;
+struct MGLObjVertData;
+struct MGLObjFileData;
 
 class MGLFile {
 public:

@@ -2,32 +2,37 @@
 
 #include "MGLContext.h"
 
-MGLContext::MGLContext() {
-	
+MGLContext::MGLContext() {	
 	//FreeConsole();
-
 	MGLLog::Init();
-	try {
-		MGLException_Init_GLFW::Test(glfwInit());
-	}
-	catch (const MGLException& e) {
-		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
-		return;
-	}
-
-	window = std::make_shared<MGLWindow>();
-	input = std::make_shared<MGLInput>();
-	timer = std::make_unique<MGLTimer>();
-
-	input->AttatchInputToWindow(window);
-
-	//std::cout << "GLFW INIT: SUCCESS" << std::endl;
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "GLFW INIT: SUCCESS");
-
+	InitGLFW();
 }
 
 MGLContext::~MGLContext() {
+	MGLH_Log->WriteToFile(MGL_LOG_FILENAME_MAIN, MGL_LOG_MAIN, GL_TRUE); // write main to file
+	MGLH_Log->WriteToFile(MGL_LOG_FILENAME_ERROR, MGL_LOG_ERROR, GL_TRUE); // write errors to file
+
+	MGLTexture::Release();
+	MGLFileMGL::Release();
+	MGLFileOBJ::Release();
+	MGLCommonMeshes::Release();
+	MGLLog::Release();
+
+	delete input;
+	delete timer;
+	delete window;
+
 	glfwTerminate();
+}
+
+void MGLContext::InitMGL() {
+	InitInstances();
+
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_FALSE, "----- INFO -----");
+	WriteOGLInfo();
+	WriteDefinesInfo();
+	WriteWindowInfo();
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_FALSE, "----- INFO -----");
 }
 
 void MGLContext::WriteDefinesInfo() {
@@ -66,6 +71,34 @@ void MGLContext::WriteDefinesInfo() {
 	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_LOG_MAXLOGSIZE", def_LOGTOTALSIZE);
 }
 
+void MGLContext::InitGLFW() {
+	std::string message = "SUCCESS";
+	try {
+		MGLException_Init_GLFW::Test(glfwInit());
+	}
+	catch (const MGLException& e) {
+		message = e.what();
+	}
+	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "GLFW INIT:"+message);
+}
+
+void MGLContext::InitInstances() {
+	// ORDER IS IMPORTANT
+	MGLTexture::Init();
+	MGLFileMGL::Init();
+	MGLFileOBJ::Init();
+	MGLCommonMeshes::Init();
+}
+
+void MGLContext::BuildWindow() {
+	BuildWindow(new MGLWindow());
+}
+
+void MGLContext::BuildWindow(MGLWindow* windo) {
+	window = windo;
+	input->AttatchInputToWindow(window);
+}
+
 GLdouble MGLContext::GetFrameDelta() const {
 	return timer->GetTime();
 }
@@ -98,10 +131,6 @@ void MGLContext::WriteWindowInfo() {
 	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MSAA", window->GetSamples());
 	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "Type", window->GetWindowType());
 }
-
-/***********************************/
-/*********** MGLRenderer ***********/
-/***********************************/
 
 
 

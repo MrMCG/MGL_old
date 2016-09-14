@@ -4,15 +4,20 @@
 #include "MGLMouse.h"
 #include "MGLKeyboard.h"
 
+/*
+ * TODO: refactor adding keys into a more managable solution (its currently too... messy)
+ * TODO: add the ablility to "swap out" inputs to register different key entries
+ */
+
 class MGLWindow;
 
 class MGLInput {
 public:
-	MGLInput();
-	explicit MGLInput(const std::shared_ptr<MGLWindow> windo);
+	MGLInput() {}
+	explicit MGLInput(MGLWindow* windo);
 	virtual ~MGLInput() {}
 
-	void AttatchInputToWindow(const std::shared_ptr<MGLWindow> windo);
+	void AttatchInputToWindow(MGLWindow* windo);
 	void PollInput() const;
 
 	virtual void AddKeyboardFunction(GLuint keyVal, GLuint action, MGLFunction2 callbackFunc, void* funcData, GLuint mod = 0);
@@ -49,8 +54,8 @@ protected:
 	virtual void HandleMouseFocus(GLboolean focused);
 
 
-	std::unique_ptr<MGLKeyboard> keyboadInput;
-	std::unique_ptr<MGLMouse> mouseInput;
-	std::weak_ptr<MGLWindow> window;
+	MGLKeyboard* keyboadInput = new MGLKeyboard();
+	MGLMouse* mouseInput = new MGLMouse();
+	MGLWindow* window = nullptr;
 
 };

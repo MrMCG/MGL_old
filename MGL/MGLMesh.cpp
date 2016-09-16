@@ -249,9 +249,9 @@ MGLCommonMeshes::MGLCommonMeshes() {
 	// create meshes
 	m_quad = new MGLMesh(MGL_MESH_QUAD);
 	m_triangle = new MGLMesh(MGL_MESH_TRIANGLE);
-	m_cube = MGLH_FileMGL->Load(MGL_DEFAULT_CUBE);
-	m_sphere = MGLH_FileMGL->Load(MGL_DEFAULT_SPHERE);
-	m_cone = MGLH_FileMGL->Load(MGL_DEFAULT_CONE);
+	m_cube = MGLI_FileMGL->Load(MGL_DEFAULT_CUBE);
+	m_sphere = MGLI_FileMGL->Load(MGL_DEFAULT_SPHERE);
+	m_cone = MGLI_FileMGL->Load(MGL_DEFAULT_CONE);
 
 	// apply default textures
 	m_quad->AddTexture(m_defaultTex);

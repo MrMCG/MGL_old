@@ -43,7 +43,7 @@ Scene::~Scene() {
 }
 
 void Scene::loadObjects() {
-	dino = MGLH_FileMGL->Load("meshes/raptor.mgl");
+	dino = MGLI_FileMGL->Load("meshes/raptor.mgl");
 	// Load raptor
 	//dino = MGLFileHandle->Load("meshes/raptor.mgl");
 	dino->AddTexture(MGLH_Tex->GetTexture("raptor"));
@@ -61,7 +61,7 @@ void Scene::loadObjects() {
 	});
 
 	// Load city
-	city = MGLH_FileOBJ->Load("meshes/The City.obj");
+	city = MGLI_FileOBJ->Load("meshes/The City.obj");
 	city->AddTexture(MGLH_Tex->GetTexture("city"));
 
 	city->SetUniforms([&]() { // just as an example
@@ -69,7 +69,7 @@ void Scene::loadObjects() {
 	});
 
 	// Load death star
-	deathStar = MGLH_FileMGL->Load("meshes/death-star-II.mgl");
+	deathStar = MGLI_FileMGL->Load("meshes/death-star-II.mgl");
 	deathStar->AddTexture(MGLH_Tex->GetTexture("death star"));
 
 	deathStar->SetUniforms([&]() { // just as an example

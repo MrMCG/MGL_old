@@ -30,7 +30,7 @@ public:
 	// Sets m_vertices amount of colours to specified colour
 	void SetNewColours(glm::vec4 colour, GLboolean buffer = GL_TRUE);
 	// Set texture
-	inline void AddTexture(GLuint tex) { m_textures->push_back(tex); }
+	void AddTexture(GLuint tex) { m_textures->push_back(tex); }
 	// Get texture
 	GLuint GetTexture(GLuint index) const { return m_textures->at(index); }
 	// User defined unfiforms will be set before drawing

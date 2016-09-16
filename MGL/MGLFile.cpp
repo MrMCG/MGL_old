@@ -3,7 +3,7 @@
 #include "MGLFile.h"
 #include "MGLMesh.h"
 #include "MGLExceptions.h"
-#include "MGLDebug.h"
+#include "MGLLog.h"
 #include "MGLTimer.h"
 
 /*******************************/
@@ -51,7 +51,7 @@ std::stringstream* MGLFile::LoadFileToSS(std::string fileName) {
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << std::endl;
-		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
 
 		return nullptr;
 	}
@@ -79,7 +79,7 @@ std::vector<T>* MGLFile::LoadFileToVec(std::string fileName) {
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << std::endl;
-		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
 
 		return nullptr;
 	}
@@ -103,12 +103,12 @@ void MGLFile::SaveMeshToMGL(MGLMesh* mesh, std::string fileName, GLboolean saveC
 	}
 	catch (MGLException_FileError& e) {
 		//std::cerr << e.what() << std::endl;
-		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
 
 		return;
 	}
 	catch (MGLException_Null& e) {
-		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), "SMTM Mesh");
+		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), "SMTM Mesh");
 
 		return;
 	}
@@ -202,13 +202,13 @@ MGLMesh* MGLFileMGL::Load(std::string fileName, GLboolean bufferData) {
 	}
 	catch (MGLException_Null& e) {
 		//std::cerr << e.what() << ": FILE SIZE ERROR " << fileName << std::endl;
-		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), ": Null Buffer");
+		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), ": Null Buffer");
 		delete buffer;
 		return new MGLMesh(MGL_MESH_TRIANGLE);
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << ": FILE SIZE ERROR " << fileName << std::endl;
-		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s%s", e.what(), ": FILE SIZE ERROR ", fileName.c_str());
+		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s%s", e.what(), ": FILE SIZE ERROR ", fileName.c_str());
 		delete buffer;
 		return new MGLMesh(MGL_MESH_TRIANGLE);
 	}
@@ -222,7 +222,7 @@ MGLMesh* MGLFileMGL::Load(std::string fileName, GLboolean bufferData) {
 	delete buffer;
 
 	timer.End();
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "MGL Load: %s : %i vertices in %f", fileName.c_str(), mesh->GetNumVertices(), timer.GetTime());
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "MGL Load: %s : %i vertices in %f", fileName.c_str(), mesh->GetNumVertices(), timer.GetTime());
 
 	return mesh;
 }
@@ -368,7 +368,7 @@ MGLMesh* MGLFileOBJ::Load(std::string fileName, GLboolean bufferData) {
 	}
 	catch (MGLException_Null& e) {
 		//std::cerr << e.what() << ": STRINGSTREAM LoadOBJ " << std::endl;
-		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), "StringStream LoadOBJ ");
+		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), "StringStream LoadOBJ ");
 
 		return new MGLMesh(MGL_MESH_TRIANGLE);
 	}
@@ -435,7 +435,7 @@ MGLMesh* MGLFileOBJ::Load(std::string fileName, GLboolean bufferData) {
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << " Error creating mesh" << std::endl;
-		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), " Error creating mesh");
+		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), " Error creating mesh");
 		delete mesh;
 		return new MGLMesh(MGL_MESH_TRIANGLE);
 	}
@@ -445,7 +445,7 @@ MGLMesh* MGLFileOBJ::Load(std::string fileName, GLboolean bufferData) {
 		mesh->BufferAllData();
 
 	timer.End();
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "OBJ Load: %s : %i vertices in %f", fileName.c_str(), mesh->GetNumVertices(), timer.GetTime());
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "OBJ Load: %s : %i vertices in %f", fileName.c_str(), mesh->GetNumVertices(), timer.GetTime());
 
 	return mesh;
 }
@@ -504,7 +504,7 @@ GLboolean MGLFileOBJ::HandleOBJFace(std::string line, MGLObjFileData* obj) {
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << std::endl;
-		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
 
 		return GL_FALSE;
 	}
@@ -621,7 +621,7 @@ MGLMesh* MGLFileOBJ::CreateMesh(MGLObjFileData* obj) {
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << "Mesh size error" << std::endl;
-		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), "Mesh size error");
+		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), "Mesh size error");
 
 		return nullptr;
 	}

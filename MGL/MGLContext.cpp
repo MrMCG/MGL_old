@@ -9,8 +9,8 @@ MGLContext::MGLContext() {
 }
 
 MGLContext::~MGLContext() {
-	MGLH_Log->WriteToFile(MGL_LOG_FILENAME_MAIN, MGL_LOG_MAIN, GL_TRUE); // write main to file
-	MGLH_Log->WriteToFile(MGL_LOG_FILENAME_ERROR, MGL_LOG_ERROR, GL_TRUE); // write errors to file
+	MGLI_Log->WriteToFile(MGL_LOG_FILENAME_MAIN, MGL_LOG_MAIN, GL_TRUE); // write main to file
+	MGLI_Log->WriteToFile(MGL_LOG_FILENAME_ERROR, MGL_LOG_ERROR, GL_TRUE); // write errors to file
 
 	MGLTexture::Release();
 	MGLFileMGL::Release();
@@ -28,11 +28,11 @@ MGLContext::~MGLContext() {
 void MGLContext::InitMGL() {
 	InitInstances();
 
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_FALSE, "----- INFO -----");
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_FALSE, "----- INFO -----");
 	WriteOGLInfo();
 	WriteDefinesInfo();
 	WriteWindowInfo();
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_FALSE, "----- INFO -----");
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_FALSE, "----- INFO -----");
 }
 
 void MGLContext::WriteDefinesInfo() {
@@ -60,15 +60,15 @@ void MGLContext::WriteDefinesInfo() {
 #endif // MGL_BUILD_CONFIG
 
 	// log variables
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_FALSE, "\tMGL DEFINES");
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_FALSE, "\tMGL DEFINES");
 
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8s", "MGLDEBUG", def_MGLDEBUG ? "TRUE" : "FALSE");
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8s", "MGL_BUILD_CONFIG", def_BUILDCONFIG.c_str());
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8s", "MGL_USER_INCLUDE_TESTS", def_USER_TESTS ? "TRUE" : "FALSE");
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8s", "MGL_USER_INCLUDE_FILETC", def_USER_TC ? "TRUE" : "FALSE");
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_FILE_CURRENTVERSION", def_FILEVERSION);
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_LOG_MAXLINESIZE", def_LOGLINESIZE);
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_LOG_MAXLOGSIZE", def_LOGTOTALSIZE);
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8s", "MGLDEBUG", def_MGLDEBUG ? "TRUE" : "FALSE");
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8s", "MGL_BUILD_CONFIG", def_BUILDCONFIG.c_str());
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8s", "MGL_USER_INCLUDE_TESTS", def_USER_TESTS ? "TRUE" : "FALSE");
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8s", "MGL_USER_INCLUDE_FILETC", def_USER_TC ? "TRUE" : "FALSE");
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_FILE_CURRENTVERSION", def_FILEVERSION);
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_LOG_MAXLINESIZE", def_LOGLINESIZE);
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_LOG_MAXLOGSIZE", def_LOGTOTALSIZE);
 }
 
 void MGLContext::InitGLFW() {
@@ -79,7 +79,7 @@ void MGLContext::InitGLFW() {
 	catch (const MGLException& e) {
 		message = e.what();
 	}
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "GLFW INIT:"+message);
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "GLFW INIT:"+message);
 }
 
 void MGLContext::InitInstances() {
@@ -115,21 +115,21 @@ void MGLContext::SwapBuffers() {
 }
 
 void MGLContext::WriteOGLInfo() {
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_FALSE, "\tOGL INFO");
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_FALSE, "\tOGL INFO");
 
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, reinterpret_cast<GLchar const*>(glGetString(GL_VERSION)));
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, reinterpret_cast<GLchar const*>(glGetString(GL_VENDOR)));
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, reinterpret_cast<GLchar const*>(glGetString(GL_RENDERER)));
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, reinterpret_cast<GLchar const*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, reinterpret_cast<GLchar const*>(glGetString(GL_VERSION)));
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, reinterpret_cast<GLchar const*>(glGetString(GL_VENDOR)));
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, reinterpret_cast<GLchar const*>(glGetString(GL_RENDERER)));
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, reinterpret_cast<GLchar const*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 }
 
 void MGLContext::WriteWindowInfo() {
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_FALSE, "\tWINDOW INFO");
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_FALSE, "\tWINDOW INFO");
 
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i%-8i", "Resolution", window->GetWidth(), window->GetHeight());
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "Refresh", window->GetRefreshRate());
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MSAA", window->GetSamples());
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "Type", window->GetWindowType());
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i%-8i", "Resolution", window->GetWidth(), window->GetHeight());
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "Refresh", window->GetRefreshRate());
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MSAA", window->GetSamples());
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "Type", window->GetWindowType());
 }
 
 

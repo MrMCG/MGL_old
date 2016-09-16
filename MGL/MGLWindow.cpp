@@ -2,7 +2,7 @@
 
 #include "MGLWindow.h"
 #include "MGLExceptions.h"
-#include "MGLDebug.h"
+#include "MGLLog.h"
 
 MGLWindow::MGLWindow() {
 	monitor = glfwGetPrimaryMonitor();
@@ -11,16 +11,21 @@ MGLWindow::MGLWindow() {
 	MGLWindow::SetGLOptions();
 }
 
+MGLWindow::~MGLWindow() {
+	monitor = nullptr;
+	glfwDestroyWindow(window);
+}
+
 void MGLWindow::InitGLEW() {
 	try {
 		glewExperimental = GL_TRUE;
 		MGLException_Init_GLEW::Test(glewInit());
 	}
 	catch (const MGLException& e) {
-		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
 		return;
 	}
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "GLEW INIT: SUCCESS");
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "GLEW INIT: SUCCESS");
 }
 
 void MGLWindow::SetGLOptions() {
@@ -32,7 +37,7 @@ void MGLWindow::SetGLOptions() {
 }
 
 GLboolean MGLWindow::GenerateWindow() {
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "WINDOW INIT...");
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "WINDOW INIT...");
 
 	if (window)
 		return GL_FALSE;

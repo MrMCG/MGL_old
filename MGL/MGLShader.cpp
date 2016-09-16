@@ -2,7 +2,7 @@
 
 #include "MGLShader.h"
 #include "MGLExceptions.h"
-#include "MGLDebug.h"
+#include "MGLLog.h"
 #include "MGLMesh.h"
 
 MGLShader::MGLShader() {
@@ -44,7 +44,7 @@ void MGLShader::LoadShader(std::string fileName, GLenum type) {
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << std::endl;
-		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), ": Shader Type Unknown");
+		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), ": Shader Type Unknown");
 
 		return;
 	}
@@ -63,7 +63,7 @@ void MGLShader::LoadShader(std::string fileName, GLenum type) {
 		}
 		catch (MGLException& e) {
 			//std::cerr << e.what() << std::endl;
-			MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+			MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
 
 			return;
 		}
@@ -83,11 +83,11 @@ void MGLShader::LoadShader(std::string fileName, GLenum type) {
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << std::endl;
-		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
 		message += " - FAIL: TYPE ERROR";
 	}
 
-	MGLH_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, message.c_str());
+	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, message.c_str());
 }
 
 GLuint MGLShader::Compile(const char* data, GLenum type) {
@@ -105,12 +105,12 @@ GLuint MGLShader::Compile(const char* data, GLenum type) {
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << std::endl;
-		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
 
 		GLchar error[512];
 		glGetInfoLogARB(shader, sizeof(error), NULL, error);
 		//std::cerr << error << std::endl;
-		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, error);
+		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, error);
 
 		glDeleteShader(shader);
 		return 0;
@@ -150,11 +150,11 @@ void MGLShader::Link() {
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << std::endl;
-		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
 
 		GLchar log[512];
 		glGetProgramInfoLog(m_program, sizeof(log), NULL, log);
-		MGLH_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, log);
+		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, log);
 
 		//std::cout << log << std::endl;
 	}

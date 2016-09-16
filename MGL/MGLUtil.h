@@ -100,10 +100,12 @@ protected:
 	~MGLSingleton(){}
 
 private:
-	/* Prevent copy */
+	/* Prevent copy/move */
 
-	MGLSingleton(MGLSingleton const&) = delete;
-	MGLSingleton& operator=(MGLSingleton const&) = delete;
+	MGLSingleton(const MGLSingleton&) = delete;
+	MGLSingleton(const MGLSingleton&&) = delete;
+	MGLSingleton& operator=(const MGLSingleton&) = delete;
+	MGLSingleton& operator=(const MGLSingleton&&) = delete;
 
 	/* Keep instance pointer for refrence */
 

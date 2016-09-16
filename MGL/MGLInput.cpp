@@ -7,6 +7,12 @@ MGLInput::MGLInput(MGLWindow* windo) : MGLInput() {
 	AttatchInputToWindow(windo);
 }
 
+MGLInput::~MGLInput() {
+	delete keyboadInput;
+	delete mouseInput;
+	window = nullptr;
+}
+
 void MGLInput::AttatchInputToWindow(MGLWindow* windo) {
 	window = windo;
 	glfwSetWindowUserPointer(window->GetGLFWWindow(), this);

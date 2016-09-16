@@ -15,7 +15,7 @@ class MGLInput {
 public:
 	MGLInput() {}
 	explicit MGLInput(MGLWindow* windo);
-	virtual ~MGLInput() {}
+	virtual ~MGLInput();
 
 	void AttatchInputToWindow(MGLWindow* windo);
 	void PollInput() const;

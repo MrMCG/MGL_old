@@ -5,7 +5,7 @@
 #include "MGLWindow.h"
 #include "MGLInput.h"
 #include "MGLTimer.h"
-#include "MGLDebug.h"
+#include "MGLLog.h"
 #include "MGLExceptions.h"
 #include "MGLFile.h"
 #include "MGLTexture.h"

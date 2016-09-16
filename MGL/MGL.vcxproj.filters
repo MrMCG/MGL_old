@@ -75,9 +75,6 @@
     <ClInclude Include="MGLContext.h">
       <Filter>Header Files\Main</Filter>
     </ClInclude>
-    <ClInclude Include="MGLDebug.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="MGLExceptions.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
@@ -88,6 +85,9 @@
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="MGLTimer.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="MGLLog.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
@@ -134,13 +134,13 @@
     <ClCompile Include="MGLUtil.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="MGLDebug.cpp">
-      <Filter>Source Files\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="MGLFile.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="MGLTimer.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="MGLLog.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
   </ItemGroup>

@@ -179,7 +179,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MGLCamera.h" />
-    <ClInclude Include="MGLDebug.h" />
+    <ClInclude Include="MGLLog.h" />
     <ClInclude Include="MGLExceptions.h" />
     <ClInclude Include="MGLFile.h" />
     <ClInclude Include="MGLInput.h" />
@@ -199,7 +199,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MGLCamera.cpp" />
-    <ClCompile Include="MGLDebug.cpp" />
+    <ClCompile Include="MGLLog.cpp" />
     <ClCompile Include="MGLFile.cpp" />
     <ClCompile Include="MGLInput.cpp" />
     <ClCompile Include="MGLInputItem.cpp" />

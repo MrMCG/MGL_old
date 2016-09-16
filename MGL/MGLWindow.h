@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 
-#include "MGLDebug.h"
+#include "MGLLog.h"
 
 /*
  * TODO: create window config file for loading options
@@ -15,7 +15,7 @@ class MGLWindow {
 public:
 
 	MGLWindow();
-	virtual ~MGLWindow() {}
+	virtual ~MGLWindow();
 
 	GLint ShouldClose() const { return glfwWindowShouldClose(window); }
 	void CloseWindow() const { glfwSetWindowShouldClose(window, GL_TRUE); }
@@ -49,7 +49,6 @@ protected:
 	virtual void HandleResize(GLuint width, GLuint height);
 	virtual void SetGLOptions();
 	virtual void InitWindowHints() const;
-
 
 private:
 

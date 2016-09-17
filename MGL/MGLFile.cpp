@@ -5,6 +5,7 @@
 #include "MGLExceptions.h"
 #include "MGLLog.h"
 #include "MGLTimer.h"
+#include "MGLMeshGenerator.h"
 
 /*******************************/
 /*********** MGLFileTEMP ***********/
@@ -204,13 +205,13 @@ MGLMesh* MGLFileMGL::Load(std::string fileName, GLboolean bufferData) {
 		//std::cerr << e.what() << ": FILE SIZE ERROR " << fileName << std::endl;
 		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), ": Null Buffer");
 		delete buffer;
-		return new MGLMesh(MGL_MESH_TRIANGLE);
+		return MGLMeshGenerator::GenerateTriangle();
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << ": FILE SIZE ERROR " << fileName << std::endl;
 		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s%s", e.what(), ": FILE SIZE ERROR ", fileName.c_str());
 		delete buffer;
-		return new MGLMesh(MGL_MESH_TRIANGLE);
+		return MGLMeshGenerator::GenerateTriangle();
 	}
 #endif // MGL_USER_INCLUDE_FILETC
 
@@ -370,7 +371,7 @@ MGLMesh* MGLFileOBJ::Load(std::string fileName, GLboolean bufferData) {
 		//std::cerr << e.what() << ": STRINGSTREAM LoadOBJ " << std::endl;
 		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), "StringStream LoadOBJ ");
 
-		return new MGLMesh(MGL_MESH_TRIANGLE);
+		return MGLMeshGenerator::GenerateTriangle();
 	}
 #endif // MGL_USER_INCLUDE_FILETC
 
@@ -418,7 +419,7 @@ MGLMesh* MGLFileOBJ::Load(std::string fileName, GLboolean bufferData) {
 			}
 
 			if (!HandleOBJFace(line, obj)) // exception caught?
-				return new MGLMesh(MGL_MESH_TRIANGLE);
+				return MGLMeshGenerator::GenerateTriangle();
 		}
 	}
 
@@ -437,7 +438,7 @@ MGLMesh* MGLFileOBJ::Load(std::string fileName, GLboolean bufferData) {
 		//std::cerr << e.what() << " Error creating mesh" << std::endl;
 		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), " Error creating mesh");
 		delete mesh;
-		return new MGLMesh(MGL_MESH_TRIANGLE);
+		return MGLMeshGenerator::GenerateTriangle();
 	}
 #endif // MGL_USER_INCLUDE_FILETC
 

@@ -5,6 +5,7 @@
 #include "MGLExceptions.h"
 #include "MGLLog.h"
 #include "MGLTimer.h"
+#include "MGLMeshGenerator.h"
 
 template<class T>
 std::stringstream* MGLFileLoader<T>::LoadFileToSS(std::string fileName) {
@@ -152,13 +153,13 @@ MGLMesh* MGLFileLoaderMGL::Load(std::string fileName) {
 		//std::cerr << e.what() << ": FILE SIZE ERROR " << fileName << std::endl;
 		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), ": Null Buffer");
 		delete buffer;
-		return new MGLMesh(MGL_MESH_TRIANGLE);
+		return MGLMeshGenerator::GenerateTriangle();
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << ": FILE SIZE ERROR " << fileName << std::endl;
 		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s%s", e.what(), ": FILE SIZE ERROR ", fileName.c_str());
 		delete buffer;
-		return new MGLMesh(MGL_MESH_TRIANGLE);
+		return MGLMeshGenerator::GenerateTriangle();
 	}
 #endif // MGL_USER_INCLUDE_FILETC
 

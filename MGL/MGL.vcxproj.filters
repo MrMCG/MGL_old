@@ -99,6 +99,12 @@
     <ClInclude Include="MGLFileLoader.h">
       <Filter>Header Files\Files</Filter>
     </ClInclude>
+    <ClInclude Include="MGLDataMap.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="MGLMeshGenerator.h">
+      <Filter>Header Files\Main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -157,6 +163,9 @@
     </ClCompile>
     <ClCompile Include="MGLExceptions.cpp">
       <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="MGLMeshGenerator.cpp">
+      <Filter>Source Files\Main</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

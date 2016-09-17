@@ -51,11 +51,11 @@ GLboolean MGLWindow::GenerateWindow() {
 
 void MGLWindow::InitWindow() {
 	switch (windowType) {
-	case MGL_WINDOWTYPE_FULLSCREEN:
+	case Fullscreen:
 		MakeWindowFullscreen(); break;
-	case MGL_WINDOWTYPE_WINDOWED:
+	case Windowed:
 		MakeWindowWindowed(); break;
-	case MGL_WINDOWTYPE_BORDERLESS:
+	case Borderless:
 		MakeWindowBorderless(); break;
 	default:
 		window = glfwCreateWindow(800, 600, "MGL Default Window!", nullptr, nullptr);

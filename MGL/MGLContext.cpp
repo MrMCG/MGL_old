@@ -39,8 +39,6 @@ void MGLContext::WriteDefinesInfo() {
 	// get define states
 	GLuint def_MGLDEBUG = 0;
 	GLuint def_FILEVERSION = static_cast<GLuint>(MGL_FILE_CURRENTVERSION);
-	GLuint def_LOGLINESIZE = MGL_LOG_MAXLINESIZE;
-	GLuint def_LOGTOTALSIZE = MGL_LOG_MAXLOGSIZE;
 	std::string def_BUILDCONFIG = "unknown";
 	GLuint def_USER_TC = 0;
 	GLuint def_USER_TESTS = 0;
@@ -67,8 +65,6 @@ void MGLContext::WriteDefinesInfo() {
 	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8s", "MGL_USER_INCLUDE_TESTS", def_USER_TESTS ? "TRUE" : "FALSE");
 	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8s", "MGL_USER_INCLUDE_FILETC", def_USER_TC ? "TRUE" : "FALSE");
 	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_FILE_CURRENTVERSION", def_FILEVERSION);
-	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_LOG_MAXLINESIZE", def_LOGLINESIZE);
-	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "%-32s%-8i", "MGL_LOG_MAXLOGSIZE", def_LOGTOTALSIZE);
 }
 
 void MGLContext::InitGLFW() {

@@ -179,6 +179,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MGLCamera.h" />
+    <ClInclude Include="MGLDataMap.h" />
     <ClInclude Include="MGLFileLoader.h" />
     <ClInclude Include="MGLLog.h" />
     <ClInclude Include="MGLExceptions.h" />
@@ -188,6 +189,7 @@
     <ClInclude Include="MGLInputType.h" />
     <ClInclude Include="MGLKeyboard.h" />
     <ClInclude Include="MGLMesh.h" />
+    <ClInclude Include="MGLMeshGenerator.h" />
     <ClInclude Include="MGLMouse.h" />
     <ClInclude Include="MGLRenderer.h" />
     <ClInclude Include="MGLShader.h" />
@@ -207,6 +209,7 @@
     <ClCompile Include="MGLInput.cpp" />
     <ClCompile Include="MGLInputItem.cpp" />
     <ClCompile Include="MGLInputType.cpp" />
+    <ClCompile Include="MGLMeshGenerator.cpp" />
     <ClCompile Include="MGLMouse.cpp" />
     <ClCompile Include="MGLMesh.cpp" />
     <ClCompile Include="MGLRenderer.cpp" />

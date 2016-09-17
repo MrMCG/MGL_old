@@ -47,7 +47,7 @@ void MGLInput::AddMouseFunction(GLuint keyVal, GLuint firstAction, GLuint second
 }
 
 void MGLInput::AddScrollFunction(MGLFunction2 func, void* funcData, GLuint mod) {
-	mouseInput->AddKeyFunction(MGL_INPUT_SCROLLKEY, MGL_INPUT_SCROLLACTION, func, funcData, mod);
+	mouseInput->AddKeyFunction(MGLMouse::ScrollInfo::ScrollKey, MGLMouse::ScrollInfo::ScrollAction, func, funcData, mod);
 }
 
 void MGLInput::SetDataPointer(void* data) const {
@@ -97,7 +97,7 @@ void MGLInput::HandleMousePosition(GLdouble xPos, GLdouble yPos) {
 
 void MGLInput::HandleMouseScroll(GLdouble xOffset, GLdouble yOffset) {
 	mouseInput->UpdateScroll(static_cast<GLfloat>(xOffset), static_cast<GLfloat>(yOffset));
-	mouseInput->UpdateKey(MGL_INPUT_SCROLLKEY, 0, MGL_INPUT_SCROLLACTION);
+	mouseInput->UpdateKey(MGLMouse::ScrollInfo::ScrollKey, 0, MGLMouse::ScrollInfo::ScrollAction);
 }
 
 void MGLInput::HandleMouseFocus(GLboolean focused) {

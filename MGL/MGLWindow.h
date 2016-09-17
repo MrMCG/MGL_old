@@ -7,10 +7,6 @@
  * TODO: create window config file for loading options
  */
 
-#define MGL_WINDOWTYPE_WINDOWED 1
-#define MGL_WINDOWTYPE_FULLSCREEN 2
-#define MGL_WINDOWTYPE_BORDERLESS 3
-
 class MGLWindow {
 public:
 
@@ -42,6 +38,8 @@ public:
 	MGLWindow& operator=(const MGLWindow& other) = delete;
 	MGLWindow& operator=(const MGLWindow&& other) = delete;
 
+	enum WindowType { Windowed, Fullscreen, Borderless };
+
 protected:
 
 	static void ResizeCallBack(GLFWwindow* window, GLuint width, GLuint height);
@@ -71,7 +69,7 @@ private:
 	GLboolean inFocus = GL_TRUE;
 	std::string title = "MGL Window!";
 
-	MGLenum windowType = MGL_WINDOWTYPE_BORDERLESS;
+	GLuint windowType = Windowed;
 
 	GLuint glVersionMajor = 3;
 	GLuint glVersionMinor = 3;

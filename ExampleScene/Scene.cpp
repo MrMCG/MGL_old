@@ -12,6 +12,8 @@ Scene::Scene() {
 
 	// 4. Create your scene!
 
+	meshes = new MGLDataMap<MGLMesh>(MGLMeshGenerator::GenerateTriangle());
+
 	// Create new shader program
 	shader = new MGLShader();
 	shader->LoadShader("shaders/vert.glsl", GL_VERTEX_SHADER);
@@ -37,44 +39,38 @@ Scene::Scene() {
 
 Scene::~Scene() {
 	// NOTE: we dont delete box, as it is a MGLCommonMesh!
-	delete dino;
-	delete city;
+	meshes->DeleteAll();
+	delete meshes;
 	delete shader;
 }
 
 void Scene::loadObjects() {
 
-	dino = MGLI_FileLoaderMGL->Load("meshes/raptor.mgl");
-	
 	// Load raptor
-	//dino = MGLFileHandle->Load("meshes/raptor.mgl");
-	dino->AddTexture(MGLH_Tex->GetTexture("raptor"));
 
-	dino->SetUniforms([&]() { // just as an example
+	meshes->Register("dino", MGLI_FileLoaderMGL->Load("meshes/raptor.mgl"));
+
+	meshes->Get("dino")->AddTexture(MGLH_Tex->GetTexture("raptor"));
+
+	meshes->Get("dino")->SetUniforms([&]() { // just as an example
 		glUniform1i(glGetUniformLocation(shader->Program(), "tex"), 0);
 	});
 
 	// Load box
-	box = MGLH_ComMesh->Cube();
-	box->AddTexture(MGLH_Tex->GetTexture("DEFAULT"));
+	meshes->Register("box", MGLMeshGenerator::GenerateQuad());
 
-	box->SetUniforms([&]() { // just as an example
-		glUniform1i(glGetUniformLocation(shader->Program(), "tex"), 0);
-	});
+	meshes->Get("box")->AddTexture(MGLH_Tex->GetTexture("DEFAULT"));
 
-	// Load city
-	city = MGLI_FileOBJ->Load("meshes/The City.obj");
-	city->AddTexture(MGLH_Tex->GetTexture("city"));
-
-	city->SetUniforms([&]() { // just as an example
+	meshes->Get("box")->SetUniforms([&]() { // just as an example
 		glUniform1i(glGetUniformLocation(shader->Program(), "tex"), 0);
 	});
 
 	// Load death star
-	deathStar = MGLI_FileLoaderMGL->Load("meshes/death-star-II.mgl");
-	deathStar->AddTexture(MGLH_Tex->GetTexture("death star"));
+	meshes->Register("deathstar", MGLI_FileLoaderMGL->Load("meshes/death-star-II.mgl"));
 
-	deathStar->SetUniforms([&]() { // just as an example
+	meshes->Get("deathstar")->AddTexture(MGLH_Tex->GetTexture("death star"));
+
+	meshes->Get("deathstar")->SetUniforms([&]() { // just as an example
 		glUniform1i(glGetUniformLocation(shader->Program(), "tex"), 0);
 	});
 }
@@ -117,37 +113,31 @@ void Scene::RenderScene() {
 	glUniformMatrix4fv(glGetUniformLocation(shader->Program(), "viewMatrix"), 1, false, glm::value_ptr(viewMatrix));
 	glUniformMatrix4fv(glGetUniformLocation(shader->Program(), "projMatrix"), 1, false, glm::value_ptr(projMatrix));
 
-	// Draw city
-	modelMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, -5.0f, 0.0f));
-	modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f, 0.5f, 0.5f));
-	glUniformMatrix4fv(glGetUniformLocation(shader->Program(), "modelMatrix"), 1, false, glm::value_ptr(modelMatrix));
-	city->Draw();
-
 	// Draw dino
 	modelMatrix = glm::translate(glm::mat4(), glm::vec3(150.0f, 106.0f, -100.0f));
 	modelMatrix = glm::rotate(modelMatrix, glm::radians(90.0f), glm::vec3(0, -1, 0));
 	modelMatrix = glm::scale(modelMatrix, glm::vec3(20.0f, 20.0f, 20.0f));
 	glUniformMatrix4fv(glGetUniformLocation(shader->Program(), "modelMatrix"), 1, false, glm::value_ptr(modelMatrix));
-	dino->Draw();
+	meshes->Get("dino")->Draw();
 
 	// Draw box
 	modelMatrix = glm::translate(glm::mat4(), glm::vec3(5.0f, 0.0f, -5.0f));
 	modelMatrix = glm::rotate(modelMatrix, glm::radians(90.0f), glm::vec3(0, -1, 0));
 	glUniformMatrix4fv(glGetUniformLocation(shader->Program(), "modelMatrix"), 1, false, glm::value_ptr(modelMatrix));
-	box->Draw();
+	meshes->Get("box")->Draw();
 
 	// Draw death star
 	modelMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, 750.0f, 0.0f));
 	modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f, 0.5f, 0.5f));
 	glUniformMatrix4fv(glGetUniformLocation(shader->Program(), "modelMatrix"), 1, false, glm::value_ptr(modelMatrix));
-	deathStar->Draw();
+	meshes->Get("deathstar")->Draw();
 
 	// Swap buffers
 	SwapBuffers();
 }
 
 void Movement_Func(Scene* inputData, MGLenum* funcData) {
-	inputData->GetCamera()->MoveCamera(*funcData, inputData->GetFrameDelta());
+	inputData->GetCamera()->MoveCamera(*funcData, static_cast<float>(inputData->GetFrameDelta()));
 }
 
 void Key_MOUSE_Func(Scene* inputData) {

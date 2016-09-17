@@ -325,7 +325,7 @@ GLuint MGL_TESTS_::MGL_TEST_MGLFILE_SMTM() {
 	MGLI_FileLoaderMGL->SaveMeshToMGL(mesh, createdTestFiles[2], GL_FALSE);
 
 	// file name error
-	mesh = new MGLMesh(MGL_MESH_QUAD);
+	mesh = MGLMeshGenerator::GenerateTriangle();
 	MGLI_FileLoaderMGL->SaveMeshToMGL(mesh, "!£$^&*()", GL_TRUE);
 	MGLI_FileLoaderMGL->SaveMeshToMGL(mesh, "!£$^&*()", GL_FALSE);
 

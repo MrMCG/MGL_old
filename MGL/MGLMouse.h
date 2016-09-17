@@ -3,9 +3,6 @@
 
 #include "MGLInputType.h"
 
-#define MGL_INPUT_SCROLLKEY 40
-#define MGL_INPUT_SCROLLACTION 5
-
 class MGLMouse : public MGLInputType {
 public:
 	MGLMouse() {}
@@ -25,6 +22,8 @@ public:
 	MGLMouse(const MGLMouse&& other) = delete;
 	MGLMouse& operator=(const MGLMouse& other) = delete;
 	MGLMouse& operator=(const MGLMouse&& other) = delete;
+
+	enum ScrollInfo { ScrollAction = 5, ScrollKey = 40 };
 
 protected:
 

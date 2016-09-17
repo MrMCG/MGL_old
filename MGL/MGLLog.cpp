@@ -3,13 +3,17 @@
 #include "MGLLog.h"
 #include "MGLExceptions.h"
 
-MGLLog::MGLLog() {
-	logsVector = new std::vector<MGLvecs*>(MGL_LOG_AMOUNT);
-	enabledLogs = new MGLvecu(MGL_LOG_AMOUNT);
+const std::string MGLLog::LogDirectory = "_LOGS";
+const std::string MGLLog::LogBasicFilename = "mglLog";
+const std::string MGLLog::LogExtension = ".log";
 
-	for (GLuint i = 0; i < MGL_LOG_AMOUNT; ++i) {
+MGLLog::MGLLog() {
+	logsVector = new std::vector<MGLvecs*>(LogCount);
+	enabledLogs = new MGLvecu(LogCount);
+
+	for (GLuint i = 0; i < LogCount; ++i) {
 		logsVector->at(i) = new MGLvecs;
-		logsVector->at(i)->reserve(MGL_LOG_MAXLOGSIZE);
+		logsVector->at(i)->reserve(MaxLogSize);
 
 		enabledLogs->at(i) = 1;
 	}
@@ -48,6 +52,16 @@ void MGLLog::WriteToFile(const std::string fileName, const GLuint log, const GLb
 	}
 }
 
+void MGLLog::WriteLogsToFile(const GLboolean truncate) {
+	std::string path = LogDirectory + LogBasicFilename;
+	std::string filename = "";
+
+	for (size_t i = 0; i < logsVector->size(); i++) {
+		filename = path + std::to_string(i) + LogExtension;
+		WriteToFile(filename, i, truncate);
+	}
+}
+
 void MGLLog::AddLog(const GLuint log, const GLboolean timeStamp, const std::string line, ...) const {
 	if (!enabledLogs->at(log))
 		return;
@@ -57,12 +71,12 @@ void MGLLog::AddLog(const GLuint log, const GLboolean timeStamp, const std::stri
 	va_start(args, line);
 
 	// create char buffer based on inputs
-	GLchar buffer[MGL_LOG_MAXLINESIZE];
-	GLint needed = vsnprintf_s(buffer, MGL_LOG_MAXLINESIZE-1, _TRUNCATE, line.c_str(), args);
+	GLchar buffer[MaxLineSize];
+	GLint needed = vsnprintf_s(buffer, MaxLineSize -1, _TRUNCATE, line.c_str(), args);
 	va_end(args);
 
 	// determine buffer length and possibly truncate size
-	GLint length = (needed < 0) ? MGL_LOG_MAXLINESIZE : needed;
+	GLint length = (needed < 0) ? MaxLineSize : needed;
 
 	// create timestamp
 	std::string text = "";

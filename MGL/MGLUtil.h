@@ -3,7 +3,7 @@
 
 // include MGL_TESTS_ 
 #define MGL_USER_INCLUDE_TESTS
-// include try-catch blocks in MGLFile
+// include try-catch blocks in MGLFileTEMP
 #define MGL_USER_INCLUDE_FILETC
 
 // MGLenums
@@ -65,6 +65,9 @@ namespace MGL {
 	int GetWindowInfo(GLFWwindow* window, const MGLenum info, const GLint attribute = 0);
 	// Print glm::mat4, uses std::cout
 	void PrintMat4(const glm::mat4& matrix);
+
+	std::size_t GetFilesize(std::ifstream& file);
+	GLboolean FileOpenedSuccessful(std::ifstream& file, std::string fileName);
 
 	/****** Useful data ******/
 

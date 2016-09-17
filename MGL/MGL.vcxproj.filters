@@ -31,6 +31,12 @@
     <Filter Include="Source Files\Utilities">
       <UniqueIdentifier>{aba4f3a3-5d65-4ab4-87fa-36d67f52db00}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Files">
+      <UniqueIdentifier>{827389da-25f2-4039-b59d-6d3e44cf829b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Files">
+      <UniqueIdentifier>{1f5dab83-915d-4e59-b20c-63570445d50c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -78,9 +84,6 @@
     <ClInclude Include="MGLExceptions.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="MGLFile.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="MGLUtil.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
@@ -89,6 +92,12 @@
     </ClInclude>
     <ClInclude Include="MGLLog.h">
       <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="MGLFile.h">
+      <Filter>Header Files\Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MGLFileLoader.h">
+      <Filter>Header Files\Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -134,13 +143,19 @@
     <ClCompile Include="MGLUtil.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="MGLFile.cpp">
-      <Filter>Source Files\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="MGLTimer.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="MGLLog.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="MGLFile.cpp">
+      <Filter>Source Files\Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MGLFileLoader.cpp">
+      <Filter>Source Files\Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MGLExceptions.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
   </ItemGroup>

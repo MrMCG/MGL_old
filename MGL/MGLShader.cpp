@@ -101,7 +101,7 @@ GLuint MGLShader::Compile(const char* data, GLenum type) {
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
 
 	try {
-		MGLException_Shader_COMPILE::Test(status);
+		MGLException_IsNotEqual::Test(status, GL_TRUE);
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << std::endl;
@@ -139,12 +139,12 @@ void MGLShader::Link() {
 	try {
 		GLint code = GL_FALSE;
 		glGetProgramiv(m_program, GL_LINK_STATUS, &code);
-		MGLException_Shader_LINK::Test(code);
+		MGLException_IsNotEqual::Test(code, GL_TRUE);
 
 		code = GL_FALSE;
 		glValidateProgram(m_program);
 		glGetProgramiv(m_program, GL_VALIDATE_STATUS, &code);
-		MGLException_Shader_LINK::Test(code);
+		MGLException_IsNotEqual::Test(code, GL_TRUE);
 
 		SetDefaultAttributes();
 	}

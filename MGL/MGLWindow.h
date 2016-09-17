@@ -71,7 +71,7 @@ private:
 	GLboolean inFocus = GL_TRUE;
 	std::string title = "MGL Window!";
 
-	MGLenum windowType = MGL_WINDOWTYPE_WINDOWED;
+	MGLenum windowType = MGL_WINDOWTYPE_BORDERLESS;
 
 	GLuint glVersionMajor = 3;
 	GLuint glVersionMinor = 3;

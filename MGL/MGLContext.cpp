@@ -13,7 +13,7 @@ MGLContext::~MGLContext() {
 	MGLI_Log->WriteToFile(MGL_LOG_FILENAME_ERROR, MGL_LOG_ERROR, GL_TRUE); // write errors to file
 
 	MGLTexture::Release();
-	MGLFileMGL::Release();
+	MGLFileLoaderMGL::Release();
 	MGLFileOBJ::Release();
 	MGLCommonMeshes::Release();
 	MGLLog::Release();
@@ -74,7 +74,7 @@ void MGLContext::WriteDefinesInfo() {
 void MGLContext::InitGLFW() {
 	std::string message = "SUCCESS";
 	try {
-		MGLException_Init_GLFW::Test(glfwInit());
+		MGLException_IsNotEqual::Test(glfwInit(), GL_TRUE);
 	}
 	catch (const MGLException& e) {
 		message = e.what();
@@ -85,7 +85,7 @@ void MGLContext::InitGLFW() {
 void MGLContext::InitInstances() {
 	// ORDER IS IMPORTANT
 	MGLTexture::Init();
-	MGLFileMGL::Init();
+	MGLFileLoaderMGL::Init();
 	MGLFileOBJ::Init();
 	MGLCommonMeshes::Init();
 }

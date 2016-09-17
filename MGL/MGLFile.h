@@ -6,7 +6,6 @@
 #define MGL_FILE_BUFFERMINSIZE 5
 #define MGL_FILE_CURRENTVERSION 1.0f
 
-#define MGLI_FileMGL MGLFileMGL::Instance()
 #define MGLI_FileOBJ MGLFileOBJ::Instance()
 
 /*
@@ -18,15 +17,15 @@ class MGLMesh;
 struct MGLObjVertData;
 struct MGLObjFileData;
 
-class MGLFile {
+class MGLFileTEMP {
 public:
 	// Loads file and returns correct MGLMesh, buffered or unbuffered
 	virtual MGLMesh* Load(std::string fileName, GLboolean bufferData = GL_TRUE) = 0;
 	// Saves a given mesh to .mgl format
 	void SaveMeshToMGL(MGLMesh* mesh, std::string fileName, GLboolean saveColours);
 protected:
-	MGLFile(std::string ext) : m_fileEXT(ext) {}
-	virtual ~MGLFile(){}
+	MGLFileTEMP(std::string ext) : m_fileEXT(ext) {}
+	virtual ~MGLFileTEMP(){}
 
 	/****** Methods ******/
 
@@ -43,12 +42,12 @@ protected:
 
 /* OBJ */
 
-class MGLFileOBJ : public MGLFile, public MGLSingleton<MGLFileOBJ> {
+class MGLFileOBJ : public MGLFileTEMP, public MGLSingleton<MGLFileOBJ> {
 	friend class MGLSingleton < MGLFileOBJ >;
 public:
 	virtual MGLMesh* Load(std::string fileName, GLboolean bufferData = GL_TRUE);
 protected:
-	MGLFileOBJ() : MGLFile(".obj") {}
+	MGLFileOBJ() : MGLFileTEMP(".obj") {}
 	virtual ~MGLFileOBJ(){}
 
 	GLboolean HandleOBJFace(std::string line, MGLObjFileData* obj);
@@ -63,12 +62,12 @@ protected:
 
 /* MGL */
 
-class MGLFileMGL : public MGLFile, public MGLSingleton<MGLFileMGL> {
+class MGLFileMGL : public MGLFileTEMP, public MGLSingleton<MGLFileMGL> {
 	friend class MGLSingleton < MGLFileMGL >;
 public:
 	virtual MGLMesh* Load(std::string fileName, GLboolean bufferData = GL_TRUE);
 protected:
-	MGLFileMGL() : MGLFile(".mgl") {}
+	MGLFileMGL() : MGLFileTEMP(".mgl") {}
 	virtual ~MGLFileMGL(){}
 
 	/****** Methods ******/

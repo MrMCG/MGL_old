@@ -11,6 +11,7 @@
 #include "MGLTexture.h"
 #include "MGLMesh.h"
 #include "MGLShader.h"
+#include "MGLFileLoader.h"
 
 // images: http://opengameart.org/content/50-free-textures-4-normalmaps
 // http://bgfons.com/upload/stars_texture2944.jpg

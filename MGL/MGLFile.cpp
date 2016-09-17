@@ -7,7 +7,7 @@
 #include "MGLTimer.h"
 
 /*******************************/
-/*********** MGLFile ***********/
+/*********** MGLFileTEMP ***********/
 /*******************************/
 
 struct MGLObjVertData {
@@ -41,13 +41,13 @@ struct MGLObjFileData {
 	GLuint idCounter = 0;
 };
 
-std::stringstream* MGLFile::LoadFileToSS(std::string fileName) {
+std::stringstream* MGLFileTEMP::LoadFileToSS(std::string fileName) {
 	std::ifstream file(fileName, std::ios::in);
 
 #ifdef MGL_USER_INCLUDE_FILETC
 	try {
 		MGLException_FileError::Test(file.is_open(), fileName);
-		MGLException_File_FileType::Test(fileName, m_fileEXT);
+		MGLException_UnexpectedFileType::Test(fileName, m_fileEXT);
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << std::endl;
@@ -64,7 +64,7 @@ std::stringstream* MGLFile::LoadFileToSS(std::string fileName) {
 }
 
 template <typename T>
-std::vector<T>* MGLFile::LoadFileToVec(std::string fileName) {
+std::vector<T>* MGLFileTEMP::LoadFileToVec(std::string fileName) {
 	std::ifstream file(fileName, std::ios::in | std::ios::binary);
 
 	file.seekg(0, std::ios_base::end);
@@ -75,7 +75,7 @@ std::vector<T>* MGLFile::LoadFileToVec(std::string fileName) {
 	try {
 		// file is open and has correct extension
 		MGLException_FileError::Test(file.is_open(), fileName);
-		MGLException_File_FileType::Test(fileName, m_fileEXT);
+		MGLException_UnexpectedFileType::Test(fileName, m_fileEXT);
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << std::endl;
@@ -92,14 +92,14 @@ std::vector<T>* MGLFile::LoadFileToVec(std::string fileName) {
 	return buffer;
 }
 
-void MGLFile::SaveMeshToMGL(MGLMesh* mesh, std::string fileName, GLboolean saveColours) {
+void MGLFileTEMP::SaveMeshToMGL(MGLMesh* mesh, std::string fileName, GLboolean saveColours) {
 	// open file
 	std::ofstream out(fileName + ".mgl", std::ios::binary);
 
 #ifdef MGL_USER_INCLUDE_FILETC
 	try {
 		MGLException_FileError::Test(out.is_open(), fileName);
-		MGLException_Null::Test(mesh);
+		MGLException_IsNullptr::Test(mesh);
 	}
 	catch (MGLException_FileError& e) {
 		//std::cerr << e.what() << std::endl;
@@ -107,7 +107,7 @@ void MGLFile::SaveMeshToMGL(MGLMesh* mesh, std::string fileName, GLboolean saveC
 
 		return;
 	}
-	catch (MGLException_Null& e) {
+	catch (MGLException_IsNullptr& e) {
 		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), "SMTM Mesh");
 
 		return;
@@ -174,8 +174,8 @@ void MGLFile::SaveMeshToMGL(MGLMesh* mesh, std::string fileName, GLboolean saveC
 	}
 
 	for (GLuint const& ind : *mesh->GetIndices()) {
-		GLfloat val = (GLfloat)ind;
-		out.write((GLchar*)&val, sizeof(GLfloat));
+		GLfloat temp = (GLfloat)ind;
+		out.write((GLchar*)&temp, sizeof(GLfloat));
 	}
 
 }
@@ -193,14 +193,14 @@ MGLMesh* MGLFileMGL::Load(std::string fileName, GLboolean bufferData) {
 #ifdef MGL_USER_INCLUDE_FILETC
 	try {
 		// buffers not null
-		MGLException_Null::Test(buffer);
+		MGLException_IsNullptr::Test(buffer);
 		// buffer size is large enough (for DetermineFileSize())
 		MGLException_IsLessThan::Test(buffer->size(), (std::size_t)MGL_FILE_BUFFERMINSIZE);
 		// buffer size is what is expected
 		MGLException_IsNotEqual::Test(DetermineFileSize(
 			(GLuint)buffer->at(2), (GLuint)buffer->at(3), (GLint)buffer->at(4)) + 1, buffer->size());
 	}
-	catch (MGLException_Null& e) {
+	catch (MGLException_IsNullptr& e) {
 		//std::cerr << e.what() << ": FILE SIZE ERROR " << fileName << std::endl;
 		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), ": Null Buffer");
 		delete buffer;
@@ -364,9 +364,9 @@ MGLMesh* MGLFileOBJ::Load(std::string fileName, GLboolean bufferData) {
 
 #ifdef MGL_USER_INCLUDE_FILETC
 	try {
-		MGLException_Null::Test(stream);
+		MGLException_IsNullptr::Test(stream);
 	}
-	catch (MGLException_Null& e) {
+	catch (MGLException_IsNullptr& e) {
 		//std::cerr << e.what() << ": STRINGSTREAM LoadOBJ " << std::endl;
 		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), "StringStream LoadOBJ ");
 
@@ -431,7 +431,7 @@ MGLMesh* MGLFileOBJ::Load(std::string fileName, GLboolean bufferData) {
 #ifdef MGL_USER_INCLUDE_FILETC
 	// test if mesh caused an error
 	try {
-		MGLException_Null::Test(mesh);
+		MGLException_IsNullptr::Test(mesh);
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << " Error creating mesh" << std::endl;
@@ -665,3 +665,12 @@ MGLMesh* MGLFileOBJ::CreateMesh(MGLObjFileData* obj) {
 }
 
 
+
+
+//MGLMesh* MGLFileLoaderMGL::LoadFile(std::string filename) {
+//	
+//	return MGLH_ComMesh->Cube();
+//}
+
+
+	

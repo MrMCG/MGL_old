@@ -85,7 +85,7 @@ void MGL_TESTS_::MGL_TEST_VARIOUS_FILESPEED() {
 	// load at-at.mgl
 	timer.Start();
 	for (GLuint i = 0; i < FILESPEED_ITERATIONS; ++i) {
-		mesh = MGLI_FileMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"at-at.mgl", GL_FALSE);
+		mesh = MGLI_FileLoaderMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"at-at.mgl");
 		delete mesh;
 	}
 	timer.End();
@@ -104,7 +104,7 @@ void MGL_TESTS_::MGL_TEST_VARIOUS_FILESPEED() {
 	// load death-star-II.mgl
 	timer.Start();
 	for (GLuint i = 0; i < FILESPEED_ITERATIONS; ++i) {
-		mesh = MGLI_FileMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"death-star-II.mgl", GL_FALSE);
+		mesh = MGLI_FileLoaderMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"death-star-II.mgl");
 		delete mesh;
 	}
 	timer.End();
@@ -122,13 +122,13 @@ void MGL_TESTS_::MGL_TEST_VARIOUS_MEMMORY() {
 
 	// mesh loading from obj
 	for (GLuint i = 0; i < MEMORY_ITERATIONS; ++i) {
-		mesh = MGLI_FileOBJ->Load(MGL_DEFAULT_TESTS_DIRECTORY"cube.obj", GL_FALSE);
+		mesh = MGLI_FileOBJ->Load(MGL_DEFAULT_TESTS_DIRECTORY"cube.obj");
 		delete mesh;
 	}
 
 	// mesh loading from mgl
 	for (GLuint i = 0; i < MEMORY_ITERATIONS; ++i) {
-		mesh = MGLI_FileMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"cube.mgl", GL_FALSE);
+		mesh = MGLI_FileLoaderMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"cube.mgl");
 		delete mesh;
 	}
 
@@ -258,50 +258,50 @@ GLuint MGL_TESTS_::MGL_TEST_MGLFILE_MGL() {
 	MGLMesh* mesh = nullptr;
 
 	// no file
-	mesh = MGLI_FileMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"wrongfile.mgl", GL_TRUE);
+	mesh = MGLI_FileLoaderMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"wrongfile.mgl");
 	delete mesh;
-	mesh = MGLI_FileMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"wrongfile.mgl", GL_FALSE);
+	mesh = MGLI_FileLoaderMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"wrongfile.mgl");
 	delete mesh;
 
 	// wrong file type
-	mesh = MGLI_FileMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"cube.obj", GL_TRUE);
+	mesh = MGLI_FileLoaderMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"cube.obj");
 	delete mesh;
-	mesh = MGLI_FileMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"cube.obj", GL_FALSE);
+	mesh = MGLI_FileLoaderMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"cube.obj");
 	delete mesh;
 
 	// file too small
-	mesh = MGLI_FileMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"cubeTiny.mgl", GL_TRUE);
+	mesh = MGLI_FileLoaderMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"cubeTiny.mgl");
 	delete mesh;
-	mesh = MGLI_FileMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"cubeTiny.mgl", GL_FALSE);
+	mesh = MGLI_FileLoaderMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"cubeTiny.mgl");
 	delete mesh;
 
 	// file size mismatch from determined size
-	mesh = MGLI_FileMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"cubeSmall.mgl", GL_TRUE);
+	mesh = MGLI_FileLoaderMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"cubeSmall.mgl");
 	delete mesh;
-	mesh = MGLI_FileMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"cubeSmall.mgl", GL_FALSE);
+	mesh = MGLI_FileLoaderMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"cubeSmall.mgl");
 	delete mesh;
 
 	// initial inputs incorrect
-	mesh = MGLI_FileMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"cubeError.mgl", GL_TRUE);
+	mesh = MGLI_FileLoaderMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"cubeError.mgl");
 	delete mesh;
-	mesh = MGLI_FileMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"cubeError.mgl", GL_FALSE);
+	mesh = MGLI_FileLoaderMGL->Load(MGL_DEFAULT_TESTS_DIRECTORY"cubeError.mgl");
 	delete mesh;
 
 	// CORRECT PARAMS
 	try {
-		mesh = MGLI_FileMGL->Load(createdTestFiles[0] + createdTestFiles[1], GL_TRUE);
+		mesh = MGLI_FileLoaderMGL->Load(createdTestFiles[0] + createdTestFiles[1]);
 		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
 		delete mesh;
 
-		mesh = MGLI_FileMGL->Load(createdTestFiles[0] + createdTestFiles[1], GL_FALSE);
+		mesh = MGLI_FileLoaderMGL->Load(createdTestFiles[0] + createdTestFiles[1]);
 		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
 		delete mesh;
 
-		mesh = MGLI_FileMGL->Load(createdTestFiles[2] + createdTestFiles[3], GL_TRUE);
+		mesh = MGLI_FileLoaderMGL->Load(createdTestFiles[2] + createdTestFiles[3]);
 		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
 		delete mesh;
 
-		mesh = MGLI_FileMGL->Load(createdTestFiles[2] + createdTestFiles[3], GL_FALSE);
+		mesh = MGLI_FileLoaderMGL->Load(createdTestFiles[2] + createdTestFiles[3]);
 		MGLException_IsLessThan::Test(mesh->GetNumVertices(), (GLuint)4); // if default triangle given
 		delete mesh;
 	}
@@ -321,17 +321,17 @@ GLuint MGL_TESTS_::MGL_TEST_MGLFILE_SMTM() {
 	MGLMesh* mesh = nullptr;
 
 	// null mesh
-	MGLI_FileMGL->SaveMeshToMGL(mesh, createdTestFiles[0], GL_TRUE);
-	MGLI_FileMGL->SaveMeshToMGL(mesh, createdTestFiles[2], GL_FALSE);
+	MGLI_FileLoaderMGL->SaveMeshToMGL(mesh, createdTestFiles[0], GL_TRUE);
+	MGLI_FileLoaderMGL->SaveMeshToMGL(mesh, createdTestFiles[2], GL_FALSE);
 
 	// file name error
 	mesh = new MGLMesh(MGL_MESH_QUAD);
-	MGLI_FileMGL->SaveMeshToMGL(mesh, "!£$^&*()", GL_TRUE);
-	MGLI_FileMGL->SaveMeshToMGL(mesh, "!£$^&*()", GL_FALSE);
+	MGLI_FileLoaderMGL->SaveMeshToMGL(mesh, "!£$^&*()", GL_TRUE);
+	MGLI_FileLoaderMGL->SaveMeshToMGL(mesh, "!£$^&*()", GL_FALSE);
 
 	// CORRECT PARAMS
-	MGLI_FileMGL->SaveMeshToMGL(mesh, createdTestFiles[0], GL_TRUE);
-	MGLI_FileMGL->SaveMeshToMGL(mesh, createdTestFiles[2], GL_FALSE);
+	MGLI_FileLoaderMGL->SaveMeshToMGL(mesh, createdTestFiles[0], GL_TRUE);
+	MGLI_FileLoaderMGL->SaveMeshToMGL(mesh, createdTestFiles[2], GL_FALSE);
 
 	delete mesh;
 

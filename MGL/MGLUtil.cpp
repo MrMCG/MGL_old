@@ -2,6 +2,7 @@
 
 #include "MGLUtil.h"
 #include "MGLExceptions.h"
+#include "MGLLog.h"
 
 void MGL::EnableWireframe() {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -32,7 +33,7 @@ GLuint MGL::LoadTextureFromFile(const std::string& fileName, const GLboolean alp
 
 		GLubyte* image = stbi_load(fileName.c_str(), &w, &h, &c, alpha ? STBI_rgb_alpha : STBI_rgb);
 
-		MGLException_Null::Test(image);
+		MGLException_IsNullptr::Test(image);
 
 		glGenTextures(1, &tex);
 		glBindTexture(GL_TEXTURE_2D, tex);
@@ -102,4 +103,25 @@ void MGL::PrintMat4(const glm::mat4& matrix) {
 	std::cout << val[4] << "\t" << val[5] << "\t" << val[6] << "\t" << val[7] << std::endl;
 	std::cout << val[8] << "\t" << val[9] << "\t" << val[10] << "\t" << val[11] << std::endl;
 	std::cout << val[12] << "\t" << val[13] << "\t" << val[14] << "\t" << val[15] << std::endl;
+}
+
+GLboolean MGL::FileOpenedSuccessful(std::ifstream& file, std::string fileName) {
+	try {
+		MGLException_FileError::Test(file.is_open(), fileName);
+	}
+	catch (MGLException& e) {
+		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+		return GL_FALSE;
+	}
+	return GL_TRUE;
+}
+
+size_t MGL::GetFilesize(std::ifstream& file) {
+	auto startLocation = static_cast<std::ios_base::seekdir>(file.tellg());
+
+	file.seekg(0, std::ios_base::end);
+	auto size = static_cast<std::size_t>(file.tellg()); // get file size
+	file.seekg(0, startLocation);
+
+	return size;
 }

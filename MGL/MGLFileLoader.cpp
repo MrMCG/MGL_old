@@ -153,13 +153,13 @@ MGLMesh* MGLFileLoaderMGL::Load(std::string fileName) {
 		//std::cerr << e.what() << ": FILE SIZE ERROR " << fileName << std::endl;
 		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), ": Null Buffer");
 		delete buffer;
-		return MGLMeshGenerator::GenerateTriangle();
+		return MGLMeshGenerator::Triangle();
 	}
 	catch (MGLException& e) {
 		//std::cerr << e.what() << ": FILE SIZE ERROR " << fileName << std::endl;
 		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s%s", e.what(), ": FILE SIZE ERROR ", fileName.c_str());
 		delete buffer;
-		return MGLMeshGenerator::GenerateTriangle();
+		return MGLMeshGenerator::Triangle();
 	}
 #endif // MGL_USER_INCLUDE_FILETC
 

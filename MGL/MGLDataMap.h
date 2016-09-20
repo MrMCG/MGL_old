@@ -4,6 +4,7 @@
 template <typename T>
 class MGLDataMap {
 public:
+
 	MGLDataMap(T* defaultMember);
 	~MGLDataMap();
 
@@ -13,7 +14,12 @@ public:
 
 	T* DefaultMember() const;
 	void DeleteAll();
+
+	T* operator[](const std::string& key);
+	const T* operator[](const std::string& key) const;
+
 private:
+
 	std::unordered_map<std::string, T*>* dataMap = new std::unordered_map<std::string, T*>();
 	static const std::string DefaultString;
 };
@@ -68,4 +74,14 @@ void MGLDataMap<T>::DeleteAll() {
 	for (auto& pair : *dataMap) {
 		delete pair.second;
 	}
+}
+
+template <typename T>
+T* MGLDataMap<T>::operator[](const std::string& key) {
+	return Get(key);
+}
+
+template <typename T>
+const T* MGLDataMap<T>::operator[](const std::string& key) const {
+	return Get(key);
 }

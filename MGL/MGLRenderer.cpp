@@ -4,6 +4,14 @@
 
 MGLRenderer::~MGLRenderer() {
 	delete camera;
+
+	meshes->DeleteAll();
+	delete meshes;
+}
+
+void MGLRenderer::InitMGL() {
+	MGLContext::InitMGL();
+	meshes = new MGLDataMap<MGLMesh>(MGLMeshGenerator::Triangle());
 }
 
 void MGLRenderer::CreateProjectionMatrix(const GLboolean orthographic) {

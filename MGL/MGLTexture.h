@@ -6,6 +6,8 @@
 #define MGL_TEXTURE_DIFFUSE 1
 #define MGL_TEXTURE_SPECULAR 2
 
+#define MGLH_Tex MGLTexture::Instance()
+
 // TODO: make adding/loading textures handle 
 // loading existing textures safer
 

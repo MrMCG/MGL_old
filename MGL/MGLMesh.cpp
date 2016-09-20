@@ -6,47 +6,33 @@
 
 MGLMesh::MGLMesh() {
 
-	for (int i = 0; i < MGL_BUFFER_MAX; ++i) {
+	for (auto i = 0; i < Max; ++i) {
 		VBO[i] = 0;
 	}
 
 	glGenVertexArrays(1, &VAO);
-
-	numIndices = 0;
-	numVertices = 0;
-	type = GL_TRIANGLES;
-
-	vertices = nullptr;
-	normals = nullptr;
-	texCoords = nullptr;
-	colours = nullptr;
-
-	textures = new MGLvecu;
-	indices = nullptr;
-
-	OnDrawCallBack = [](){};
 }
 
 MGLMesh::~MGLMesh() {
 	if (vertices) {
 		delete vertices;
-		glDeleteBuffers(1, &VBO[MGL_BUFFER_VERTEX]);
+		glDeleteBuffers(1, &VBO[Vertex]);
 	}
 	if (normals) {
 		delete normals;
-		glDeleteBuffers(1, &VBO[MGL_BUFFER_NORMALS]);
+		glDeleteBuffers(1, &VBO[Normals]);
 	}
 	if (texCoords) {
 		delete texCoords;
-		glDeleteBuffers(1, &VBO[MGL_BUFFER_TEXTURES]);
+		glDeleteBuffers(1, &VBO[Textures]);
 	}
 	if (colours) {
 		delete colours;
-		glDeleteBuffers(1, &VBO[MGL_BUFFER_COLOURS]);
+		glDeleteBuffers(1, &VBO[Colours]);
 	}
 	if (indices) {
 		delete indices;
-		glDeleteBuffers(1, &VBO[MGL_BUFFER_INDICES]);
+		glDeleteBuffers(1, &VBO[Indices]);
 	}
 
 	delete textures;
@@ -57,7 +43,7 @@ void MGLMesh::Draw() {
 	GLuint counter = 0;
 
 	// load textures into texture units
-	for (GLuint id : *textures) { 
+	for (auto id : *textures) { 
 		glActiveTexture(GL_TEXTURE0 + counter);
 		glBindTexture(GL_TEXTURE_2D, id);
 		counter++;
@@ -69,7 +55,7 @@ void MGLMesh::Draw() {
 	// bind VAO and draw
 	glBindVertexArray(VAO);
 	if (indices)
-		glDrawElements(type, numIndices, GL_UNSIGNED_INT, 0);
+		glDrawElements(type, numIndices, GL_UNSIGNED_INT, nullptr);
 	else
 		glDrawArrays(type, 0, numVertices);
 	glBindVertexArray(0);
@@ -87,23 +73,19 @@ void MGLMesh::SetNewColours(glm::vec4 colour, GLboolean buffer) {
 }
 
 void MGLMesh::BufferAllData(const GLboolean genBuffers, const GLenum usage) {
-	//buffer Vertices data
+
 	if (vertices)
 		BufferVerticesData(genBuffers, usage);
 
-	//Buffer texture data
 	if (normals)
 		BufferNormalsData(genBuffers, usage);
 
-	//Buffer texture data
 	if (texCoords)
 		BufferTexCoordData(genBuffers, usage);
 
-	//buffer colour data
 	if (colours)
 		BufferColourData(genBuffers, usage);
 
-	//Buffer indicies data
 	if (indices) 
 		BufferIndicesData(genBuffers, usage);
 }
@@ -112,12 +94,12 @@ void MGLMesh::BufferVerticesData(GLboolean genBuffers, const GLenum usage) {
 	glBindVertexArray(VAO);
 
 	if (genBuffers)
-		glGenBuffers(1, &VBO[MGL_BUFFER_VERTEX]);
+		glGenBuffers(1, &VBO[Vertex]);
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO[MGL_BUFFER_VERTEX]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[Vertex]);
 	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(glm::vec3), &vertices->at(0), usage);
-	glVertexAttribPointer(MGL_BUFFER_VERTEX, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(MGL_BUFFER_VERTEX);
+	glVertexAttribPointer(Vertex, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(Vertex);
 
 	glBindVertexArray(0);
 }
@@ -126,9 +108,9 @@ void MGLMesh::BufferIndicesData(GLboolean genBuffers, const GLenum usage) {
 	glBindVertexArray(VAO);
 
 	if (genBuffers)
-		glGenBuffers(1, &VBO[MGL_BUFFER_INDICES]);
+		glGenBuffers(1, &VBO[Indices]);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO[MGL_BUFFER_INDICES]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO[Indices]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices*sizeof(GLuint), &indices->at(0), usage);
 
 	glBindVertexArray(0);
@@ -139,12 +121,12 @@ void MGLMesh::BufferTexCoordData(GLboolean genBuffers, const GLenum usage) {
 	glBindVertexArray(VAO);
 
 	if (genBuffers)
-		glGenBuffers(1, &VBO[MGL_BUFFER_TEXTURES]);
+		glGenBuffers(1, &VBO[Textures]);
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO[MGL_BUFFER_TEXTURES]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[Textures]);
 	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(glm::vec2), &texCoords->at(0), usage);
-	glVertexAttribPointer(MGL_BUFFER_TEXTURES, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(MGL_BUFFER_TEXTURES);
+	glVertexAttribPointer(Textures, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(Textures);
 
 	glBindVertexArray(0);
 }
@@ -154,12 +136,12 @@ void MGLMesh::BufferColourData(GLboolean genBuffers, const GLenum usage) {
 	glBindVertexArray(VAO);
 
 	if (genBuffers)
-		glGenBuffers(1, &VBO[MGL_BUFFER_COLOURS]);
+		glGenBuffers(1, &VBO[Colours]);
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO[MGL_BUFFER_COLOURS]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[Colours]);
 	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(glm::vec4), &colours->at(0), usage);
-	glVertexAttribPointer(MGL_BUFFER_COLOURS, 4, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(MGL_BUFFER_COLOURS);
+	glVertexAttribPointer(Colours, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(Colours);
 
 	glBindVertexArray(0);
 }
@@ -168,36 +150,12 @@ void MGLMesh::BufferNormalsData(GLboolean genBuffers, const GLenum usage) {
 	glBindVertexArray(VAO);
 
 	if (genBuffers)
-		glGenBuffers(1, &VBO[MGL_BUFFER_NORMALS]);
+		glGenBuffers(1, &VBO[Normals]);
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO[MGL_BUFFER_NORMALS]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[Normals]);
 	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(glm::vec3), &normals->at(0), usage);
-	glVertexAttribPointer(MGL_BUFFER_NORMALS, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(MGL_BUFFER_NORMALS);
+	glVertexAttribPointer(Normals, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(Normals);
 
 	glBindVertexArray(0);
-}
-
-/***************************************/
-/*********** MGLCommonMeshes ***********/
-/***************************************/
-
-MGLCommonMeshes::MGLCommonMeshes() {
-	// load default texture
-	GLuint m_defaultTex = MGLH_Tex->GetTexture("DEFAULT");
-
-	m_cube = MGLI_FileLoaderMGL->Load(MGL_DEFAULT_CUBE);
-	m_sphere = MGLI_FileLoaderMGL->Load(MGL_DEFAULT_SPHERE);
-	m_cone = MGLI_FileLoaderMGL->Load(MGL_DEFAULT_CONE);
-
-	// apply default textures
-	m_cube->AddTexture(m_defaultTex);
-	m_sphere->AddTexture(m_defaultTex);
-	m_cone->AddTexture(m_defaultTex);
-}
-
-MGLCommonMeshes::~MGLCommonMeshes() {
-	delete m_cube;
-	delete m_sphere;
-	delete m_cone;
 }

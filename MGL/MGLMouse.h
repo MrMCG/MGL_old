@@ -8,8 +8,8 @@ public:
 	MGLMouse() {}
 	virtual ~MGLMouse() {}
 
-	virtual void UpdatePosition(GLfloat xPos, GLfloat yPos);
-	virtual void UpdateScroll(GLfloat x, GLfloat y);
+	virtual void UpdatePosition(const GLfloat xPos, const GLfloat yPos);
+	virtual void UpdateScroll(const GLfloat x, const GLfloat y);
 
 	void RunKeys() override;
 

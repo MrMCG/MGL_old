@@ -48,6 +48,11 @@ public:
 	// Move camera an amount based on update time
 	void MoveCamera(MGLenum direction, GLfloat dt);
 
+	MGLCamera(const MGLCamera& other) = delete;
+	MGLCamera(const MGLCamera&& other) = delete;
+	MGLCamera& operator=(const MGLCamera& other) = delete;
+	MGLCamera& operator=(const MGLCamera&& other) = delete;
+
 protected:
 
 	/****** Methods ******/

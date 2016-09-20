@@ -11,6 +11,6 @@ int main() {
 	
 	delete scene;
 
-	//_CrtDumpMemoryLeaks();
+	_CrtDumpMemoryLeaks();
 	return 0;
 }

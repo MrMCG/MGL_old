@@ -30,18 +30,23 @@ public:
 	MGLInput* GetInput() const { return input; }
 
 	virtual void BuildWindow();
-	virtual void BuildWindow(MGLWindow*  windo);
+	virtual void BuildWindow(MGLWindow* windo);
 
 	GLdouble GetFrameDelta() const;
 
+	MGLContext(const MGLContext& other) = delete;
+	MGLContext(const MGLContext&& other) = delete;
+	MGLContext& operator=(const MGLContext& other) = delete;
+	MGLContext& operator=(const MGLContext&& other) = delete;
+
 protected:
 
-	virtual void PollEvents();
-	virtual void SwapBuffers();
+	virtual void PollEvents() const;
+	virtual void SwapBuffers() const;
 
-	virtual void WriteOGLInfo();
-	virtual void WriteWindowInfo();
-	virtual void WriteDefinesInfo();
+	virtual void WriteOGLInfo() const;
+	virtual void WriteWindowInfo() const;
+	virtual void WriteDefinesInfo() const;
 
 	MGLWindow* window = nullptr;
 	MGLInput* input = new MGLInput();

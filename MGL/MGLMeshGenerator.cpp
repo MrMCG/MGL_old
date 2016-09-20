@@ -3,7 +3,7 @@
 
 #include "MGLMesh.h"
 
-MGLMesh* MGLMeshGenerator::GenerateTriangle() {
+MGLMesh* MGLMeshGenerator::Triangle() {
 	MGLMesh* mesh = new MGLMesh();
 	GLuint numVert = 3;
 	mesh->SetNumVertices(numVert);
@@ -36,7 +36,7 @@ MGLMesh* MGLMeshGenerator::GenerateTriangle() {
 	return mesh;
 }
 
-MGLMesh* MGLMeshGenerator::GenerateQuad() {
+MGLMesh* MGLMeshGenerator::Quad() {
 	MGLMesh* mesh = new MGLMesh();
 	GLuint numVert = 4;
 	GLuint numInd = 6;

@@ -20,7 +20,7 @@ public:
 	MGLException(const std::string str)
 		: std::runtime_error("MGLEXCEPTION ERROR - "+str+" "){}
 
-	virtual const char* what() const throw();
+	const char* what() const throw() override;
 };
 
 /******	Common exceptions ******/
@@ -134,7 +134,7 @@ public:
 	const char* what() const throw() override {	return MGLException::what(); }
 
 	template<typename T, typename N>
-	static void Test(const T lfs, const N rhs) {
+	static void Test(const T lhs, const N rhs) {
 		if (lhs == rhs) {
 			throw MGLException_IsEqual(lhs, rhs);
 		}

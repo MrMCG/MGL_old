@@ -120,10 +120,10 @@ GLuint MGLShader::Compile(const char* data, GLenum type) {
 }
 
 void MGLShader::SetDefaultAttributes() {
-	glBindAttribLocation(m_program, MGL_BUFFER_VERTEX, "position");
-	glBindAttribLocation(m_program, MGL_BUFFER_TEXTURES, "texCoord");
-	glBindAttribLocation(m_program, MGL_BUFFER_NORMALS, "normals");
-	glBindAttribLocation(m_program, MGL_BUFFER_COLOURS, "colour");
+	glBindAttribLocation(m_program, MGLMesh::Vertex, "position");
+	glBindAttribLocation(m_program, MGLMesh::Textures, "texCoord");
+	glBindAttribLocation(m_program, MGLMesh::Normals, "normals");
+	glBindAttribLocation(m_program, MGLMesh::Colours, "colour");
 }
 
 void MGLShader::Link() {

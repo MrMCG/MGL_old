@@ -33,6 +33,7 @@ public:
 
 	void WriteMGLLogSettings() const;
 	void WriteMGLLogDataStats() const;
+
 protected:
 	MGLLog();
 	~MGLLog();

@@ -1,17 +1,17 @@
 #include "stdafx.h"
 #include "MGLInputType.h"
 
-MGLInputType::MGLInputType() {
-	activeKeysVector = std::make_unique<std::vector<MGLInputItem>>();
-	keyFunctionsMap = std::make_unique<std::unordered_map<GLuint, MGLFunction2>>();
+MGLInputType::~MGLInputType() {
+	delete activeKeysVector;
+	delete keyFunctionsMap;
 	dataPointer = nullptr;
 }
 
-void MGLInputType::AddKeyFunction(GLuint keyVal, GLuint action, MGLFunction2 callbackFunc, void* funcData, GLuint mod) {
+void MGLInputType::AddKeyFunction(const GLuint keyVal, const GLuint action, const MGLFunction2 callbackFunc, void* funcData, const GLuint mod) {
 	AddKeyFunction(keyVal, action, action, callbackFunc, funcData, mod);
 }
 
-void MGLInputType::AddKeyFunction(GLuint keyVal, GLuint firstAction, GLuint secondAction, MGLFunction2 callbackFunc, void* funcData, GLuint mod) {
+void MGLInputType::AddKeyFunction(const GLuint keyVal, const GLuint firstAction, const GLuint secondAction, const MGLFunction2 callbackFunc, void* funcData, const GLuint mod) {
 	++inputCounter;
 	activeKeysVector->push_back(MGLInputItem(keyVal, firstAction, secondAction, inputCounter, mod, funcData));
 	keyFunctionsMap->insert(std::make_pair(inputCounter, callbackFunc));
@@ -28,7 +28,7 @@ void MGLInputType::UpdateKey(GLuint keyVal, GLuint mod, GLuint action) {
 	}
 }
 
-void MGLInputType::SetCurrentData(GLuint keyVal, GLuint mod, GLuint action) {
+void MGLInputType::SetCurrentData(const GLuint keyVal, const GLuint mod, const GLuint action) {
 	currentMod = mod;
 	currentKey = keyVal;
 	currentAction = action;

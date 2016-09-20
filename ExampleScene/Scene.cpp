@@ -8,11 +8,9 @@ Scene::Scene() {
 	MGLContext::BuildWindow(new MGLWindow());
 
 	// 3. Init GL features and Instances
-	MGLContext::InitMGL();
+	MGLRenderer::InitMGL();
 
 	// 4. Create your scene!
-
-	meshes = new MGLDataMap<MGLMesh>(MGLMeshGenerator::GenerateTriangle());
 
 	// Create new shader program
 	shader = new MGLShader();
@@ -39,8 +37,7 @@ Scene::Scene() {
 
 Scene::~Scene() {
 	// NOTE: we dont delete box, as it is a MGLCommonMesh!
-	meshes->DeleteAll();
-	delete meshes;
+	
 	delete shader;
 }
 
@@ -50,27 +47,27 @@ void Scene::loadObjects() {
 
 	meshes->Register("dino", MGLI_FileLoaderMGL->Load("meshes/raptor.mgl"));
 
-	meshes->Get("dino")->AddTexture(MGLH_Tex->GetTexture("raptor"));
+	(*meshes)["dino"]->AddTexture(MGLH_Tex->GetTexture("raptor"));
 
-	meshes->Get("dino")->SetUniforms([&]() { // just as an example
+	(*meshes)["dino"]->SetDrawCallback([&]() { // just as an example
 		glUniform1i(glGetUniformLocation(shader->Program(), "tex"), 0);
 	});
 
 	// Load box
-	meshes->Register("box", MGLMeshGenerator::GenerateQuad());
+	meshes->Register("box", MGLMeshGenerator::Quad());
 
-	meshes->Get("box")->AddTexture(MGLH_Tex->GetTexture("DEFAULT"));
+	(*meshes)["box"]->AddTexture(MGLH_Tex->GetTexture("DEFAULT"));
 
-	meshes->Get("box")->SetUniforms([&]() { // just as an example
+	(*meshes)["box"]->SetDrawCallback([&]() { // just as an example
 		glUniform1i(glGetUniformLocation(shader->Program(), "tex"), 0);
 	});
 
 	// Load death star
 	meshes->Register("deathstar", MGLI_FileLoaderMGL->Load("meshes/death-star-II.mgl"));
 
-	meshes->Get("deathstar")->AddTexture(MGLH_Tex->GetTexture("death star"));
+	(*meshes)["deathstar"]->AddTexture(MGLH_Tex->GetTexture("death star"));
 
-	meshes->Get("deathstar")->SetUniforms([&]() { // just as an example
+	(*meshes)["deathstar"]->SetDrawCallback([&]() { // just as an example
 		glUniform1i(glGetUniformLocation(shader->Program(), "tex"), 0);
 	});
 }
@@ -118,19 +115,19 @@ void Scene::RenderScene() {
 	modelMatrix = glm::rotate(modelMatrix, glm::radians(90.0f), glm::vec3(0, -1, 0));
 	modelMatrix = glm::scale(modelMatrix, glm::vec3(20.0f, 20.0f, 20.0f));
 	glUniformMatrix4fv(glGetUniformLocation(shader->Program(), "modelMatrix"), 1, false, glm::value_ptr(modelMatrix));
-	meshes->Get("dino")->Draw();
+	(*meshes)["dino"]->Draw();
 
 	// Draw box
 	modelMatrix = glm::translate(glm::mat4(), glm::vec3(5.0f, 0.0f, -5.0f));
 	modelMatrix = glm::rotate(modelMatrix, glm::radians(90.0f), glm::vec3(0, -1, 0));
 	glUniformMatrix4fv(glGetUniformLocation(shader->Program(), "modelMatrix"), 1, false, glm::value_ptr(modelMatrix));
-	meshes->Get("box")->Draw();
+	(*meshes)["box"]->Draw();
 
 	// Draw death star
 	modelMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, 750.0f, 0.0f));
 	modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f, 0.5f, 0.5f));
 	glUniformMatrix4fv(glGetUniformLocation(shader->Program(), "modelMatrix"), 1, false, glm::value_ptr(modelMatrix));
-	meshes->Get("deathstar")->Draw();
+	(*meshes)["deathstar"]->Draw();
 
 	// Swap buffers
 	SwapBuffers();

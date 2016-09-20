@@ -22,7 +22,6 @@ public:
 	void Use() const { glUseProgram(m_program); }
 	// Get program
 	GLuint Program() const { return m_program; }
-	
 
 protected:
 	// Returns 0 if error, otherwise returns shader

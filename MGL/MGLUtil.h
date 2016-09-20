@@ -98,6 +98,7 @@ public:
 			}
 		}
 	};
+
 protected:
 	MGLSingleton(){}
 	~MGLSingleton(){}

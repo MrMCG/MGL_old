@@ -10,9 +10,18 @@
 #define GLEW_STATIC
 
 /****** FOR MEMORY DEBUGGING *****/
-//#define _CRTDBG_MAP_ALLOC
-//#include <stdlib.h>
-//#include <crtdbg.h>
+#ifdef _DEBUG
+
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
+#ifndef DBG_NEW
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+#endif
+
+#endif  // _DEBUG
 
 #pragma warning(push, 0) // disable third party/stl warnings
 
@@ -57,4 +66,4 @@
 
 #pragma comment(lib, "glfw3.lib")
 
-#pragma warning(pop) // wnable warnigns again
+#pragma warning(pop) // wnable warnings again

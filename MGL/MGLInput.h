@@ -7,6 +7,7 @@
 /*
  * TODO: refactor adding keys into a more managable solution (its currently too... messy)
  * TODO: add the ablility to "swap out" inputs to register different key entries
+ * TODO: add handling of static game pointer changing when new window is used 
  */
 
 class MGLWindow;
@@ -20,11 +21,12 @@ public:
 	void AttatchInputToWindow(MGLWindow* windo);
 	void PollInput() const;
 
-	virtual void AddKeyboardFunction(GLuint keyVal, GLuint action, MGLFunction2 callbackFunc, void* funcData, GLuint mod = 0);
-	virtual void AddKeyboardFunction(GLuint keyVal, GLuint firstAction, GLuint secondAction, MGLFunction2 callbackFunc, void* funcData, GLuint mod = 0);
-	virtual void AddMouseFunction(GLuint keyVal, GLuint action, MGLFunction2 callbackFunc, void* funcData, GLuint mod = 0);
-	virtual void AddMouseFunction(GLuint keyVal, GLuint firstAction, GLuint secondAction, MGLFunction2 callbackFunc, void* funcData, GLuint mod = 0);
-	virtual void AddScrollFunction(MGLFunction2 func, void* funcData, GLuint mod = 0);
+	virtual void AddKeyboardFunction(const GLuint keyVal, const GLuint action, const MGLFunction2 callbackFunc, void* funcData, const GLuint mod = 0);
+	virtual void AddKeyboardFunction(const GLuint keyVal, const GLuint firstAction, const GLuint secondAction, const MGLFunction2 callbackFunc, void* funcData, const GLuint mod = 0);
+	virtual void AddMouseFunction(const GLuint keyVal, const GLuint action, const MGLFunction2 callbackFunc, void* funcData, const GLuint mod = 0);
+	virtual void AddMouseFunction(const GLuint keyVal, const GLuint firstAction, const GLuint secondAction, const MGLFunction2 callbackFunc, void* funcData, const GLuint mod = 0);
+	virtual void AddScrollFunction(const MGLFunction2 func, void* funcData, const GLuint mod = 0);
+	
 	void SetDataPointer(void* data) const;
 
 	GLfloat GetMouseOffsetX() const { return mouseInput->GetMouseOffsetX(); }

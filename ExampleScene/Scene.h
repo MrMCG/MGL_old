@@ -11,11 +11,9 @@ public:
 	void RenderScene() override;
 
 private:
+
 	void InitInputFuncs();
 	void loadObjects();
-	std::vector<std::thread> threads; // for multi testing
-
-	MGLDataMap<MGLMesh>* meshes;
 
 	MGLShader* shader;
 };

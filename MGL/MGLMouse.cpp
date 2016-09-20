@@ -8,14 +8,14 @@ void MGLMouse::RunKeys() {
 	ResetScrollOffset();
 }
 
-void MGLMouse::UpdatePosition(GLfloat xPos, GLfloat yPos) {
+void MGLMouse::UpdatePosition(const GLfloat xPos, const GLfloat yPos) {
 	mouseOffsetX = xPos - mouseLastX;
 	mouseOffsetY = mouseLastY - yPos;
 	mouseLastX = xPos;
 	mouseLastY = yPos;
 }
 
-void MGLMouse::UpdateScroll(GLfloat x, GLfloat y) {
+void MGLMouse::UpdateScroll(const GLfloat x, const GLfloat y) {
 	scrollX = x; scrollY = y;
 }
 

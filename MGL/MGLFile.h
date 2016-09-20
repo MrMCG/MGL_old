@@ -23,6 +23,7 @@ public:
 	virtual MGLMesh* Load(std::string fileName, GLboolean bufferData = GL_TRUE) = 0;
 	// Saves a given mesh to .mgl format
 	void SaveMeshToMGL(MGLMesh* mesh, std::string fileName, GLboolean saveColours);
+
 protected:
 	MGLFileTEMP(std::string ext) : m_fileEXT(ext) {}
 	virtual ~MGLFileTEMP(){}
@@ -46,6 +47,7 @@ class MGLFileOBJ : public MGLFileTEMP, public MGLSingleton<MGLFileOBJ> {
 	friend class MGLSingleton < MGLFileOBJ >;
 public:
 	virtual MGLMesh* Load(std::string fileName, GLboolean bufferData = GL_TRUE);
+
 protected:
 	MGLFileOBJ() : MGLFileTEMP(".obj") {}
 	virtual ~MGLFileOBJ(){}
@@ -66,6 +68,7 @@ class MGLFileMGL : public MGLFileTEMP, public MGLSingleton<MGLFileMGL> {
 	friend class MGLSingleton < MGLFileMGL >;
 public:
 	virtual MGLMesh* Load(std::string fileName, GLboolean bufferData = GL_TRUE);
+
 protected:
 	MGLFileMGL() : MGLFileTEMP(".mgl") {}
 	virtual ~MGLFileMGL(){}

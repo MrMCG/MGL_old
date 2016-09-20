@@ -3,15 +3,11 @@
 
 #include "MGLUtil.h"
 
-#define MGL_BUFFER_VERTEX 0
-#define MGL_BUFFER_TEXTURES 1
-#define MGL_BUFFER_NORMALS 2
-#define MGL_BUFFER_COLOURS 3
-#define MGL_BUFFER_INDICES 4
-#define MGL_BUFFER_MAX 5
-
-#define MGLH_ComMesh MGLCommonMeshes::Instance()
-#define MGLH_Tex MGLTexture::Instance()
+/*
+ * TODO: refactor textures into materials
+ * TODO: add tangents data
+ * TODO: add ability to generate normals + tangents
+ */
 
 class MGLMesh {
 public:
@@ -21,14 +17,10 @@ public:
 	// Draws the mesh
 	virtual void Draw();
 
-	// Sets vertices amount of colours to specified colour
-	void SetNewColours(glm::vec4 colour, GLboolean buffer = GL_TRUE);
-	// Set texture
-	void AddTexture(GLuint tex) { textures->push_back(tex); }
-	// Get texture
-	GLuint GetTexture(GLuint index) const { return textures->at(index); }
-	// User defined unfiforms will be set before drawing
-	void SetUniforms(std::function<void(void)> onDrawCallBack) { OnDrawCallBack = onDrawCallBack; }
+	void SetNewColours(const glm::vec4 colour, const GLboolean buffer = GL_TRUE);
+	void AddTexture(const GLuint tex) const { textures->push_back(tex); }
+	GLuint GetTexture(const GLuint index) const { return textures->at(index); }
+	void SetDrawCallback(std::function<void(void)> onDrawCallBack) { OnDrawCallBack = onDrawCallBack; }
 
 	MGLvecv3* GetVertices() const { return vertices; }
 	MGLvecv2* GetTexCoords() const { return texCoords; }
@@ -50,7 +42,6 @@ public:
 	void SetNumIndices(GLuint num) { numIndices = num; }
 	void SetType(GLenum typ) { type = typ; }
 
-	// Loads VBO data into memory
 	virtual void BufferAllData(GLboolean genBuffers = GL_TRUE, const GLenum usage = GL_STATIC_DRAW);
 
 	virtual void BufferVerticesData(GLboolean genBuffers, const GLenum usage);
@@ -61,47 +52,32 @@ public:
 
 	void GenerateNormals(){}; // TODO
 
+	enum BufferIndexes {Vertex, Textures, Normals, Colours, Indices, Max};
+
+	MGLMesh(const MGLMesh& other) = delete;
+	MGLMesh(const MGLMesh&& other) = delete;
+	MGLMesh& operator=(const MGLMesh& other) = delete;
+	MGLMesh& operator=(const MGLMesh&& other) = delete;
+
 protected:
 
 	/****** Data ******/
 
-	GLuint VAO;
-	GLuint VBO[MGL_BUFFER_MAX];
+	GLuint VAO = 0;
+	GLuint VBO[Max];
 
-	GLuint type;
-	GLuint numIndices;
-	GLuint numVertices;
+	GLuint type = GL_TRIANGLES;
+	GLuint numIndices = 0;
+	GLuint numVertices = 0;
 
-	MGLvecv3* vertices;
-	MGLvecv3* normals;
-	MGLvecv2* texCoords;
-	MGLvecv4* colours;
+	MGLvecv3* vertices = nullptr;
+	MGLvecv3* normals = nullptr;
+	MGLvecv2* texCoords = nullptr;
+	MGLvecv4* colours = nullptr;
 
-	MGLvecu* textures;
-	MGLvecu* indices;
+	MGLvecu* textures = new MGLvecu();
+	MGLvecu* indices = nullptr;
 
-	std::function<void(void)> OnDrawCallBack;
-};
-
-class MGLCommonMeshes : public MGLSingleton<MGLCommonMeshes> {
-	friend class MGLSingleton < MGLCommonMeshes > ;
-public:
-
-	// Returns a shared cube (DONT DELETE)
-	MGLMesh* Cube() { return m_cube; }
-	// Returns a shared sphere (DONT DELETE)
-	MGLMesh* Sphere() { return m_sphere; }
-	// Returns a shared cone (DONT DELETE)
-	MGLMesh* Cone() { return m_cone; }
-
-protected:
-	MGLCommonMeshes();
-	~MGLCommonMeshes();
-
-	/****** Data ******/
-
-	MGLMesh* m_cube;
-	MGLMesh* m_sphere;
-	MGLMesh* m_cone;
+	std::function<void(void)> OnDrawCallBack = [](){};
 };
 

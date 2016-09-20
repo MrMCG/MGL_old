@@ -5,8 +5,11 @@ class MGLMesh;
 
 class MGLMeshGenerator{
 public:
-	// Generates a triangle mesh
-	static MGLMesh* GenerateTriangle();
-	// Generates a quad mesh using indices (triangle strip)
-	static MGLMesh* GenerateQuad();
+
+	static MGLMesh* Triangle();
+	static MGLMesh* Quad();
+	static MGLMesh* Cone() { return Triangle(); } // TODO
+	static MGLMesh* Cube() { return Triangle(); } // TODO
+	static MGLMesh* Sphere() { return Triangle(); } // TODO
+
 };

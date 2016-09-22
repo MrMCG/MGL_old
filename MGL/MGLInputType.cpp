@@ -8,12 +8,8 @@ MGLInputType::~MGLInputType() {
 }
 
 void MGLInputType::AddKeyFunction(const GLuint keyVal, const GLuint action, const MGLFunction2 callbackFunc, void* funcData, const GLuint mod) {
-	AddKeyFunction(keyVal, action, action, callbackFunc, funcData, mod);
-}
-
-void MGLInputType::AddKeyFunction(const GLuint keyVal, const GLuint firstAction, const GLuint secondAction, const MGLFunction2 callbackFunc, void* funcData, const GLuint mod) {
 	++inputCounter;
-	activeKeysVector->push_back(MGLInputItem(keyVal, firstAction, secondAction, inputCounter, mod, funcData));
+	activeKeysVector->push_back(MGLInputItem(keyVal, action, inputCounter, mod, funcData));
 	keyFunctionsMap->insert(std::make_pair(inputCounter, callbackFunc));
 }
 
@@ -40,7 +36,7 @@ GLboolean MGLInputType::FindRegisteredKey(const MGLInputItem& key) const {
 
 void MGLInputType::UpdateRegisteredKey(MGLInputItem& key) const
 {
-	if (key.action1 == currentAction || key.action2 == currentAction) 
+	if (key.action & currentAction) 
 		key.SetActive(GL_TRUE);
 	else
 		key.SetActive(GL_FALSE);

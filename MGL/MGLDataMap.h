@@ -60,13 +60,13 @@ T* MGLDataMap<T>::DefaultMember() const {
 template <class T>
 GLboolean MGLDataMap<T>::Exists(std::string key) const {
 	try {
-		MGLException_IsNotZero::Test(dataMap->count(key));
+		MGLException_IsZero::Test(dataMap->count(key));
 	}
 	catch (MGLException& e) {
-		MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "MGLDataMap : Key already exists " + std::string(e.what()));
-		return GL_TRUE;
+		MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, "MGLDataMap : Key" + key + " does not exist " + std::string(e.what()));
+		return GL_FALSE;
 	}
-	return GL_FALSE;
+	return GL_TRUE;
 }
 
 template <class T>

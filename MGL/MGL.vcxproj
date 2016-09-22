@@ -181,6 +181,8 @@
     <ClInclude Include="MGLCamera.h" />
     <ClInclude Include="MGLDataMap.h" />
     <ClInclude Include="MGLFileLoader.h" />
+    <ClInclude Include="MGLFileLoaderMGL.h" />
+    <ClInclude Include="MGLFileLoaderString.h" />
     <ClInclude Include="MGLLog.h" />
     <ClInclude Include="MGLExceptions.h" />
     <ClInclude Include="MGLFile.h" />
@@ -188,6 +190,7 @@
     <ClInclude Include="MGLInputItem.h" />
     <ClInclude Include="MGLInputType.h" />
     <ClInclude Include="MGLKeyboard.h" />
+    <ClInclude Include="MGLMaterial.h" />
     <ClInclude Include="MGLMesh.h" />
     <ClInclude Include="MGLMeshGenerator.h" />
     <ClInclude Include="MGLMouse.h" />
@@ -204,11 +207,14 @@
     <ClCompile Include="MGLCamera.cpp" />
     <ClCompile Include="MGLExceptions.cpp" />
     <ClCompile Include="MGLFileLoader.cpp" />
+    <ClCompile Include="MGLFileLoaderMGL.cpp" />
+    <ClCompile Include="MGLFileLoaderString.cpp" />
     <ClCompile Include="MGLLog.cpp" />
     <ClCompile Include="MGLFile.cpp" />
     <ClCompile Include="MGLInput.cpp" />
     <ClCompile Include="MGLInputItem.cpp" />
     <ClCompile Include="MGLInputType.cpp" />
+    <ClCompile Include="MGLMaterial.cpp" />
     <ClCompile Include="MGLMeshGenerator.cpp" />
     <ClCompile Include="MGLMouse.cpp" />
     <ClCompile Include="MGLMesh.cpp" />

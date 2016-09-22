@@ -2,6 +2,7 @@
 
 #include "MGLInput.h"
 #include "MGLWindow.h"
+#include "MGLUtil.h"
 
 MGLInput::MGLInput(MGLWindow* windo) : MGLInput() {
 	AttatchInputToWindow(windo);
@@ -34,20 +35,12 @@ void MGLInput::AddKeyboardFunction(const GLuint keyVal, const GLuint action, con
 	keyboadInput->AddKeyFunction(keyVal, action, callbackFunc, funcData, mod);
 }
 
-void MGLInput::AddKeyboardFunction(const GLuint keyVal, const GLuint firstAction, const GLuint secondAction, const MGLFunction2 callbackFunc, void* funcData, const GLuint mod) {
-	keyboadInput->AddKeyFunction(keyVal, firstAction, secondAction, callbackFunc, funcData, mod);
-}
-
 void MGLInput::AddMouseFunction(const GLuint keyVal, const GLuint action, const MGLFunction2 callbackFunc, void* funcData, const GLuint mod) {
 	mouseInput->AddKeyFunction(keyVal, action, callbackFunc, funcData, mod);
 }
 
-void MGLInput::AddMouseFunction(const GLuint keyVal, const GLuint firstAction, const GLuint secondAction, const MGLFunction2 callbackFunc, void* funcData, const GLuint mod) {
-	mouseInput->AddKeyFunction(keyVal, firstAction, secondAction, callbackFunc, funcData, mod);
-}
-
 void MGLInput::AddScrollFunction(const MGLFunction2 func, void* funcData, const GLuint mod) {
-	mouseInput->AddKeyFunction(MGLMouse::ScrollInfo::ScrollKey, MGLMouse::ScrollInfo::ScrollAction, func, funcData, mod);
+	mouseInput->AddKeyFunction(MGLMouse::ScrollKey, MGLInputType::Scroll, func, funcData, mod);
 }
 
 void MGLInput::SetDataPointer(void* data) const {
@@ -57,12 +50,12 @@ void MGLInput::SetDataPointer(void* data) const {
 
 void MGLInput::KeyInputCallBack(GLFWwindow* window, GLuint key, GLuint scancode, GLuint action, GLuint mods) {
 	static auto game = static_cast<MGLInput*>(glfwGetWindowUserPointer(window));
-	game->HandleKeyInput(key, scancode, action, mods);
+	game->HandleKeyInput(key, scancode, MGL::BitShiftLeftEnableZero(action), mods); // GLFW actions -> MGLInputType ButtonActions
 }
 
 void MGLInput::MouseButtonCallBack(GLFWwindow* window, GLuint button, GLuint action, GLuint mods) {
 	static auto game = static_cast<MGLInput*>(glfwGetWindowUserPointer(window));
-	game->HandleMouseButton(button, action, mods);
+	game->HandleMouseButton(button, MGL::BitShiftLeftEnableZero(action), mods); // GLFW actions -> MGLInputType ButtonActions
 }
 
 void MGLInput::MousePositionCallBack(GLFWwindow* window, GLdouble xPos, GLdouble yPos) {
@@ -97,7 +90,7 @@ void MGLInput::HandleMousePosition(GLdouble xPos, GLdouble yPos) {
 
 void MGLInput::HandleMouseScroll(GLdouble xOffset, GLdouble yOffset) {
 	mouseInput->UpdateScroll(static_cast<GLfloat>(xOffset), static_cast<GLfloat>(yOffset));
-	mouseInput->UpdateKey(MGLMouse::ScrollInfo::ScrollKey, 0, MGLMouse::ScrollInfo::ScrollAction);
+	mouseInput->UpdateKey(MGLMouse::ScrollKey, 0, MGLInputType::Scroll);
 }
 
 void MGLInput::HandleMouseFocus(GLboolean focused) {

@@ -1,8 +1,11 @@
 #include "stdafx.h"
 
 #include "MGLMesh.h"
-#include "MGLTexture.h"
-#include "MGLFileLoader.h"
+
+const char* MGLMesh::VertexUniform = "position";
+const char* MGLMesh::TextureUniform = "texCoord";
+const char* MGLMesh::NormalsUniform = "normals";
+const char* MGLMesh::ColourUniform = "colour";
 
 MGLMesh::MGLMesh() {
 
@@ -90,7 +93,7 @@ void MGLMesh::BufferAllData(const GLboolean genBuffers, const GLenum usage) {
 		BufferIndicesData(genBuffers, usage);
 }
 
-void MGLMesh::BufferVerticesData(GLboolean genBuffers, const GLenum usage) {
+void MGLMesh::BufferVerticesData(const GLboolean genBuffers, const GLenum usage) {
 	glBindVertexArray(VAO);
 
 	if (genBuffers)
@@ -104,7 +107,7 @@ void MGLMesh::BufferVerticesData(GLboolean genBuffers, const GLenum usage) {
 	glBindVertexArray(0);
 }
 
-void MGLMesh::BufferIndicesData(GLboolean genBuffers, const GLenum usage) {
+void MGLMesh::BufferIndicesData(const GLboolean genBuffers, const GLenum usage) {
 	glBindVertexArray(VAO);
 
 	if (genBuffers)
@@ -117,7 +120,7 @@ void MGLMesh::BufferIndicesData(GLboolean genBuffers, const GLenum usage) {
 }
 
 
-void MGLMesh::BufferTexCoordData(GLboolean genBuffers, const GLenum usage) {
+void MGLMesh::BufferTexCoordData(const GLboolean genBuffers, const GLenum usage) {
 	glBindVertexArray(VAO);
 
 	if (genBuffers)
@@ -132,7 +135,7 @@ void MGLMesh::BufferTexCoordData(GLboolean genBuffers, const GLenum usage) {
 }
 
 
-void MGLMesh::BufferColourData(GLboolean genBuffers, const GLenum usage) {
+void MGLMesh::BufferColourData(const GLboolean genBuffers, const GLenum usage) {
 	glBindVertexArray(VAO);
 
 	if (genBuffers)
@@ -146,7 +149,7 @@ void MGLMesh::BufferColourData(GLboolean genBuffers, const GLenum usage) {
 	glBindVertexArray(0);
 }
 
-void MGLMesh::BufferNormalsData(GLboolean genBuffers, const GLenum usage) {
+void MGLMesh::BufferNormalsData(const GLboolean genBuffers, const GLenum usage) {
 	glBindVertexArray(VAO);
 
 	if (genBuffers)

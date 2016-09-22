@@ -6,7 +6,6 @@
 class MGLMouse : public MGLInputType {
 public:
 	MGLMouse() {}
-	virtual ~MGLMouse() {}
 
 	virtual void UpdatePosition(const GLfloat xPos, const GLfloat yPos);
 	virtual void UpdateScroll(const GLfloat x, const GLfloat y);
@@ -18,12 +17,7 @@ public:
 	GLfloat GetScrollX() const { return scrollX; }
 	GLfloat GetScrollY() const { return scrollY; }
 
-	MGLMouse(const MGLMouse& other) = delete;
-	MGLMouse(const MGLMouse&& other) = delete;
-	MGLMouse& operator=(const MGLMouse& other) = delete;
-	MGLMouse& operator=(const MGLMouse&& other) = delete;
-
-	enum ScrollInfo { ScrollAction = 5, ScrollKey = 40 };
+	static const GLuint ScrollKey = 40;
 
 protected:
 

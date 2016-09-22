@@ -5,113 +5,63 @@
 #include "MGLLog.h"
 #include "MGLMesh.h"
 
-MGLShader::MGLShader() {
-	m_program = glCreateProgram();
+#include "MGLFileLoaderMGL.h"
 
-	for (GLuint i = 0; i < MGL_SHADER_MAX; ++i) {
-		m_shaders[i] = 0;
+MGLShader::MGLShader() {
+	program = glCreateProgram();
+
+	for (GLuint i = 0; i < MaxShaders; ++i) {
+		shaders[i] = 0;
 	}
 }
 
 MGLShader::~MGLShader() {
-	for (GLuint i = 0; i < MGL_SHADER_MAX; ++i) {
-		if (m_shaders[i]) {
-			glDetachShader(m_program, m_shaders[i]);
-			glDeleteShader(m_shaders[i]);
+	for (GLuint i = 0; i < MaxShaders; ++i) {
+		if (shaders[i]) {
+			glDetachShader(program, shaders[i]);
+			glDeleteShader(shaders[i]);
 		}
 	}
-	glDeleteProgram(m_program);
+	glDeleteProgram(program);
 }
 
-void MGLShader::LoadShader(std::string fileName, GLenum type) {
+void MGLShader::LoadShader(const std::string fileName, const GLenum glType) {
 	std::string message = "Compiling Shader : "+fileName;
 
-	GLint shaderType = -1;
+	GLint shaderType = AssignShaderType(glType);
 
-	// Assign compiled shader
-	switch (type) {
-	case GL_VERTEX_SHADER:
-		shaderType = (GLint)MGL_SHADER_VERTEX; break;
-	case GL_FRAGMENT_SHADER:
-		shaderType = (GLint)MGL_SHADER_FRAGMENT; break;
-	case GL_GEOMETRY_SHADER:
-		shaderType = (GLint)MGL_SHADER_GEOMETRY; break;
-	default: break;
-	}
+	if (!IsValidShaderType(shaderType)) 
+		return;
 
-	try {
-		MGLException_IsLessThan::Test(shaderType, (GLint)0); // test if shaderType is still -1
-	}
-	catch (MGLException& e) {
-		//std::cerr << e.what() << std::endl;
-		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), ": Shader Type Unknown");
+	std::stringstream* stream = LoadShaerFromFile(fileName);
 
+	if (!CompileShader(stream, glType, shaderType)) {
+		delete stream;
 		return;
 	}
 
-	std::string into;
-
-	// Load shader from file
-	{
-		std::ifstream file;
-		std::string temp;
-
-		file.open(fileName.c_str());
-
-		try {
-			MGLException_FileError::Test(file.is_open(), fileName);
-		}
-		catch (MGLException& e) {
-			//std::cerr << e.what() << std::endl;
-			MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
-
-			return;
-		}
-
-		while (!file.eof()){
-			std::getline(file, temp);
-			into += temp + "\n";
-		}
-
-	}
-
-	m_shaders[shaderType] = Compile(into.c_str(), type);
-
-	try {
-		MGLException_IsZero::Test(m_shaders[shaderType]);
-		message += " - SUCCESS"; // runs is MGLException is not thrown
-	}
-	catch (MGLException& e) {
-		//std::cerr << e.what() << std::endl;
-		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
-		message += " - FAIL: TYPE ERROR";
-	}
+	delete stream;
+	message += " - SUCCESS";
 
 	MGLI_Log->AddLog(MGL_LOG_MAIN, GL_TRUE, message.c_str());
 }
 
-GLuint MGLShader::Compile(const char* data, GLenum type) {
-	// Generate and compile loaded shader
-	GLuint shader = glCreateShader(type);
+GLuint MGLShader::CompileGLShader(const char* data, const GLenum glType){
 
-	glShaderSource(shader, 1, &data, NULL);
+	GLuint shader = glCreateShader(glType);
+
+	glShaderSource(shader, 1, &data, nullptr);
 	glCompileShader(shader);
 
-	GLint status;
+	GLint status = 0;
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
 
 	try {
 		MGLException_IsNotEqual::Test(status, GL_TRUE);
 	}
 	catch (MGLException& e) {
-		//std::cerr << e.what() << std::endl;
 		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
-
-		GLchar error[512];
-		glGetInfoLogARB(shader, sizeof(error), NULL, error);
-		//std::cerr << error << std::endl;
-		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, error);
-
+		LogGLShaderError(shader);
 		glDeleteShader(shader);
 		return 0;
 	}
@@ -120,42 +70,97 @@ GLuint MGLShader::Compile(const char* data, GLenum type) {
 }
 
 void MGLShader::SetDefaultAttributes() {
-	glBindAttribLocation(m_program, MGLMesh::Vertex, "position");
-	glBindAttribLocation(m_program, MGLMesh::Textures, "texCoord");
-	glBindAttribLocation(m_program, MGLMesh::Normals, "normals");
-	glBindAttribLocation(m_program, MGLMesh::Colours, "colour");
+	glBindAttribLocation(program, MGLMesh::Vertex, MGLMesh::VertexUniform);
+	glBindAttribLocation(program, MGLMesh::Textures, MGLMesh::TextureUniform);
+	glBindAttribLocation(program, MGLMesh::Normals, MGLMesh::NormalsUniform);
+	glBindAttribLocation(program, MGLMesh::Colours, MGLMesh::ColourUniform);
+}
+
+GLboolean MGLShader::CompileShader(const std::stringstream* stream, const GLenum glType, const GLint mglType) {
+
+	const std::string& fileString = stream->str();
+	const char* cFileString = fileString.c_str();
+
+	shaders[mglType] = CompileGLShader(cFileString, glType);
+	
+	try {
+		MGLException_IsZero::Test(shaders[mglType]);
+	}
+	catch (MGLException& e) {
+		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
+		return GL_FALSE;
+	}
+	return GL_TRUE;
+}
+
+GLboolean MGLShader::IsValidShaderType(const GLint type) const {
+	try {
+		MGLException_IsEqual::Test(type, Invalid);
+	}
+	catch (MGLException& e) {
+		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, "%s%s", e.what(), ": Shader Type Invalid");
+		return GL_FALSE;
+	}
+	return GL_TRUE;
+}
+
+GLint MGLShader::AssignShaderType(const GLenum glType) const
+{
+	switch (glType) {
+	case GL_VERTEX_SHADER:
+		return Vertex;
+	case GL_FRAGMENT_SHADER:
+		return Fragment;
+	case GL_GEOMETRY_SHADER:
+		return Geometry;
+	default:
+		return -1;
+	}
+}
+
+std::stringstream* MGLShader::LoadShaerFromFile(const std::string filename) const {
+	
+	std::stringstream* stream = MGLI_FileLoaderMGL->LoadFileToSS(filename);
+	return stream;
+}
+
+void MGLShader::LogGLShaderError(const GLuint shader) {
+	GLchar error[512];
+	glGetInfoLogARB(shader, sizeof(error), nullptr, error);
+	MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, error);
+}
+
+void MGLShader::LogGLProgramError(const GLuint prgrm) {
+	GLchar error[512];
+	glGetProgramInfoLog(prgrm, sizeof(error), nullptr, error);
+	MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, error);
 }
 
 void MGLShader::Link() {
 	
-	for (GLuint i = 0; i < MGL_SHADER_MAX; ++i) {
-		if (m_shaders[i]) {
-			glAttachShader(m_program, m_shaders[i]);
+	for (GLuint i = 0; i < MaxShaders; ++i) {
+		if (shaders[i]) {
+			glAttachShader(program, shaders[i]);
 		}
 	}
 
-	glLinkProgram(m_program);
+	glLinkProgram(program);
 
 	try {
 		GLint code = GL_FALSE;
-		glGetProgramiv(m_program, GL_LINK_STATUS, &code);
+		glGetProgramiv(program, GL_LINK_STATUS, &code);
 		MGLException_IsNotEqual::Test(code, GL_TRUE);
 
 		code = GL_FALSE;
-		glValidateProgram(m_program);
-		glGetProgramiv(m_program, GL_VALIDATE_STATUS, &code);
+		glValidateProgram(program);
+		glGetProgramiv(program, GL_VALIDATE_STATUS, &code);
 		MGLException_IsNotEqual::Test(code, GL_TRUE);
 
 		SetDefaultAttributes();
 	}
 	catch (MGLException& e) {
-		//std::cerr << e.what() << std::endl;
 		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, e.what());
 
-		GLchar log[512];
-		glGetProgramInfoLog(m_program, sizeof(log), NULL, log);
-		MGLI_Log->AddLog(MGL_LOG_ERROR, GL_TRUE, log);
-
-		//std::cout << log << std::endl;
+		LogGLProgramError(program);
 	}
 }

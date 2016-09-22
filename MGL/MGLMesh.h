@@ -44,11 +44,11 @@ public:
 
 	virtual void BufferAllData(GLboolean genBuffers = GL_TRUE, const GLenum usage = GL_STATIC_DRAW);
 
-	virtual void BufferVerticesData(GLboolean genBuffers, const GLenum usage);
-	virtual void BufferNormalsData(GLboolean genBuffers, const GLenum usage);
-	virtual void BufferTexCoordData(GLboolean genBuffers, const GLenum usage);
-	virtual void BufferColourData(GLboolean genBuffers, const GLenum usage);
-	virtual void BufferIndicesData(GLboolean genBuffers, const GLenum usage);
+	virtual void BufferVerticesData(const GLboolean genBuffers, const GLenum usage);
+	virtual void BufferNormalsData(const GLboolean genBuffers, const GLenum usage);
+	virtual void BufferTexCoordData(const GLboolean genBuffers, const GLenum usage);
+	virtual void BufferColourData(const GLboolean genBuffers, const GLenum usage);
+	virtual void BufferIndicesData(const GLboolean genBuffers, const GLenum usage);
 
 	void GenerateNormals(){}; // TODO
 
@@ -58,6 +58,11 @@ public:
 	MGLMesh(const MGLMesh&& other) = delete;
 	MGLMesh& operator=(const MGLMesh& other) = delete;
 	MGLMesh& operator=(const MGLMesh&& other) = delete;
+
+	static const char* VertexUniform;
+	static const char* TextureUniform;
+	static const char* NormalsUniform;
+	static const char* ColourUniform;
 
 protected:
 

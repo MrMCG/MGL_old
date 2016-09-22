@@ -11,7 +11,7 @@
 #include "MGLTexture.h"
 #include "MGLMesh.h"
 #include "MGLShader.h"
-#include "MGLFileLoader.h"
+#include "MGLFileLoaderMGL.h"
 #include "MGLDataMap.h"
 #include "MGLMeshGenerator.h"
 

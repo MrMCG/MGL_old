@@ -6,6 +6,7 @@
 
 /*
  * TODO: refactor adding keys into a more managable solution (its currently too... messy)
+ *		 Maybe just have a KeyPressed(keyVal) or KeyDown(keyVal) funciton to query buttons
  * TODO: add the ablility to "swap out" inputs to register different key entries
  * TODO: add handling of static game pointer changing when new window is used 
  */
@@ -22,9 +23,7 @@ public:
 	void PollInput() const;
 
 	virtual void AddKeyboardFunction(const GLuint keyVal, const GLuint action, const MGLFunction2 callbackFunc, void* funcData, const GLuint mod = 0);
-	virtual void AddKeyboardFunction(const GLuint keyVal, const GLuint firstAction, const GLuint secondAction, const MGLFunction2 callbackFunc, void* funcData, const GLuint mod = 0);
 	virtual void AddMouseFunction(const GLuint keyVal, const GLuint action, const MGLFunction2 callbackFunc, void* funcData, const GLuint mod = 0);
-	virtual void AddMouseFunction(const GLuint keyVal, const GLuint firstAction, const GLuint secondAction, const MGLFunction2 callbackFunc, void* funcData, const GLuint mod = 0);
 	virtual void AddScrollFunction(const MGLFunction2 func, void* funcData, const GLuint mod = 0);
 	
 	void SetDataPointer(void* data) const;

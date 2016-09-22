@@ -1,49 +1,56 @@
 ﻿#pragma once
 #include "stdafx.h"
 
-#include "MGLUtil.h"
+#define MGL_FILELOADER_DEFAULTFILEPATH "mglData"
 
 class MGLMesh;
 
-#define MGL_FILELOADER_DEFAULTFILEPATH "mglData"
-#define MGL_FILELOADERMGL_BUFFERMINSIZE 5
-#define MGL_FILELOADERMGL_CURRENTVERSION 1.0f
-
-#define MGLI_FileLoaderMGL MGLFileLoaderMGL::Instance()
+/*
+ * TODO: Fix LoadFilesTo* for more classes
+ */
 
 template <class T>
 class MGLFileLoader {
 public:
+	virtual ~MGLFileLoader() {}
 
 	virtual T* Load(std::string fileName) = 0;
 
 	static void SaveMeshToMGL(MGLMesh* mesh, std::string fileName, GLboolean saveColours);
 
-protected:
-
 	std::stringstream* LoadFileToSS(std::string fileName);
 
-	template < typename T >
-	std::vector<T>* LoadFileToVec(std::string fileName);
+	template < class X >
+	std::vector<X>* LoadFileToVec(std::string fileName);
 
 };
 
-class MGLFileLoaderMGL : public MGLFileLoader<MGLMesh>, public MGLSingleton<MGLFileLoaderMGL> {
-	friend class MGLSingleton<MGLFileLoaderMGL>;
+template<class T>
+std::stringstream* MGLFileLoader<T>::LoadFileToSS(std::string fileName) {
+	std::ifstream file(fileName, std::ios::in);
 
-public:
-	MGLMesh* Load(std::string fileName) override;
+	if (!MGL::FileOpenedSuccessful(file, fileName))
+		return nullptr;
 
-private:
-	// Determines correct file size based on inputs
-	std::size_t DetermineFileSize(const GLuint numVertices, const GLuint numIndices, const GLint colourVal) const;
-	// Creates a MGLMesh from a loaded buffer
-	static MGLMesh* LoadMesh(const MGLvecf* buffer);
+	std::stringstream* stream = new std::stringstream();
+	*stream << file.rdbuf();
 
-	MGLFileLoaderMGL() {}
-	MGLFileLoaderMGL(const MGLFileLoaderMGL&) = delete;
-	MGLFileLoaderMGL(const MGLFileLoaderMGL&&) = delete;
-	MGLFileLoaderMGL& operator=(const MGLFileLoaderMGL&) = delete;
-	MGLFileLoaderMGL& operator=(const MGLFileLoaderMGL&&) = delete;
-};
+	return stream;
+}
 
+template <class T>
+template <class X>
+std::vector<X>* MGLFileLoader<T>::LoadFileToVec(std::string fileName) {
+	std::ifstream file(fileName, std::ios::in | std::ios::binary);
+
+	if (!MGL::FileOpenedSuccessful(file, fileName))
+		return nullptr;
+
+	auto size = MGL::GetFilesize(file);
+
+	// read file buffer into vector
+	std::vector<X>* buffer = new std::vector < GLfloat >((size / sizeof(X)) + 1);
+	file.read(reinterpret_cast<GLchar*>(&buffer->at(0)), size);
+
+	return buffer;
+}

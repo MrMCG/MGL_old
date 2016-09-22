@@ -2,18 +2,21 @@
 
 #include "MGLInputItem.h"
 
-MGLInputItem::MGLInputItem(const GLuint k, const GLuint a1, const GLuint a2, const GLuint i, const GLuint m, void* funcData) :
+MGLInputItem::MGLInputItem(const GLuint k, const GLuint a1, const GLuint i, const GLuint m, void* funcData) :
 	keyValue(k),
-	action1(a1),
-	action2(a2),
+	action(a1),
 	index(i),
 	keyMod(m),
 	functionData(funcData) {}
 
+MGLInputItem::~MGLInputItem() {
+	//if (functionData && deleteFuncData) 
+		//delete functionData;
+}
+
 MGLInputItem::MGLInputItem(const MGLInputItem&& other) noexcept {
 	keyValue = other.keyValue;
-	action1 = other.action1;
-	action2 = other.action2;
+	action = other.action;
 	index = other.index;
 	keyMod = other.keyMod;
 	inUse = other.inUse;

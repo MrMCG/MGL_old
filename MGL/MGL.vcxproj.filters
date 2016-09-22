@@ -105,6 +105,15 @@
     <ClInclude Include="MGLMeshGenerator.h">
       <Filter>Header Files\Main</Filter>
     </ClInclude>
+    <ClInclude Include="MGLFileLoaderMGL.h">
+      <Filter>Header Files\Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MGLFileLoaderString.h">
+      <Filter>Header Files\Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MGLMaterial.h">
+      <Filter>Header Files\Main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -166,6 +175,15 @@
     </ClCompile>
     <ClCompile Include="MGLMeshGenerator.cpp">
       <Filter>Source Files\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="MGLFileLoaderMGL.cpp">
+      <Filter>Source Files\Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MGLFileLoaderString.cpp">
+      <Filter>Source Files\Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MGLMaterial.cpp">
+      <Filter>Header Files\Main</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

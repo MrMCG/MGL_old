@@ -1,34 +1,37 @@
 #pragma once
 #include "stdafx.h"
 
-#define MGL_SHADER_VERTEX 0
-#define MGL_SHADER_FRAGMENT 1
-#define MGL_SHADER_GEOMETRY 2
-#define MGL_SHADER_MAX 3
-
-// TODO: Add a singleton shader handler to hold program refrences
+// TODO: Add capability to hold multiple shader programs
 
 class MGLShader {
 public:
 	MGLShader();
-	virtual ~MGLShader();
+	~MGLShader();
 
-	// Loads and compiles shader, given file and shader type
-	void LoadShader(std::string fileName, GLenum type);
-	// Links all viable shaders
+	void LoadShader(const std::string fileName, const GLenum type);
+
 	void Link();
+	void Use() const { glUseProgram(program); }
 
-	// Uses shaders program
-	void Use() const { glUseProgram(m_program); }
-	// Get program
-	GLuint Program() const { return m_program; }
+	GLuint Program() const { return program; }
 
-protected:
-	// Returns 0 if error, otherwise returns shader
-	virtual GLuint Compile(const char* data, GLenum type);
-	// Sets default uniforms
-	virtual void SetDefaultAttributes();
+	static GLuint CompileGLShader(const char* data, const GLenum glType);
 
-	GLuint m_program;
-	GLuint m_shaders[MGL_SHADER_MAX];
+private:
+
+	enum ShaderType { Invalid = -1, Vertex, Fragment, Geometry, MaxShaders };
+
+	void SetDefaultAttributes();
+
+	GLboolean CompileShader(const std::stringstream* stream, const GLenum glType, const GLint mglType);
+	GLboolean IsValidShaderType(GLint mglType) const;
+	GLint AssignShaderType(const GLenum glType) const;
+	std::stringstream* LoadShaerFromFile(const std::string filename) const;
+
+	static void LogGLShaderError(GLuint shader);
+	static void LogGLProgramError(GLuint program);
+
+	GLuint program = 0;
+	GLuint shaders[MaxShaders];
+
 };

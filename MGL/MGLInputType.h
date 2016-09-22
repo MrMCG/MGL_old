@@ -13,8 +13,9 @@ public:
 	MGLInputType() {}
 	virtual ~MGLInputType();
 
+	enum ButtonActions { Released = 1, Pressed = 2, Repeat = 4, Scroll = 8 };
+
 	virtual void AddKeyFunction(const GLuint keyVal, const GLuint action, const MGLFunction2 callbackFunc, void* funcData, const GLuint mod = 0);
-	virtual void AddKeyFunction(const GLuint keyVal, const GLuint firstAction, const GLuint secondAction, const MGLFunction2 callbackFunc, void* funcData, const GLuint mod = 0);
 
 	virtual void UpdateKey(GLuint keyVal, GLuint mod, GLuint action);
 	virtual void RunKeys();

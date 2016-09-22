@@ -65,6 +65,9 @@ namespace MGL {
 	int GetWindowInfo(GLFWwindow* window, const MGLenum info, const GLint attribute = 0);
 	// Print glm::mat4, uses std::cout
 	void PrintMat4(const glm::mat4& matrix);
+	// eg turns 0,1,2 into 1,2,4
+	template<class T>
+	T BitShiftLeftEnableZero(const T number) { auto result = number << 1; return result ? result : 1; }
 
 	std::size_t GetFilesize(std::ifstream& file);
 	GLboolean FileOpenedSuccessful(std::ifstream& file, std::string fileName);
